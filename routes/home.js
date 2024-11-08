@@ -30,10 +30,10 @@ router.get("/event/create", event_controller.event_create_get);
 router.post("/event/create", event_controller.event_create_post);
 
 // GET request to delete Book.
-router.get("/event/:id/delete", book_controller.book_delete_get);
+router.get("/events/:id/delete", event_controller.event_delete_get);
 
 // POST request to delete Book.
-router.post("/event/:id/delete", book_controller.book_delete_post);
+router.post("/events/:id/delete", event_controller.event_delete_post);
 
 
 /// Event Instances ROUTES ///

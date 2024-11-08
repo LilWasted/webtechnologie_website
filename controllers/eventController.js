@@ -6,8 +6,6 @@ const { DateTime } = require("luxon");
 
 
 const asyncHandler = require("express-async-handler");
-const BookInstance = require("../models/bookinstance");
-const Book = require("../models/book");
 
 exports.index = asyncHandler(async (req, res, next) => {
     // Get details of events, event instances, authors and genre counts (in parallel)
@@ -152,13 +150,34 @@ exports.event_create_post = [
 
 // Display event delete form on GET.
 exports.event_delete_get = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Event delete GET");
+    const [event, categories] = await Promise.all([
+        Event.findById(req.params.id).populate("categorie").exec(),
+    ]);
+
+    if (event === null) {
+        // No results.
+        res.redirect("/home/events");
+    }
+
+
+    res.render("event_delete", {
+        title: "Delete Event",
+        event: event,
+    });
+
 });
 
 // Handle event delete on POST.
 exports.event_delete_post = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Event delete POST");
-});
+// Get details of author and all their books (in parallel)
+    const [event, categories] = await Promise.all([
+        Event.findById(req.params.id).exec(),
+    ]);
+
+        // Author has no books. Delete object and redirect to the list of authors.
+        await Event.findByIdAndDelete(req.body.eventid);
+        res.redirect("/home/events");
+    });
 
 /*
 
