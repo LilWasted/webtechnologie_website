@@ -1,0 +1,17 @@
+extends layout
+
+block content
+
+  h1 Genre: #{categorie.name}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h2(style='font-size: 1.5rem;') Books
+    if categorie_events.length
+      dl
+        each event in categorie_events
+          dt
+            a(href=event.url) #{event.title}
+          dd #{event.summary}
+    else
+      p This categorie has no events.

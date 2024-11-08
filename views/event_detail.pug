@@ -1,0 +1,25 @@
+extends layout
+
+block content
+    h1 Title: #{event.title}
+
+    p #[strong categorie: ]
+        a(href=event.categorie.url) #{event.categorie.name}
+    p #[strong Summary:] #{event.description}
+
+    div(style='margin-left:20px;margin-top:20px')
+        h2(style='font-size: 1.5rem;') Copies
+
+        each val in event_instances
+            hr
+            if val.status=='Available'
+                p.text-success #{val.status}
+            else if val.status=='Full'
+                p.text-danger #{val.status}
+            else
+                p.text-warning #{val.status}
+            p #[strong Id: ]
+                a(href=val.url) #{val._id}
+
+        else
+            p There are no copies of this event in the library.

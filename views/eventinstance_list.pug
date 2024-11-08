@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+
+  if eventinstance_list.length
+    ul
+      each val in eventinstance_list
+        li
+          a(href=val.url) #{val.event.title} : #{val.imprint} -&nbsp;
+          if val.status=='Available'
+            span.text-success #{val.status}
+          else if val.status=='Full'
+            span.text-danger #{val.status}
+          else
+            span.text-warning #{val.status}
+  else
+    p There are no event copies in this library.
