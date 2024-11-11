@@ -3,10 +3,20 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const asyncHandler = require("express-async-handler");
 const {promise} = require("bcrypt/promises");
-const Event = require("../models/event");
-const Categorie = require("../models/categorie");
-
 const SECRET_KEY="mysecretkey"
+
+const verifyToken = (token)=>{
+    try {
+        const verify = jwt.verify(token,SECRET_KEY);
+        console.log(verify);
+        if(verify.type==='user'){return true;}
+        else{return false;}
+    } catch (error) {
+        console.log(JSON.stringify(error),"error");
+        return false;
+    }
+}
+
 // Register a new user
 const register_post = async (req, res, next) => {
     const { username, email, password } = req.body;
@@ -48,11 +58,11 @@ const login_post = async (req, res, next) => {
         }
 
 
-        const token = jwt.sign({ userId: user._id }, SECRET_KEY, {
+        const token = jwt.sign({username: username, userId: user._id, type: user.role }, SECRET_KEY, {
             expiresIn: '1 hour'
         });
-        console.log("logged in");
-        console.log(token);
+        res.cookie('token',token,{ maxAge: 3600000, httpOnly: true });  // maxAge: 2 hours
+        console.log("saved local token");
 
     } catch (error) {
         next(error);
@@ -64,5 +74,13 @@ const login_get = async (req, res, next) => {
     res.render("login", { title: "Login" });
 };
 
+const profile_get = async (req, res, next) => {
+    const {token}=req.cookies;
+    if(verifyToken(token)){
+        return res.redirect('/home');
+    }else{
+        res.redirect('/user/login')
+    }
+}
 
-module.exports = {login_post, login_get, register_get, register_post};
+module.exports = {login_post, login_get, register_get, register_post, profile_get};

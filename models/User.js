@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
             default: 0
         },
         events: {
-            type: Schema.Types.ObjectId,
+            type: [Schema.Types.ObjectId],
             ref: "Event"
         },
         createdAt: {
@@ -59,7 +59,4 @@ userSchema.pre('save', async function (next) {
 });
 
 
-
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+module.exports = mongoose.model('User', userSchema);

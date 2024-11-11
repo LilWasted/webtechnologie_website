@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const { authenticate } = require('../middlewares/auth');
+const { register_get, register_post, login_get, login_post, profile_get} = require('../controllers/auth');
+const jwt = require("jsonwebtoken");
 
-const { register_get, register_post, login_get, login_post} = require('../controllers/auth');
-const authController = require("../controllers/auth");
 
-router.get('/profile', authenticate, (req, res) => {
-    res.json({ message: `Welcome ${req.user.username}` });
-});
+router.get('/profile', profile_get);
 
 router.post('/register', register_post);
 router.get('/register', register_get);

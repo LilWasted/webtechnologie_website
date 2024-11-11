@@ -12,7 +12,9 @@ const EventInstanceSchema = new Schema({
         enum: ["Available", "Full", "Cancelled"],
         default: "Available",
     },
-});
+    },
+    { timestamps: true }
+);
 
 // Virtual for eventinstance's URL
 EventInstanceSchema.virtual("url").get(function () {

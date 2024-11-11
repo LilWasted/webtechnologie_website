@@ -1,11 +1,17 @@
 const Event = require("../models/event");
 const Categorie = require("../models/categorie");
 const EventInstance = require("../models/eveninstance");
+const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const { DateTime } = require("luxon");
-
-
 const asyncHandler = require("express-async-handler");
+
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const Genre = require("../models/genre");
+const Book = require("../models/book");
+const Author = require("../models/author");
+const SECRET_KEY="mysecretkey"
 
 exports.index = asyncHandler(async (req, res, next) => {
     // Get details of events, event instances, authors and genre counts (in parallel)
@@ -41,8 +47,8 @@ exports.event_list = asyncHandler(async (req, res, next) => {
 // Display detail page for a specific event.
 exports.event_detail = asyncHandler(async (req, res, next) => {
     // Get details of events, event instances for specific event
-    const [event, eventInstances] = await Promise.all([
-        Event.findById(req.params.id).populate("categorie").exec(),
+    const [event, eventInstances, users] = await Promise.all([
+        Event.findById(req.params.id).populate("categorie").populate('participants').exec(),
         EventInstance.find({ event: req.params.id }).exec(),
     ]);
 
@@ -53,10 +59,15 @@ exports.event_detail = asyncHandler(async (req, res, next) => {
         return next(err);
     }
 
+    for (const user of event.participants) {
+        console.log("user = ", user.username);
+    }
+
     res.render("event_detail", {
         title: event.title,
         event: event,
         event_instances: eventInstances,
+        users: event.participants,
     });
 });
 
@@ -65,9 +76,10 @@ exports.event_detail = asyncHandler(async (req, res, next) => {
 // Display event create form on GET.
 exports.event_create_get = asyncHandler(async (req, res, next) => {
     // Get all authors and genres, which we can use for adding to our event.
-    const [event, categories] = await Promise.all([
+    const [event, categories, users] = await Promise.all([
         Event.findById(req.params.id).populate("categorie").exec(),
         Categorie.find({ event: req.params.id }).exec(),
+        User.find().exec(),
     ]);
 
 
@@ -110,13 +122,24 @@ exports.event_create_post = [
         // Extract the validation errors from a request.
         const errors = validationResult(req);
 
+        const {token}=req.cookies;
+        const verify = jwt.verify(token,SECRET_KEY);
+
+        const maker = await User.findOne( {username: verify.username}).exec();
         // Create a Event object with escaped and trimmed data.
         const event = new Event({
             title: req.body.title,
             description: req.body.description,
             categorie: req.body.categorie,
-
+            organizer: maker._id,
+            date: req.body.date,
+            participants: [maker._id],
         });
+
+        console.log("orginize =  ", event.organizer)
+        for (const user of event.participants) {
+            console.log("user = ", user);
+        }
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
@@ -179,111 +202,48 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
         res.redirect("/home/events");
     });
 
-/*
 
-// Display event update form on GET.
-exports.event_update_get = asyncHandler(async (req, res, next) => {
-    // Get event, authors and genres for form.
-    const [event, allAuthors, allGenres] = await Promise.all([
-        Event.findById(req.params.id).populate("author").exec(),
-        Author.find().sort({ family_name: 1 }).exec(),
-        Genre.find().sort({ name: 1 }).exec(),
+
+exports.event_delete_post = asyncHandler(async (req, res, next) => {
+// Get details of author and all their books (in parallel)
+    const [event, categories] = await Promise.all([
+        Event.findById(req.params.id).exec(),
     ]);
 
-    if (event === null) {
-        // No results.
-        const err = new Error("Event not found");
-        err.status = 404;
-        return next(err);
-    }
-
-    // Mark our selected genres as checked.
-    allGenres.forEach((genre) => {
-        if (event.genre.includes(genre._id)) genre.checked = "true";
-    });
-
-    res.render("event_form", {
-        title: "Update Event",
-        authors: allAuthors,
-        genres: allGenres,
-        event: event,
-    });
+    // Author has no books. Delete object and redirect to the list of authors.
+    await Event.findByIdAndDelete(req.body.eventid);
+    res.redirect("/home/events");
 });
 
 
-// Handle event update on POST.
-exports.event_update_post = [
-    // Convert the genre to an array.
-    (req, res, next) => {
-        if (!Array.isArray(req.body.genre)) {
-            req.body.genre =
-                typeof req.body.genre === "undefined" ? [] : [req.body.genre];
+//kunnen een event joinen get waar je een klop krijgt of je zeker bent en post waar je dan toegevoegd wordt
+
+
+exports.join_post = asyncHandler(async (req, res, next) => {
+    const [event] = await Promise.all([
+        Event.findById(req.params.id).populate('participants').populate("blacklist") .exec(),
+    ]);
+
+    const {token}=req.cookies;
+    const verify = jwt.verify(token,SECRET_KEY);
+    const user = await User.findOne( {username: verify.username}).exec();
+    // Create a Event object with escaped and trimmed data.
+    for (const participant of event.participants) {
+        if (user._id === participant._id) {
+            console.log("user already in");
+            return res.redirect(event.url);
+
+        }}
+
+    for (const participant of event.blacklist) {
+        if (user._id === participant._id) {
+            console.log("user blacklisted");
+            return res.redirect(event.url);
+
         }
-        next();
-    },
+    }
+    event.participants.push(user._id)
 
-    // Validate and sanitize fields.
-    body("title", "Title must not be empty.")
-        .trim()
-        .isLength({ min: 1 })
-        .escape(),
-    body("author", "Author must not be empty.")
-        .trim()
-        .isLength({ min: 1 })
-        .escape(),
-    body("summary", "Summary must not be empty.")
-        .trim()
-        .isLength({ min: 1 })
-        .escape(),
-    body("isbn", "ISBN must not be empty").trim().isLength({ min: 1 }).escape(),
-    body("genre.*").escape(),
+});
 
-    // Process request after validation and sanitization.
-    asyncHandler(async (req, res, next) => {
-        // Extract the validation errors from a request.
-        const errors = validationResult(req);
-
-        // Create a Event object with escaped/trimmed data and old id.
-        const event = new Event({
-            title: req.body.title,
-            author: req.body.author,
-            summary: req.body.summary,
-            isbn: req.body.isbn,
-            genre: typeof req.body.genre === "undefined" ? [] : req.body.genre,
-            _id: req.params.id, // This is required, or a new ID will be assigned!
-        });
-
-        if (!errors.isEmpty()) {
-            // There are errors. Render form again with sanitized values/error messages.
-
-            // Get all authors and genres for form
-            const [allAuthors, allGenres] = await Promise.all([
-                Author.find().sort({ family_name: 1 }).exec(),
-                Genre.find().sort({ name: 1 }).exec(),
-            ]);
-
-            // Mark our selected genres as checked.
-            for (const genre of allGenres) {
-                if (event.genre.indexOf(genre._id) > -1) {
-                    genre.checked = "true";
-                }
-            }
-            res.render("event_form", {
-                title: "Update Event",
-                authors: allAuthors,
-                genres: allGenres,
-                event: event,
-                errors: errors.array(),
-            });
-            return;
-        } else {
-            // Data from form is valid. Update the record.
-            const updatedEvent = await Event.findByIdAndUpdate(req.params.id, event, {});
-            // Redirect to event detail page.
-            res.redirect(updatedEvent.url);
-        }
-    }),
-];
-
-
- */
+// Handle book update on POST.
