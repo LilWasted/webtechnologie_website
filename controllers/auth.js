@@ -12,8 +12,7 @@ const register_post = async (req, res, next) => {
     const { username, email, password } = req.body;
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, email, password: hashedPassword });
+        const user = new User({ username, email, password: password });
         await user.save();
         console.log("user made");
     } catch (error) {
@@ -35,10 +34,6 @@ const login_post = async (req, res, next) => {
     const { username, password } = req.body;
 
     try {
-        //const user = await Promise.all([
-        //    User.find({username}).exec(),
-        //]);
-        //const user = await promise(User.findById(req.params.id).exec());
         const user = await User.findOne({ username });
         console.log(user);
         if (!user) {
@@ -46,15 +41,16 @@ const login_post = async (req, res, next) => {
         }
 
         const passwordMatch = await user.comparePassword(password);
+        console.log("Password Match:", passwordMatch);
         if (!passwordMatch) {
             console.log(user);
             return res.status(401).json({ message: 'Incorrect password' });
         }
 
+
         const token = jwt.sign({ userId: user._id }, SECRET_KEY, {
             expiresIn: '1 hour'
         });
-        res.json({ token });
         console.log("logged in");
         console.log(token);
 
