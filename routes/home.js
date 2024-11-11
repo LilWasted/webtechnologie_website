@@ -34,6 +34,7 @@ router.get("/events/:id/delete", event_controller.event_delete_get);
 // POST request to delete Book.
 router.post("/events/:id/delete", event_controller.event_delete_post);
 
+router.get("/events/:id/join", event_controller.join_get);
 
 // POST request to update Book.
 router.post("/events/:id/join", event_controller.join_post);

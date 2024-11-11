@@ -67,6 +67,8 @@ const login_post = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+
+    res.redirect('/home');
 };
 
 const login_get = async (req, res, next) => {

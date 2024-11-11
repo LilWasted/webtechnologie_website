@@ -217,11 +217,28 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
 
 
 //kunnen een event joinen get waar je een klop krijgt of je zeker bent en post waar je dan toegevoegd wordt
+// Display event delete form on GET.
+exports.join_get = asyncHandler(async (req, res, next) => {
+    const [event] = await Promise.all([
+        Event.findById(req.params.id).exec(),
+    ]);
 
+    if (event === null) {
+        // No results.
+        res.redirect("/home/events");
+    }
+
+
+    res.render("event_join", {
+        title: "join Event",
+        event: event,
+    });
+
+});
 
 exports.join_post = asyncHandler(async (req, res, next) => {
     const [event] = await Promise.all([
-        Event.findById(req.params.id).populate('participants').populate("blacklist") .exec(),
+        Event.findById(req.params.id).populate('participants').populate("blacklist").exec(),
     ]);
 
     const {token}=req.cookies;
@@ -242,7 +259,9 @@ exports.join_post = asyncHandler(async (req, res, next) => {
 
         }
     }
-    event.participants.push(user._id)
+    event.participants.push(user._id);
+    res.redirect(`/home`);
+
 
 });
 
