@@ -244,6 +244,7 @@ exports.join_post = asyncHandler(async (req, res, next) => {
     const {token}=req.cookies;
     const verify = jwt.verify(token,SECRET_KEY);
     const user = await User.findOne( {username: verify.username}).exec();
+
     // Create a Event object with escaped and trimmed data.
     for (const participant of event.participants) {
         if (user._id === participant._id) {
@@ -259,7 +260,9 @@ exports.join_post = asyncHandler(async (req, res, next) => {
 
         }
     }
+
     event.participants.push(user._id);
+    await event.save();
     res.redirect(`/home`);
 
 
