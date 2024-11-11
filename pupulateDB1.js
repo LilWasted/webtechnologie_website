@@ -12,10 +12,12 @@ const userArgs = process.argv.slice(2);
 const Event = require("./models/event");
 const Categorie = require("./models/categorie");
 const EventInstance = require("./models/eveninstance");
+const User = require("./models/User");
 
 const categories = [];
 const events = [];
 const eventinstances = [];
+const users = [];
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -31,6 +33,7 @@ async function main() {
     await createCategories();
     await createEvents();
     await createEventInstances();
+    await createUsers();
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
 }
@@ -60,6 +63,20 @@ async function eventCreate(index, title, description, date, categorie) {
     console.log(`Added event: ${title}, ${date}, ${categorie}`);
 }
 
+async function userCreate(index, username, email, password) {
+    const userDetail = {
+        username: username,
+        email: email,
+        password: password,
+    };
+    if (password != false) userDetail.password = password;
+
+    const user = new User(userDetail);
+    await user.save();
+    user[index] = user;
+    console.log(`Added user: ${username}, ${email}`);
+}
+
 async function eventInstanceCreate(index, event, status) {
     const eventinstancedetail = {
         event: event,
@@ -83,6 +100,13 @@ async function createCategories() {
     ]);
 }
 
+async function createUsers() {
+    console.log("Adding categories");
+    await Promise.all([
+        userCreate(0, "test", "test", "test"),
+    ]);
+}
+
 async function createEvents() {
     console.log("Adding Events");
     for(let i = 0; i < categories.length; i++) {
@@ -94,35 +118,39 @@ async function createEvents() {
             0,
             "The Name of the Wind (The Kingkiller Chronicle, #1)",
             "description of event 1",
-            "1971-12-16",
+            "2025-10-01",
             categories[0]
         ),
         eventCreate(
             1,
             "The Wise Man's Fear (The Kingkiller Chronicle, #2)",
             "description of event 2",
-            "1971-12-16",
+            "2025-10-01",
+
             categories[0]
         ),
         eventCreate(
             2,
             "The Slow Regard of Silent Things (Kingkiller Chronicle)",
             "description of event 3",
-            "1971-12-16",
+            "2025-10-01",
+
             categories[0]
         ),
         eventCreate(
             3,
             "Apes and Angels",
             "description of event 4",
-            "1971-12-16",
+            "2025-10-01",
+
             categories[1]
         ),
         eventCreate(
             4,
             "Death Wave",
             "description of event 4",
-            "1971-12-16",
+            "2025-10-01",
+
             categories[1]
         ),
     ]);

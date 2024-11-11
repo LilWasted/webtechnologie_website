@@ -11,7 +11,6 @@ const categorie_controller = require("../controllers/categorieController");
 const event_controller = require("../controllers/eventController");
 const event_instance_controller = require("../controllers/eveninstanceController");
 
-
 /// Event ROUTES ///
 
 // GET catalog home page.

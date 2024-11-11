@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { DateTime } = require("luxon");
 
 
 const Schema = mongoose.Schema;
@@ -7,8 +6,14 @@ const Schema = mongoose.Schema;
 const EventSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    date: { type: Date },
-    categorie: { type: Schema.Types.ObjectId, ref: "Categorie" , required : true},
+    date: { type: Date, required: true, min: Date.now},
+    categorie: { type: Schema.Types.ObjectId, ref: "Categorie" , required : true}, //game
+    participants:{type: [Schema.Types.ObjectId], ref: "User"},
+    blacklist:{type: [Schema.Types.ObjectId], ref: "User"},
+    max_size: {type:Number,min:2,max:40},
+    platform:{type:String,enum: ["PC","PS","xbox","switch"]},
+    organizer: {type:Schema.Types.ObjectId, ref: "User"},
+    time_created:{type:Date,default:Date.now}
 });
 
 // Virtual for book's URL

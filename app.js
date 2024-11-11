@@ -9,12 +9,15 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const catalogRouter = require("./routes/catalog"); //Import routes for "catalog" area of sit
 const homeRouter = require("./routes/home"); //Import routes for "catalog" area of sit
+const userRouter = require("./routes/user"); //Import routes for "catalog" area of sit
 
 var app = express();
 
 // Set up mongoose connection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
+
+const SECRET_KEY="mysecretkey"
 const mongoDB = "mongodb+srv://radi:radi@cluster0.7nafa.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0";
 
 main().catch((err) => console.log(err));
@@ -37,6 +40,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
 app.use("/home", homeRouter); // Add catalog routes to middleware chain.
+app.use("/user", userRouter); // Add catalog routes to middleware chain.
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
