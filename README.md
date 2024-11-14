@@ -30,14 +30,13 @@ games or events:
 
 TODO:
 - [x] user aanmaken en register
-- [ ] schema aanmaken voor db
+- [x] schema aanmaken voor db
 - [x] ww hashen
 - [ ] uitloggen
 
 - [ ] events
-   - [ ] users toevoegen aan event
-   - [ ] users kunnen joinen (on update)
-   - [ ] als user al in event zit, dan kan hij niet joinen
+   - [x] users kunnen joinen
+   - [x] als user al in event zit, dan kan hij niet joinen
    - [ ] tijd implementeren voor start event
    - [ ] duur event (optionaal)
    - [ ] end time (optional)

@@ -8,19 +8,13 @@ block content
     p #[strong Summary:] #{event.description}
 
     div(style='margin-left:20px;margin-top:20px')
-        each val in event_instances
-            hr
-            if val.status=='Available'
-                p.text-success #{val.status}
-            else if val.status=='Full'
-                p.text-danger #{val.status}
-            else
-                p.text-warning #{val.status}
-            p #[strong Id: ]
-                a(href=val.url) #{val._id}
-
+        hr
+        if event.status==='Available'
+            p.text-success playes = #{users.length} / #{event.max_size}
+        else if val.status==='Full'
+            p.text-danger event is full
         else
-            p There are no copies of this event in the library.
+            p.text-warning #{val.status}
 
     div(style='margin-left:20px;margin-top:20px')
         h2(style='font-size: 1.5rem;') users
@@ -32,6 +26,9 @@ block content
             p There are no users
     hr
     p
-    a(href=event.url + '/delete') Delete event
+    if event.organizer===user._id
+        a(href=event.url + '/delete') Delete event
     p
-    a(href=event.url + '/join') join event
+
+    if event.status==='Available'
+        a(href=event.url + '/join') join event

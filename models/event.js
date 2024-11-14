@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const Schema = mongoose.Schema;
 
 const EventSchema = new Schema({
@@ -10,13 +9,13 @@ const EventSchema = new Schema({
     categorie: { type: Schema.Types.ObjectId, ref: "Categorie" , required : true}, //game
     participants:[{ type: Schema.Types.ObjectId, ref: 'User' }],
     blacklist:[{type: Schema.Types.ObjectId, ref: "User"}],
-    max_size: {type:Number,min:1,max:40},
+    max_size: {type:Number,min:1,max:40, default: 6},
     platform:{type:String,enum: ["PC","PS","xbox","switch"]},
     organizer: {type:Schema.Types.ObjectId, ref: "User"},
-    time_created:{type:Date,default:Date.now}
-},
-{ timestamps: true },
-    );
+    status: {type: String, enum: ["Available", "Full", "Cancelled"], default: "Available"},
+    time_created:{type:Date,default:Date.now}},
+    { timestamps: true }
+);
 
 // Virtual for book's URL
 EventSchema.virtual("url").get(function () {

@@ -5,10 +5,10 @@ block content
   h1 #{title}: #{event.title}
 
 
-    p Do you really want to delete this Author?
+    p Do you really want to join this event?
 
     form(method='POST')
       div.form-group
         input#eventid.form-control(type='hidden', name='eventid', value=event._id )
 
-      button.btn.btn-primary(type='submit') Delete
+      button.btn.btn-primary(type='submit') JOIN

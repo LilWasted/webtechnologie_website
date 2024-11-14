@@ -8,9 +8,6 @@ const asyncHandler = require("express-async-handler");
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Genre = require("../models/genre");
-const Book = require("../models/book");
-const Author = require("../models/author");
 const SECRET_KEY="mysecretkey"
 
 exports.index = asyncHandler(async (req, res, next) => {
@@ -58,16 +55,16 @@ exports.event_detail = asyncHandler(async (req, res, next) => {
         err.status = 404;
         return next(err);
     }
-
-    for (const user of event.participants) {
-        console.log("user = ", user.username);
-    }
+    const {token}=req.cookies;
+    const verify = jwt.verify(token,SECRET_KEY);
+    const user = await User.findOne( {username: verify.username}).exec();
 
     res.render("event_detail", {
         title: event.title,
         event: event,
         event_instances: eventInstances,
         users: event.participants,
+        user : user,
     });
 });
 
@@ -124,7 +121,6 @@ exports.event_create_post = [
 
         const {token}=req.cookies;
         const verify = jwt.verify(token,SECRET_KEY);
-
         const maker = await User.findOne( {username: verify.username}).exec();
         // Create a Event object with escaped and trimmed data.
         const event = new Event({
@@ -135,11 +131,6 @@ exports.event_create_post = [
             date: req.body.date,
             participants: [maker._id],
         });
-
-        console.log("orginize =  ", event.organizer)
-        for (const user of event.participants) {
-            console.log("user = ", user);
-        }
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
@@ -164,7 +155,10 @@ exports.event_create_post = [
         } else {
             // Data from form is valid. Save event.
             await event.save();
+            maker.events.push(event._id);
+            await maker.save();
             res.redirect(event.url);
+
         }
     }),
 ];
@@ -197,24 +191,9 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
         Event.findById(req.params.id).exec(),
     ]);
 
-        // Author has no books. Delete object and redirect to the list of authors.
-        await Event.findByIdAndDelete(req.body.eventid);
-        res.redirect("/home/events");
-    });
-
-
-
-exports.event_delete_post = asyncHandler(async (req, res, next) => {
-// Get details of author and all their books (in parallel)
-    const [event, categories] = await Promise.all([
-        Event.findById(req.params.id).exec(),
-    ]);
-
-    // Author has no books. Delete object and redirect to the list of authors.
     await Event.findByIdAndDelete(req.body.eventid);
     res.redirect("/home/events");
-});
-
+    });
 
 //kunnen een event joinen get waar je een klop krijgt of je zeker bent en post waar je dan toegevoegd wordt
 // Display event delete form on GET.
@@ -238,34 +217,132 @@ exports.join_get = asyncHandler(async (req, res, next) => {
 
 exports.join_post = asyncHandler(async (req, res, next) => {
     const [event] = await Promise.all([
-        Event.findById(req.params.id).populate('participants').populate("blacklist").exec(),
+        Event.findById(req.params.id).populate('participants').populate("blacklist").populate("max_size").exec(),
     ]);
 
     const {token}=req.cookies;
     const verify = jwt.verify(token,SECRET_KEY);
     const user = await User.findOne( {username: verify.username}).exec();
 
+    if (event.participants.length >= event.max_size) {
+        event.status = "Full";
+        console.log("event full");
+        return res.redirect(event.url);
+    }
+
+
     // Create a Event object with escaped and trimmed data.
     for (const participant of event.participants) {
-        if (user._id === participant._id) {
+        if (participant._id.equals(user._id)) {
             console.log("user already in");
             return res.redirect(event.url);
 
         }}
 
+
     for (const participant of event.blacklist) {
         if (user._id === participant._id) {
             console.log("user blacklisted");
             return res.redirect(event.url);
-
         }
     }
 
     event.participants.push(user._id);
     await event.save();
-    res.redirect(`/home`);
+
+    user.events.push(event._id);
+    await user.save();
+
+    res.redirect(event.url);
+});
+
+exports.leave_get = asyncHandler(async (req, res, next) => { //hpooookleave_get
+    const {token}=req.cookies;
+    const verify = jwt.verify(token,SECRET_KEY);
+    const user = await User.findOne( {username: verify.username}).exec();
+
+    await user.events.findByIdAndDelete(req.body.eventid);
+    res.redirect("/home/events");
+
+    await Event.findByIdAndDelete(req.body.eventid);
+    res.redirect("/home/events");
+});
+
+exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
+    const [event] = await Promise.all([
+        Event.findById(req.params.id).populate('participants')
+    ]);
+
+    const {token}=req.cookies;
+    const verify = jwt.verify(token,SECRET_KEY);
+    const user = await User.findOne( {username: verify.username}).exec();
+
+    await user.events.findByIdAndDelete(req.body.eventid);
+
+    if (event.organizer === user._id) {
+        await Event.findByIdAndDelete(req.body.eventid);
+    }
+
+    await Event.findByIdAndDelete(req.body.eventid);
+    res.redirect("/home/events");
+});
+//TODO afmaken
+exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
+
+});
+//TODO afmaken
+exports.update_post = asyncHandler(async (req, res, next) => { //hookupdate_post
+    const [event] = await Promise.all([
+        Event.findById(req.params.id)
+    ]);
+
+    const {token}=req.cookies;
+    const verify = jwt.verify(token,SECRET_KEY);
+    const user = await User.findOne( {username: verify.username}).exec();
+
+    if(user._id === event.organizer  ){
+
+    }
+});
+
+//TODO afmaken
+exports.blacklist_get = asyncHandler(async (req, res, next) => { //hookupdate_get
+    const [event] = await Promise.all([
+        Event.findById(req.params.id)
+    ]);
 
 
 });
+//TODO afmaken
+exports.blacklist_post = asyncHandler(async (req, res, next) => { //hookupdate_post
+    const [event] = await Promise.all([
+        Event.findById(req.params.id)
+    ]);
 
-// Handle book update on POST.
+    const {token}=req.cookies;
+    const verify = jwt.verify(token,SECRET_KEY);
+    const user = await User.findOne( {username: verify.username}).exec();
+
+    if(user._id === event.organizer  ){
+
+    }
+});
+//TODO afmaken
+exports.kick_get = asyncHandler(async (req, res, next) => { //hookupdate_get
+
+});
+
+//TODO afmaken
+exports.kick_post = asyncHandler(async (req, res, next) => { //hookupdate_post
+    const [event] = await Promise.all([
+        Event.findById(req.params.id)
+    ]);
+
+    const {token}=req.cookies;
+    const verify = jwt.verify(token,SECRET_KEY);
+    const user = await User.findOne( {username: verify.username}).exec();
+
+    if(user._id === event.organizer  ){
+
+    }
+});

@@ -8,7 +8,6 @@ var cookieParser = require('cookie-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-const catalogRouter = require("./routes/catalog"); //Import routes for "catalog" area of sit
 const homeRouter = require("./routes/home"); //Import routes for "catalog" area of sit
 const userRouter = require("./routes/user"); //Import routes for "catalog" area of sit
 
@@ -39,7 +38,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
 app.use("/home", homeRouter); // Add catalog routes to middleware chain.
 app.use("/user", userRouter); // Add catalog routes to middleware chain.
 

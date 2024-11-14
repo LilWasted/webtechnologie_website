@@ -23,7 +23,13 @@ block content
     div.form-group
       label(for='date') Date of event:
       input#date.form-control(type='date' name='date' value=(undefined === event ? '' : event.date) )
+
+      div.form-group
+      label(for='max_size') maximal participants (including yourself):
+      input#max_size.form-control(type='number' name='max_size' value=(undefined === event ? '' : event.date) )
+
     button.btn.btn-primary(type='submit') Submit
+
 
   if errors
     ul

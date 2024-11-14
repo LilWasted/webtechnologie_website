@@ -23,7 +23,7 @@ const register_post = async (req, res, next) => {
 
     try {
         const user = new User({ username, email, password: password });
-        await user.save();
+        await user.register();
         console.log("user made");
     } catch (error) {
         next(error);
