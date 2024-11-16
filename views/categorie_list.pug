@@ -2,12 +2,26 @@ extends layout
 
 block content
   h1= title
+  input#search(type="text" placeholder="Search categories...")
   if categorie_list.length
-    ul
+    ul#categorie-list
       each categorie in categorie_list
         li
-          a(href=categorie.url) #{categorie.name}
-          |  
-
+          a(href=`/categorie/${categorie._id}`) #{categorie.name}
   else
     p There are no categories.
+
+  // via chatgpt => weet een kleine beetje hierover, maar niet genoeg om het te kunnen uitleggen
+  script.
+    document.getElementById('search').addEventListener('input', function() {
+      const filter = this.value.toLowerCase();
+      const categories = document.querySelectorAll('#categorie-list li');
+      categories.forEach(function(category) {
+        const text = category.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          category.style.display = '';
+        } else {
+          category.style.display = 'none';
+        }
+      });
+    });

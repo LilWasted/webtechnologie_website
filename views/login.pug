@@ -1,5 +1,6 @@
-doctype html
-html
+extends layout
+
+block content
     head
         title Login
     body
@@ -13,3 +14,8 @@ html
                 input(type="password" name="password" id="password" required)
             div
                 button(type="submit") Login
+
+
+
+        h2 not registered yet?
+        a(href='/user/register') Register here

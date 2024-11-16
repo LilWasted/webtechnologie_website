@@ -11,12 +11,10 @@ const userArgs = process.argv.slice(2);
 
 const Event = require("./models/event");
 const Categorie = require("./models/categorie");
-const EventInstance = require("./models/eveninstance");
 const User = require("./models/User");
 
 const categories = [];
 const events = [];
-const eventinstances = [];
 const users = [];
 
 const mongoose = require("mongoose");
@@ -77,17 +75,6 @@ async function userCreate(index, username, email, password) {
     console.log(`Added user: ${username}, ${email}`);
 }
 
-async function eventInstanceCreate(index, event, status) {
-    const eventinstancedetail = {
-        event: event,
-    };
-    if (status != false) eventinstancedetail.status = status;
-
-    const eventinstance = new EventInstance(eventinstancedetail);
-    await eventinstance.save();
-    eventinstances[index] = eventinstance;
-    console.log(`Added eventinstance: ${index}`);
-}
 
 async function createCategories() {
     console.log("Adding categories");

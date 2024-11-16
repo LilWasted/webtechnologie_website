@@ -18,7 +18,7 @@ const verifyToken = (token)=>{
 }
 
 // Register a new user
-const register_post = async (req, res, next) => {
+exports.register_post = async (req, res, next) => {
     const { username, email, password } = req.body;
 
     try {
@@ -32,7 +32,7 @@ const register_post = async (req, res, next) => {
 
 };
 
-const register_get = async (req, res, next) => {
+exports.register_get = async (req, res, next) => {
 
     res.render("register", { title: "Register" });
 };
@@ -40,7 +40,7 @@ const register_get = async (req, res, next) => {
 
 
 // Login with an existing user
-const login_post = async (req, res, next) => {
+exports.login_post = async (req, res, next) => {
     const { username, password } = req.body;
 
     try {
@@ -76,25 +76,32 @@ const login_get = async (req, res, next) => {
     res.render("login", { title: "Login" });
 };
 
-const profile_get = async (req, res, next) => {
-    const {token}=req.cookies;
-    if(verifyToken(token)){
-        return res.redirect('/home');
-    }else{
-        res.redirect('/user/login')
-    }
-}
-
-const logout_get = async (req, res, next) => {
+exports.logout_get = async (req, res, next) => {
     console.log("logout get");
     res.render("logout", { title: "logout" });
     console.log("logout get 2");
 };
 
-const logout_post = async (req, res, next) => {
+exports.logout_post = async (req, res, next) => {
     console.log("logout post");
     res.clearCookie('token');
     res.redirect('/home');
 };
 
-module.exports = {login_post, login_get, register_get, register_post, profile_get, logout_get, logout_post};
+exports.profile = async (req, res, next) => {
+    const { token } = req.cookies;
+    const verify = jwt.verify(token, SECRET_KEY);
+    const user = await User.findOne({ username: verify.username })
+        .populate("rating")
+        .populate("events")
+        .populate("email")
+        .populate("username")
+        .exec();
+
+    console.log("help");
+    res.render("profile", {
+        title: "Profile", user
+    });
+}
+
+

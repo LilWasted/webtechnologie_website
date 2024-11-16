@@ -3,7 +3,6 @@ const router = express.Router();
 
 const categorie_controller = require("../controllers/categorieController");
 const event_controller = require("../controllers/eventController");
-const event_instance_controller = require("../controllers/eveninstanceController");
 
 /// Event ROUTES ///
 
@@ -55,17 +54,12 @@ router.get("/events/:id/kick", event_controller.kick_get);
 router.post("/events/:id/kick", event_controller.kick_post);
 
 
-/// Event Instances ROUTES ///
-
-// GET request for list of all Event Instances items.
-router.get("/eventinstances", event_instance_controller.eventinstance_list);
-
-router.get("/eventinstances/:id", event_instance_controller.eventinstance_detail);
-
 
 
 /// Categories ROUTES ///
 
 router.get("/categories", categorie_controller.categorie_list);
+
+router.get("/categories/:id", categorie_controller.categorie_detail);
 
 module.exports = router;

@@ -9,12 +9,12 @@ block content
 
     div(style='margin-left:20px;margin-top:20px')
         hr
-        if event.status==='Available'
-            p.text-success playes = #{users.length} / #{event.max_size}
-        else if val.status==='Full'
+        if status_event==='Available'
+            p.text-success playes = #{users.length} / #{max_size}
+        else if status_event==='Full'
             p.text-danger event is full
         else
-            p.text-warning #{val.status}
+            p.text-warning #{status_event}
 
     div(style='margin-left:20px;margin-top:20px')
         h2(style='font-size: 1.5rem;') users
@@ -27,12 +27,15 @@ block content
     hr
     p
     if event.organizer.equals(user._id)
-        a(href=event.url + '/delete') Delete event
+        p
+            a(href=event.url + '/delete') Delete event
+        p
+            a(href=event.url + '/update') Edit event
     else
         for user1 in users
             if user1._id.equals(user._id)
                 a(href=event.url + '/leave') Leave event
 
     p
-    if event.status==='Available'
+    if status_event === "Available"
         a(href=event.url + '/join') join event
