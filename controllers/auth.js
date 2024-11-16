@@ -37,8 +37,6 @@ exports.register_get = async (req, res, next) => {
     res.render("register", { title: "Register" });
 };
 
-
-
 // Login with an existing user
 exports.login_post = async (req, res, next) => {
     const { username, password } = req.body;
@@ -57,7 +55,6 @@ exports.login_post = async (req, res, next) => {
             return res.status(401).json({ message: 'Incorrect password' });
         }
 
-
         const token = jwt.sign({username: username, userId: user._id, type: user.role }, SECRET_KEY, {
             expiresIn: '1 hour'
         });
@@ -71,8 +68,7 @@ exports.login_post = async (req, res, next) => {
     res.redirect('/home');
 };
 
-const login_get = async (req, res, next) => {
-
+exports.login_get = async (req, res, next) => {
     res.render("login", { title: "Login" });
 };
 

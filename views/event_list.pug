@@ -7,7 +7,15 @@ block content
             each event in event_list
                 li
                     a(href=event.url) #{event.title}
-                    |  (#{event.categorie.name})
+                        |  (#{event.categorie.name})
+                        if event.status === 'Available'
+                            p.text-success (#{event.categorie.name}) Available = #{event.participants.length} / #{event.max_size}
+                        else if event.status === 'Full'
+                            p.text-danger (#{event.categorie.name}) event is full, #{event.participants.length} / #{event.max_size}
+                        else
+                            p.text-warning #{event.status}
+
+                //p.players = #{event.participants.length} / #{event.max_size}
 
     else
         p There are no events.

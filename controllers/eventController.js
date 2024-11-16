@@ -30,7 +30,7 @@ async function isUserSignedIn(req) {
     //voor elke del en join etc => checken of het wel de juiste user is
     //anders kan er via de url vanalles gebeuren
 
-exports.index = asyncHandler(async (req, res, next) => {
+exports.index = asyncHandler(async (req, res, next) => {  //hookINDEX
     // Get details of events, event instances, authors and genre counts (in parallel)
     const [
         numEvents,
@@ -46,7 +46,7 @@ exports.index = asyncHandler(async (req, res, next) => {
 });
 
 // Display list of all events.
-exports.event_list = asyncHandler(async (req, res, next) => {
+exports.event_list = asyncHandler(async (req, res, next) => {  //hookEVENT_LIST
     const allEvents = await Event.find({}, "title categorie")
         .sort({ date: 1 })
         .populate("categorie")
@@ -61,9 +61,8 @@ exports.event_list = asyncHandler(async (req, res, next) => {
     });
 });
 
-
 // Display detail page for a specific event.
-exports.event_detail = asyncHandler(async (req, res, next) => {
+exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DETAIL
     // Get details of events, event instances for specific event
     const [event, users] = await Promise.all([
         Event.findById(req.params.id).populate("categorie").populate('participants').populate("status").populate("max_size").exec(),
@@ -101,8 +100,6 @@ exports.event_detail = asyncHandler(async (req, res, next) => {
 
 });
 
-
-
 // Display event create form on GET.
 exports.event_create_get = asyncHandler(async (req, res, next) => {
     // get the event and all categories
@@ -122,9 +119,9 @@ exports.event_create_get = asyncHandler(async (req, res, next) => {
 
 });
 
-
 // Handle event create on POST.
-exports.event_create_post = [
+exports.event_create_post = [  //hookevent_create_post
+
     // Convert the genre to an array.
 
     //TODO filteren en alle inputs verschonen
@@ -195,8 +192,6 @@ exports.event_create_post = [
     }),
 ];
 
-
-
 // Display event delete form on GET.
 exports.event_delete_get = asyncHandler(async (req, res, next) => {
     //dit kan enkel gebeuren door organisator, alleen hij kan dit zijn door middel van event_detail.pug file
@@ -213,12 +208,10 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
         return next(err);
     }
 
-
     res.render("event_delete", {
         title: "Delete Event",
         event: event,
     });
-
 });
 
 // Handle event delete on POST.
@@ -264,12 +257,10 @@ exports.join_get = asyncHandler(async (req, res, next) => {
         res.redirect("/home/events");
     }
 
-
     res.render("event_join", {
         title: "join Event",
         event: event,
     });
-
 });
 
 exports.join_post = asyncHandler(async (req, res, next) => {
@@ -286,12 +277,11 @@ exports.join_post = asyncHandler(async (req, res, next) => {
         if (participant._id.equals(user._id)) {
             console.log("user already in");
             return res.redirect(event.url);
-
-        }}
-
+        }
+    }
 
     for (const participant of event.blacklist) {
-        if (user._id === participant._id) {
+        if (user._id.equals(participant._id)) {
             console.log("user blacklisted");
             return res.redirect(event.url);
         }

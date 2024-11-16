@@ -25,11 +25,9 @@ EventSchema.virtual("url").get(function () {
 
 EventSchema.virtual("groupRating").get(function () {
   let som = 0;
-  // Loop through participants array and add up their ratings
   for (let i = 0; i < this.participants.length; i++) {
-    som += this.participants[i].rating;  // Assuming each participant has a 'rating' property
+    som += this.participants[i].rating;
   }
-  // Return the average rating
   return this.participants.length > 0 ? som / this.participants.length : 0;
 });
 

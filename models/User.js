@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
-
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
-
 
 const userSchema = new mongoose.Schema({
         username:{type: String, required: true, unique: true},
@@ -23,6 +21,7 @@ userSchema.methods.register = async function () {
 userSchema.methods.comparePassword = async function (password) {
     return bcrypt.compare(password, this.password);
 };
+
 // Hash the password before saving it to the database
 userSchema.pre('register', async function (next) {
     const user = this;
@@ -36,6 +35,5 @@ userSchema.pre('register', async function (next) {
         return next(error);
     }
 });
-
 
 module.exports = mongoose.model('User', userSchema);

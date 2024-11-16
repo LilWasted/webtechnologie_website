@@ -33,6 +33,7 @@ TODO:
 - [x] schema aanmaken voor db
 - [x] ww hashen
 - [ ] uitloggen
+- [ ] andere users ne rating geven
 
 - [ ] events
    - [x] users kunnen joinen
