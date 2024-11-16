@@ -1,15 +1,14 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #[em gamingDen]
+    h1= title
+    p Welcome to #[em gamingDen]
 
-  h2 Dynamic content
+    h2 Dynamic content
 
-  p The Gaming den has the following record counts:
+    p The Gaming den has the following record counts:
 
-  ul
-    li #[strong Events:] !{numEvents}
-    li #[strong Instances:] !{numEventInstances}
-    li #[strong Copies iets:] !{numAvailableEventInstances}
-
+    ul
+        li #[strong Events:] !{numEvents}
+        li #[strong Instances:] !{numEventInstances}
+        li #[strong Copies iets:] !{numAvailableEventInstances}

@@ -1,0 +1,14 @@
+extends layout
+
+block content
+
+  h1 #{title}
+
+
+    p Do you really want to logout
+
+    form(method='POST')
+      div.form-group
+        input#userid.form-control(type='hidden', name='userid', value="user" )
+
+      button.btn.btn-primary(type='submit') logout

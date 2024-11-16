@@ -85,4 +85,16 @@ const profile_get = async (req, res, next) => {
     }
 }
 
-module.exports = {login_post, login_get, register_get, register_post, profile_get};
+const logout_get = async (req, res, next) => {
+    console.log("logout get");
+    res.render("logout", { title: "logout" });
+    console.log("logout get 2");
+};
+
+const logout_post = async (req, res, next) => {
+    console.log("logout post");
+    res.clearCookie('token');
+    res.redirect('/home');
+};
+
+module.exports = {login_post, login_get, register_get, register_post, profile_get, logout_get, logout_post};

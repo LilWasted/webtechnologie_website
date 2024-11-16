@@ -1,0 +1,38 @@
+extends layout
+
+block content
+    h1 Title: #{event.title}
+
+    p #[strong categorie: ]
+        a(href=event.categorie.url) #{event.categorie.name}
+    p #[strong Summary:] #{event.description}
+
+    div(style='margin-left:20px;margin-top:20px')
+        hr
+        if event.status==='Available'
+            p.text-success playes = #{users.length} / #{event.max_size}
+        else if val.status==='Full'
+            p.text-danger event is full
+        else
+            p.text-warning #{val.status}
+
+    div(style='margin-left:20px;margin-top:20px')
+        h2(style='font-size: 1.5rem;') users
+
+        each val in users
+            p.user #{val.username}
+
+        else
+            p There are no users
+    hr
+    p
+    if event.organizer.equals(user._id)
+        a(href=event.url + '/delete') Delete event
+    else
+        for user1 in users
+            if user1._id.equals(user._id)
+                a(href=event.url + '/leave') Leave event
+
+    p
+    if event.status==='Available'
+        a(href=event.url + '/join') join event

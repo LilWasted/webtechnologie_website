@@ -1,0 +1,14 @@
+extends layout
+
+block content
+
+  h1 #{title}: #{event.title}
+
+
+    p Do you really want to leave this event?
+
+    form(method='POST')
+      div.form-group
+        input#eventid.form-control(type='hidden', name='eventid', value=event._id )
+
+      button.btn.btn-primary(type='submit') JOIN

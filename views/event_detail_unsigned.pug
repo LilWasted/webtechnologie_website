@@ -25,10 +25,6 @@ block content
         else
             p There are no users
     hr
-    p
-    if event.organizer===user._id
-        a(href=event.url + '/delete') Delete event
-    p
 
     if event.status==='Available'
-        a(href=event.url + '/join') join event
+        a(href='/user/login') join event

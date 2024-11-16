@@ -55,17 +55,38 @@ exports.event_detail = asyncHandler(async (req, res, next) => {
         err.status = 404;
         return next(err);
     }
-    const {token}=req.cookies;
-    const verify = jwt.verify(token,SECRET_KEY);
-    const user = await User.findOne( {username: verify.username}).exec();
 
-    res.render("event_detail", {
-        title: event.title,
-        event: event,
-        event_instances: eventInstances,
-        users: event.participants,
-        user : user,
-    });
+    //TODO momenteel kan enkel event details gezien worden als je ingelogd bent
+    //mischien met try en else werken
+        //ingelogd
+            //als organisator => delete knop
+            //als deelnemer => leave knop (enkel als je deelnemer bent)
+        //niet ingelogd => pug file zonder delete knop maar wel met join => klip op join => redirect naar login page
+    //user moet meegegeven worden zodat er een delete knop meegegvn kan worden
+
+    try {
+        const {token}=req.cookies;
+        const verify = jwt.verify(token,SECRET_KEY);
+        const user = await User.findOne( {username: verify.username}).exec();
+
+        res.render("event_detail_signedin", {
+            title: event.title,
+            event: event,
+            event_instances: eventInstances,
+            users: event.participants,
+            user : user,
+        });
+
+    } catch (error) {
+        res.render("event_detail_unsigned", {
+            title: event.title,
+            event: event,
+            event_instances: eventInstances,
+            users: event.participants,
+        });
+    }
+
+
 });
 
 
@@ -76,7 +97,6 @@ exports.event_create_get = asyncHandler(async (req, res, next) => {
     const [event, categories, users] = await Promise.all([
         Event.findById(req.params.id).populate("categorie").exec(),
         Categorie.find({ event: req.params.id }).exec(),
-        User.find().exec(),
     ]);
 
 
@@ -97,6 +117,8 @@ exports.event_create_post = [
         }
         next();
     },
+
+    //TODO filteren en alle inputs verschonen
 
     // Validate and sanitize fields.
     body("title", "Title must not be empty.")
@@ -186,6 +208,8 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
 
 // Handle event delete on POST.
 exports.event_delete_post = asyncHandler(async (req, res, next) => {
+    //TODO voor elke user in participants => delete event van user
+
 // Get details of author and all their books (in parallel)
     const [event, categories] = await Promise.all([
         Event.findById(req.params.id).exec(),
@@ -257,15 +281,19 @@ exports.join_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.leave_get = asyncHandler(async (req, res, next) => { //hpooookleave_get
-    const {token}=req.cookies;
-    const verify = jwt.verify(token,SECRET_KEY);
-    const user = await User.findOne( {username: verify.username}).exec();
+    const [event] = await Promise.all([
+        Event.findById(req.params.id).exec(),
+    ]);
 
-    await user.events.findByIdAndDelete(req.body.eventid);
-    res.redirect("/home/events");
+    if (event === null) {
+        // No results.
+        res.redirect("/home/events");
+    }
 
-    await Event.findByIdAndDelete(req.body.eventid);
-    res.redirect("/home/events");
+    res.render("event_leave", {
+        title: "leave Event",
+        event: event,
+    });
 });
 
 exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
@@ -275,17 +303,26 @@ exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
 
     const {token}=req.cookies;
     const verify = jwt.verify(token,SECRET_KEY);
+    //const user = await User.findOne( {_id: verify._id}).exec();
     const user = await User.findOne( {username: verify.username}).exec();
 
-    await user.events.findByIdAndDelete(req.body.eventid);
+    await User.updateOne(
+        { _id: user._id },
+        { $pull: { events: req.body.eventid } }
+    );
+    //TODO verwijderen
+    //word als gecheckt in event_detail => kan dit verwijderen
+    //if (event.organizer === user._id) {
+    //    await Event.findByIdAndDelete(req.body.eventid);
+    //}
 
-    if (event.organizer === user._id) {
-        await Event.findByIdAndDelete(req.body.eventid);
-    }
-
-    await Event.findByIdAndDelete(req.body.eventid);
+    await Event.updateOne(
+        { _id: event._id },
+        { $pull: { participants: user._id } }
+    );
     res.redirect("/home/events");
 });
+
 //TODO afmaken
 exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
 
