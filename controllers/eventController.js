@@ -1,5 +1,5 @@
 const Event = require("../models/event");
-const Categorie = require("../models/categorie");
+const Game = require("../models/game");
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const { DateTime } = require("luxon");
@@ -7,7 +7,7 @@ const asyncHandler = require("express-async-handler");
 
 
 const jwt = require('jsonwebtoken');
-const SECRET_KEY="mysecretkey"
+const SECRET_KEY=process.env.SECRET_KEY
 
 async function getUserFromToken(req) {
     const token = req.cookies.token;
@@ -51,9 +51,9 @@ exports.index = asyncHandler(async (req, res, next) => {  //hookINDEX
 
 // Display list of all events.
 exports.event_list = asyncHandler(async (req, res, next) => {  //hookEVENT_LIST
-    const allEvents = await Event.find({}, "title categorie")
+    const allEvents = await Event.find({}, "title game")
         .sort({ date: 1 })
-        .populate("categorie")
+        .populate("game")
         .populate("participants")
         .populate("max_size")
         .populate("status")
@@ -69,7 +69,7 @@ exports.event_list = asyncHandler(async (req, res, next) => {  //hookEVENT_LIST
 exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DETAIL
     // Get details of events, event instances for specific event
     const [event, users] = await Promise.all([
-        Event.findById(req.params.id).populate("categorie").populate('participants').populate("status").populate("max_size").exec(),
+        Event.findById(req.params.id).populate("game").populate('participants').populate("status").populate("max_size").exec(),
     ]);
 
     if (event === null) {
@@ -106,10 +106,10 @@ exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DET
 
 // Display event create form on GET.
 exports.event_create_get = asyncHandler(async (req, res, next) => {
-    // get the event and all categories
-    const [event, categories] = await Promise.all([
-        Event.findById(req.params.id).populate("categorie").exec(),
-        Categorie.find().sort({ name: 1 }).exec(),
+    // get the event and all games
+    const [event, games] = await Promise.all([
+        Event.findById(req.params.id).populate("game").exec(),
+        Game.find().sort({ name: 1 }).exec(),
     ]);
 
     if(!await isUserSignedIn(req)) {
@@ -118,7 +118,7 @@ exports.event_create_get = asyncHandler(async (req, res, next) => {
 
     res.render("event_form", {
         title: "Create Event",
-        categories: categories,
+        games: games,
         event: event || {},
     });
 
@@ -145,9 +145,9 @@ exports.event_create_post = [  //hookevent_create_post
         .optional({ values: "falsy" })
         .isISO8601().withMessage("Date must be in ISO 8601 format.")
         .toDate(),
-    body("categorie")
+    body("game")
         .trim()
-        .isLength({ min: 1 }).withMessage("Category must not be empty if provided.")
+        .isLength({ min: 1 }).withMessage("Game must not be empty if provided.")
         .escape(),
     body("max_size", "Invalid max size")
         .optional() // Assuming max_size can be optional
@@ -163,45 +163,42 @@ exports.event_create_post = [  //hookevent_create_post
         const event = new Event({
             title: req.body.title,
             description: req.body.description,
-            categorie: req.body.categorie,
+            game: req.body.game,
             organizer: maker._id,
             date: req.body.date,
             participants: [maker._id],
             max_size: req.body.max_size,
         });
 
-        //TODO error aanpasses, kijken dat de categorie niet leeg is en geen array is, kan maar 1tje zijn (ik denk gefixt)
+        //TODO error aanpasses, kijken dat de game niet leeg is en geen array is, kan maar 1tje zijn (ik denk gefixt)
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
+            const allGames = await Game.find().sort({ name: 1 }).exec();
 
-            // Get all authors and genres for form.
-            allCategorie = await Categorie.find().sort({ name: 1 }).exec();
-            //const allCategorie = await Promise.all([
-            //    Categorie.find().sort({ name: 1 }).exec(),
-            //]);
-
-            const selectedCategorie =  allCategorie.find(
-            (cat) => cat && cat._id === event.categorie
+            const selectedGame =  allGame.find(
+            (cat) => cat && cat._id === event.game
             );
 
-            if (!selectedCategorie) {
+
+
+            if (!selectedGame) {
                 errors.errors.push({
-                  msg: "Selected category is invalid.",
-                  param: "categorie",
+                  msg: "Selected game is invalid.",
+                  param: "game",
                   location: "body",
                 });
             }
         /*
             // Mark our selected genres as checked.
-            for (const categorie of allCategorie) {
-                if (event.categorie.includes(categorie._id)) {
-                    categorie.checked = "true";
+            for (const game of allGame) {
+                if (event.game.includes(game._id)) {
+                    game.checked = "true";
                 }
             }
         */
             res.render("event_form", {
                 title: "Create Event",
-                categories: allCategorie,
+                games: allGames,
                 event: event,
                 errors: errors.array(),
             });
@@ -222,7 +219,7 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
     //dit kan enkel gebeuren door organisator, alleen hij kan dit zijn door middel van event_detail.pug file
     //hierdoor moeten we niet kijken of de user ingelogd is
 
-    const [event, categories] = await Promise.all([
+    const [event, games] = await Promise.all([
         Event.findById(req.params.id).exec(),
     ]);
 
@@ -361,9 +358,9 @@ exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
 //TODO afmaken
 exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
 
-    const [event, categorie] = await Promise.all([
-        Event.findById(req.params.id).populate("categorie").exec(),
-        Categorie.find().sort({ name: 1 }).exec(),
+    const [event, game] = await Promise.all([
+        Event.findById(req.params.id).populate("game").exec(),
+        Game.find().sort({ name: 1 }).exec(),
     ]);
 
     if (event === null) {
@@ -375,7 +372,7 @@ exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
 
     res.render("event_form", {
         title: "Update Book",
-        categories: categorie,
+        games: game,
         event: event,
 
     });
@@ -397,16 +394,16 @@ exports.update_post = [ //hookupdate_post
         .optional({ values: "falsy" })
         .isISO8601().withMessage("Date must be in ISO 8601 format.")
         .toDate(),
-    body("categorie")
+    body("game")
         .trim()
-        .isLength({ min: 1 }).withMessage("Category must not be empty if provided.")
+        .isLength({ min: 1 }).withMessage("Game must not be empty if provided.")
         .escape(),
     body("max_size", "Invalid max size")
         .optional() // Assuming max_size can be optional
         .isInt({ min: 1 }).withMessage("Max size must be a positive integer."),
     // Process request after validation and sanitization.
 
-    //TODO error aanpasses, kijken dat de categorie niet leeg is en geen array is, kan maar 1tje zijn(kinda gefixt)
+    //TODO error aanpasses, kijken dat de game niet leeg is en geen array is, kan maar 1tje zijn(kinda gefixt)
     asyncHandler(async (req, res, next) => {
         // Extract the validation errors from a request.
         const errors = validationResult(req);
@@ -416,7 +413,7 @@ exports.update_post = [ //hookupdate_post
         const event = new Event({
             title: req.body.title,
             description: req.body.description,
-            categorie: req.body.categorie,
+            game: req.body.game,
             organizer: maker._id,
             date: req.body.date,
             participants: [maker._id],
@@ -428,35 +425,35 @@ exports.update_post = [ //hookupdate_post
             // There are errors. Render form again with sanitized values/error messages.
 
             // Get all authors and genres for form.
-            const allCategorie = await Promise(
-                Categorie.find().sort({ name: 1 }).exec(),
+            const allGame = await Promise(
+                Game.find().sort({ name: 1 }).exec(),
             );
 
-            const selectedCategorie =  allCategorie.find(
-            (cat) => cat._id.toString() === event.categorie
+            const selectedGame =  allGame.find(
+            (cat) => cat._id.toString() === event.game
             );
 
-            if (!selectedCategorie) {
+            if (!selectedGame) {
                 errors.errors.push({
-                  msg: "Selected category is invalid.",
+                  msg: "Selected game is invalid.",
 
-                  param: "categorie",
+                  param: "game",
                   location: "body",
                 });
             }
 
             /*
             // Mark our selected genres as checked.
-            for (const categorie of allCategorie) {
-                if (event.categorie.includes(categorie._id)) {
-                    categorie.checked = "true";
+            for (const game of allGame) {
+                if (event.game.includes(game._id)) {
+                    game.checked = "true";
                 }
             }
             */
 
             res.render("event_form", {
                 title: "Create Event",
-                categories: categories,
+                games: games,
                 event: event,
                 errors: errors.array(),
             });

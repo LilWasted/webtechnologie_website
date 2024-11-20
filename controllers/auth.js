@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const asyncHandler = require("express-async-handler");
 const {promise} = require("bcrypt/promises");
-const SECRET_KEY="mysecretkey"
+const SECRET_KEY=process.env.SECRET_KEY
 
 const verifyToken = (token)=>{
     try {

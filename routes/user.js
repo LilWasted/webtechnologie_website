@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/auth');
 const passport = require('../controllers/passport'); // Load Passport configuration
-const SECRET_KEY="mysecretkey"
+const SECRET_KEY=process.env.SECRET_KEY
 const jwt = require('jsonwebtoken');
 const User = require("../models/User"); // Import jsonwebtoken
 

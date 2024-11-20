@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const categorie_controller = require("../controllers/categorieController");
+const game_controller = require("../controllers/gameController");
 const event_controller = require("../controllers/eventController");
 
 /// Event ROUTES ///
@@ -53,10 +53,10 @@ router.get("/events/:id/kick", event_controller.kick_get);
 
 router.post("/events/:id/kick", event_controller.kick_post);
 
-/// Categories ROUTES ///
+/// Games ROUTES ///
 
-router.get("/categories", categorie_controller.categorie_list);
+router.get("/games", game_controller.game_list);
 
-router.get("/categories/:id", categorie_controller.categorie_detail);
+router.get("/games/:id", game_controller.game_detail);
 
 module.exports = router;

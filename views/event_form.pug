@@ -10,13 +10,13 @@ block content
       label(for='description') Summary:
       textarea#description.form-control(placeholder='description' name='description' required)= undefined===event ? '' : event.summary
     div.form-group
-      label Categorie:
-        input(type='text', id='category-search', placeholder='Search categories...', oninput="filterCategories()")
+      label game:
+        input(type='text', id='category-search', placeholder='Search games...', oninput="filtergames()")
         div#category-list(style='max-height: 200px; overflow-y: auto;')
-            for categorie in categories
+            for game in games
               div.category-item(style='padding: 5px;')
-                input(type='radio', name='categorie', id=categorie._id, value=categorie._id)
-                label(for=categorie._id) &nbsp;#{categorie.name}
+                input(type='radio', name='game', id=game._id, value=game._id)
+                label(for=game._id) &nbsp;#{game.name}
     div.form-group
       label(for='date') Date of event:
       input#date.form-control(type='date' name='date' value=(undefined === event ? '' : event.date) )
@@ -34,7 +34,7 @@ block content
         li!= error.msg
 
   script.
-    function filterCategories() {
+    function filtergames() {
       const searchTerm = document.getElementById('category-search').value.toLowerCase();
       const categoryItems = document.querySelectorAll('.category-item');
 
@@ -43,9 +43,9 @@ block content
         const categoryName = label ? label.textContent.trim().toLowerCase() : '';
 
         if (categoryName.indexOf(searchTerm) === -1) {
-          item.style.display = 'none';  // Hide categories that don't match
+          item.style.display = 'none';  // Hide games that don't match
         } else {
-          item.style.display = 'block';  // Show categories that match
+          item.style.display = 'block';  // Show games that match
         }
       });
     }

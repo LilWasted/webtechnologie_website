@@ -2,16 +2,16 @@ extends layout
 
 block content
   h1= title
-  if categorie
-    h2 Categorie: #{categorie.name}
-    if categorie_events.length
+  if game
+    h2 game: #{game.name}
+    if game_events.length
       h3 Open Events:
       ul
-        each event in categorie_events
+        each event in game_events
           li
             a(href=event.url) #{event.title}
             p Available slots:   #{event.participants.length} / #{event.max_size}
     else
       p No open events in this category.
   else
-    p Categorie not found.
+    p game not found.

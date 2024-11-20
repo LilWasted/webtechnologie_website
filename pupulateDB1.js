@@ -3,17 +3,17 @@ const { DateTime } = require("luxon");
 
 
 console.log(
-    'This script populates some test events, authors, categories and eventinstances to your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.cojoign.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0"'
+    'This script populates some test events, authors, games and eventinstances to your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.cojoign.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0"'
 );
 
 // Get arguments passed on command line
 const userArgs = process.argv.slice(2);
 
 const Event = require("./models/event");
-const Categorie = require("./models/categorie");
+const Game = require("./models/game");
 const User = require("./models/User");
 
-const categories = [];
+const games = [];
 const events = [];
 const users = [];
 
@@ -28,37 +28,36 @@ async function main() {
     console.log("Debug: About to connect");
     await mongoose.connect(mongoDB);
     console.log("Debug: Should be connected?");
-    await createCategories();
+    await createGames();
     await createEvents();
-    await createEventInstances();
     await createUsers();
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
 }
 
 // We pass the index to the ...Create functions so that, for example,
-// categorie[0] will always be the Fantasy categorie, regardless of the order
+// game[0] will always be the Fantasy game, regardless of the order
 // in which the elements of promise.all's argument complete.
-async function categorieCreate(index, name) {
-    const categorie = new Categorie({ name: name });
-    await categorie.save();
-    categories[index] = categorie;
-    console.log(`Added categorie: ${name}`);
+async function gameCreate(index, name) {
+    const game = new Game({ name: name });
+    await game.save();
+    games[index] = game;
+    console.log(`Added game: ${name}`);
 }
 
-async function eventCreate(index, title, description, date, categorie) {
+async function eventCreate(index, title, description, date, game) {
     const eventdetail = {
         title: title,
         description: description,
-        categorie: categorie,
+        game: game,
         date: date,
     };
-    if (categorie != false) eventdetail.categorie = categorie;
+    if (game != false) eventdetail.game = game;
 
     const event = new Event(eventdetail);
     await event.save();
     events[index] = event;
-    console.log(`Added event: ${title}, ${date}, ${categorie}`);
+    console.log(`Added event: ${title}, ${date}, ${game}`);
 }
 
 async function userCreate(index, username, email, password) {
@@ -76,19 +75,19 @@ async function userCreate(index, username, email, password) {
 }
 
 
-async function createCategories() {
-    console.log("Adding categories");
+async function createGames() {
+    console.log("Adding games");
     await Promise.all([
-        categorieCreate(0, "COD"),
-        categorieCreate(1, "LOL"),
-        categorieCreate(2, "DOTA"),
-        categorieCreate(3, "PUBG"),
-        categorieCreate(4, "FIFA"),
+        gameCreate(0, "COD"),
+        gameCreate(1, "LOL"),
+        gameCreate(2, "DOTA"),
+        gameCreate(3, "PUBG"),
+        gameCreate(4, "FIFA"),
     ]);
 }
 
 async function createUsers() {
-    console.log("Adding categories");
+    console.log("Adding games");
     await Promise.all([
         userCreate(0, "test", "test", "test"),
     ]);
@@ -96,8 +95,8 @@ async function createUsers() {
 
 async function createEvents() {
     console.log("Adding Events");
-    for(let i = 0; i < categories.length; i++) {
-        console.log(categories[i]);
+    for(let i = 0; i < games.length; i++) {
+        console.log(games[i]);
     }
 
     await Promise.all([
@@ -106,7 +105,7 @@ async function createEvents() {
             "The Name of the Wind (The Kingkiller Chronicle, #1)",
             "description of event 1",
             "2025-10-01",
-            categories[0]
+            games[0]
         ),
         eventCreate(
             1,
@@ -114,7 +113,7 @@ async function createEvents() {
             "description of event 2",
             "2025-10-01",
 
-            categories[0]
+            games[0]
         ),
         eventCreate(
             2,
@@ -122,7 +121,7 @@ async function createEvents() {
             "description of event 3",
             "2025-10-01",
 
-            categories[0]
+            games[0]
         ),
         eventCreate(
             3,
@@ -130,7 +129,7 @@ async function createEvents() {
             "description of event 4",
             "2025-10-01",
 
-            categories[1]
+            games[1]
         ),
         eventCreate(
             4,
@@ -138,54 +137,7 @@ async function createEvents() {
             "description of event 4",
             "2025-10-01",
 
-            categories[1]
+            games[1]
         ),
     ]);
 }
-
-async function createEventInstances() {
-    console.log("Adding authors");
-    await Promise.all([
-        eventInstanceCreate(
-            0,
-            events[0],
-            "Available"
-        ),
-        //"Full", "Cancelled"
-        eventInstanceCreate(1, events[1], "Full"),
-        eventInstanceCreate(2, events[2], false),
-        eventInstanceCreate(
-            3,
-            events[3],
-            "Available"
-        ),
-        eventInstanceCreate(
-            4,
-            events[3],
-            "Available"
-        ),
-        eventInstanceCreate(
-            5,
-            events[3],
-            "Available"
-        ),
-        eventInstanceCreate(
-            6,
-            events[4],
-            "Available"
-        ),
-        eventInstanceCreate(
-            7,
-            events[4],
-            "Cancelled"
-        ),
-        eventInstanceCreate(
-            8,
-            events[4],
-            "Cancelled"
-        ),
-        eventInstanceCreate(9, events[0],false),
-        eventInstanceCreate(10, events[1],false),
-    ]);
-}
-  

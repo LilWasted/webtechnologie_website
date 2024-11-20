@@ -2,21 +2,21 @@ extends layout
 
 block content
   h1= title
-  input#search(type="text" placeholder="Search categories...")
-  if categorie_list.length
-    ul#categorie-list
-      each categorie in categorie_list
+  input#search(type="text" placeholder="Search games...")
+  if game_list.length
+    ul#game-list
+      each game in game_list
         li
-          a(href=`/categorie/${categorie._id}`) #{categorie.name}
+          a(href=`/game/${game._id}`) #{game.name}
   else
-    p There are no categories.
+    p There are no games.
 
   // via chatgpt => weet een kleine beetje hierover, maar niet genoeg om het te kunnen uitleggen
   script.
     document.getElementById('search').addEventListener('input', function() {
       const filter = this.value.toLowerCase();
-      const categories = document.querySelectorAll('#categorie-list li');
-      categories.forEach(function(category) {
+      const games = document.querySelectorAll('#game-list li');
+      games.forEach(function(category) {
         const text = category.textContent.toLowerCase();
         if (text.includes(filter)) {
           category.style.display = '';

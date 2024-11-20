@@ -6,7 +6,7 @@ const EventSchema = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     date: { type: Date, min: Date.now},
-    categorie: { type: Schema.Types.ObjectId, ref: "Categorie" , required : true}, //game
+    game: { type: Schema.Types.ObjectId, ref: "game" , required : true}, //game
     participants:[{ type: Schema.Types.ObjectId, ref: 'User' }],
     blacklist:[{type: Schema.Types.ObjectId, ref: "User"}],
     max_size: {type:Number,min:1,max:40, default: 6},

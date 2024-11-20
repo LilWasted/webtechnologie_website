@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-
+require('dotenv').config();
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
@@ -21,8 +21,8 @@ var app = express();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
-const SECRET_KEY="mysecretkey"
-const mongoDB = "mongodb+srv://radi:radi@cluster0.7nafa.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0";
+const SECRET_KEY= process.env.SECRET_KEY;
+const mongoDB = process.env.DATABASE_URL;
 
 main().catch((err) => console.log(err));
 async function main() {
@@ -32,6 +32,7 @@ async function main() {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
 
 app.use(logger('dev'));
 app.use(express.json());
