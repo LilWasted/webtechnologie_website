@@ -30,6 +30,11 @@ TODO:
       - [ ] als event is afgelopen, na 1 dag dan verwijderen uit db
       - [ ] als end time niet wordt gegeven, verwijderen na 1 dag start tijd
 
+
+- [ ] privacy policy
+- [ ] terms of service
+- [ ] cookie policy
+- [ ] contact
 features:
 1. api's
    - [ ] email
