@@ -3,9 +3,8 @@ const router = express.Router();
 const userController = require('../controllers/auth');
 const passport = require('../controllers/passport'); // Load Passport configuration
 const SECRET_KEY="mysecretkey"
-const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-
-
+const jwt = require('jsonwebtoken');
+const User = require("../models/User"); // Import jsonwebtoken
 
 router.post('/register', userController.register_post);
 router.get('/register', userController.register_get);
@@ -24,15 +23,25 @@ router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 
 router.get(
     '/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/user/login' }),
-    (req, res) => {
+    async (req, res) => {
         // Generate a JWT for the user
-        const token = jwt.sign({ id: req.user.id }, SECRET_KEY , { expiresIn: '1h' });
+        await res.clearCookie('token');
+        const token = jwt.sign({username: req.user.username, userId: req.user.id, type: req.user.role }, SECRET_KEY, {
+            expiresIn: '1 hour'
+        });
+        //const token = jwt.sign({ id: req.user.id }, SECRET_KEY , { expiresIn: '1h' });
 
+        console.log(req.user.id);
         // Set token as a third-party cookie
-        res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+        await res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
-        // Redirect to the home page or dashboard
+        const verify = jwt.verify(token, SECRET_KEY);
+
+        const usertest = await User.findOne({ _id: verify.userId }).exec();
+
+
         res.redirect('/home');
+
     }
 );
 

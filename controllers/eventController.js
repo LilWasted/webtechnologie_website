@@ -10,15 +10,18 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY="mysecretkey"
 
 async function getUserFromToken(req) {
-    const { token } = req.cookies;
+    const token = req.cookies.token;
+    if (!token) {
+        throw new Error("Token not found");
+    }
     const verify = jwt.verify(token, SECRET_KEY);
-    const user = await User.findOne({ id: verify._id }).exec();
+    const user = await User.findOne({ _id: verify.userId }).exec();
     return user;
 }
 
 async function isUserSignedIn(req) {
     try {
-        const { token } = req.cookies;
+        const token = req.cookies.token;
         const verify = jwt.verify(token, SECRET_KEY);
         const user = await User.findOne({ username: verify.username }).exec();
         return true;
@@ -172,12 +175,13 @@ exports.event_create_post = [  //hookevent_create_post
             // There are errors. Render form again with sanitized values/error messages.
 
             // Get all authors and genres for form.
-            const allCategorie = await Promise.all([
-                Categorie.find().sort({ name: 1 }).exec(),
-            ]);
+            allCategorie = await Categorie.find().sort({ name: 1 }).exec();
+            //const allCategorie = await Promise.all([
+            //    Categorie.find().sort({ name: 1 }).exec(),
+            //]);
 
             const selectedCategorie =  allCategorie.find(
-            (cat) => cat && cat._id.toString() === event.categorie
+            (cat) => cat && cat._id === event.categorie
             );
 
             if (!selectedCategorie) {
@@ -197,7 +201,7 @@ exports.event_create_post = [  //hookevent_create_post
         */
             res.render("event_form", {
                 title: "Create Event",
-                categories: categories,
+                categories: allCategorie,
                 event: event,
                 errors: errors.array(),
             });

@@ -8,11 +8,9 @@ const SECRET_KEY="mysecretkey"
 const verifyToken = (token)=>{
     try {
         const verify = jwt.verify(token,SECRET_KEY);
-        console.log(verify);
         if(verify.type==='user'){return true;}
         else{return false;}
     } catch (error) {
-        console.log(JSON.stringify(error),"error");
         return false;
     }
 }
@@ -43,7 +41,6 @@ exports.login_post = async (req, res, next) => {
 
     try {
         const user = await User.findOne({ username });
-        console.log(user);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -73,13 +70,10 @@ exports.login_get = async (req, res, next) => {
 };
 
 exports.logout_get = async (req, res, next) => {
-    console.log("logout get");
     res.render("logout", { title: "logout" });
-    console.log("logout get 2");
 };
 
 exports.logout_post = async (req, res, next) => {
-    console.log("logout post");
     res.clearCookie('token');
     req.logout((err) => { // Passport.js logout method
         if (err) { return next(err); }
@@ -91,20 +85,37 @@ exports.logout_post = async (req, res, next) => {
     });
 };
 
-exports.profile = async (req, res, next) => {
-    const { token } = req.cookies;
+async function getUserFromToken(req) {
+    const token = req.cookies.token;
     const verify = jwt.verify(token, SECRET_KEY);
-    const user = await User.findOne({ id: verify._id })
-        .populate("rating")
-        .populate("events")
-        .populate("email")
-        .populate("username")
-        .exec();
-
-    console.log(verify);
-    res.render("profile", {
-        title: "Profile", user
-    });
+    const user = await User.findOne({ id: verify._id }).exec();
+    return user;
 }
 
+exports.profile = async (req, res, next) => {
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
 
+        const verify = jwt.verify(token, SECRET_KEY);
+        const user = await User.findOne({ _id: verify.userId })
+            .populate("rating")
+            .populate("events")
+            .populate("email")
+            .populate("username")
+            .exec();
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.render("profile", {
+            title: "Profile",
+            user: user
+        });
+    } catch (error) {
+        next(error);
+    }
+};
