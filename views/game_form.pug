@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h1= title
+
+    form(action="/home/games/create" method="post")
+        div.form-group
+            label(for="name") Game Name:
+            input#name.form-control(type="text" name="name" required)
+
+        button.btn.btn-primary(type="submit") Create Game

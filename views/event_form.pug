@@ -10,6 +10,13 @@ block content
       label(for='description') Summary:
       textarea#description.form-control(placeholder='description' name='description' required)= undefined===event ? '' : event.summary
     div.form-group
+      label(for='platform') Platform:
+      select#platform.form-control(name='platform' required)
+        option(value='PC') PC
+        option(value='PS') PS
+        option(value='xbox') Xbox
+        option(value='switch') Switch
+    div.form-group
       label game:
         input(type='text', id='category-search', placeholder='Search games...', oninput="filtergames()")
         div#category-list(style='max-height: 200px; overflow-y: auto;')
@@ -18,12 +25,18 @@ block content
                 input(type='radio', name='game', id=game._id, value=game._id)
                 label(for=game._id) &nbsp;#{game.name}
     div.form-group
-      label(for='date') Date of event:
-      input#date.form-control(type='date' name='date' value=(undefined === event ? '' : event.date) )
+      label(for='date') Date and Time of Event:
+        input#date.form-control(type='datetime-local' name='date' required value=(event && event.date ? event.date.toISOString().slice(0, 16) : '') )
 
       div.form-group
-      label(for='max_size') maximal participants (including yourself):
-      input#max_size.form-control(type='number' name='max_size' value=(undefined === event ? '' : event.date) )
+      label(for='max_size') Maximal participants (including yourself):
+        input#max_size.form-control(
+          type='number',
+          name='max_size',
+          value=(event && event.max_size !== undefined ? event.max_size : ""),
+          min='1',
+          max='40'
+        )
 
     button.btn.btn-primary(type='submit') Submit
 
@@ -35,12 +48,12 @@ block content
 
   script.
     function filtergames() {
-      const searchTerm = document.getElementById('category-search').value.toLowerCase();
+      const searchTerm = document.getElementById('category-search').value; //.toLowerCase()
       const categoryItems = document.querySelectorAll('.category-item');
 
       categoryItems.forEach(function (item) {
         const label = item.querySelector('label');
-        const categoryName = label ? label.textContent.trim().toLowerCase() : '';
+        const categoryName = label ? label.textContent.trim() : ''; //.toLowerCase()
 
         if (categoryName.indexOf(searchTerm) === -1) {
           item.style.display = 'none';  // Hide games that don't match

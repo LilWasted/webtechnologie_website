@@ -2,7 +2,6 @@ const Event = require("../models/event");
 const Game = require("../models/game");
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
-const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 
 
@@ -23,7 +22,7 @@ async function isUserSignedIn(req) {
     try {
         const token = req.cookies.token;
         const verify = jwt.verify(token, SECRET_KEY);
-        const user = await User.findOne({ username: verify.username }).exec();
+        const user = await User.findOne({ _id: verify.userId }).exec();
         return true;
     } catch (error) {
         return false;
@@ -36,11 +35,8 @@ async function isUserSignedIn(req) {
 
 exports.index = asyncHandler(async (req, res, next) => {  //hookINDEX
     // Get details of events, event instances, authors and genre counts (in parallel)
-    const [
-        numEvents,
-    ] = await Promise.all([
-        Event.countDocuments({}).exec(),
-    ]);
+    const numEvents = await Event.countDocuments({}).exec();
+
 
     //thsi renders home page
     res.render("index", {
@@ -68,9 +64,14 @@ exports.event_list = asyncHandler(async (req, res, next) => {  //hookEVENT_LIST
 // Display detail page for a specific event.
 exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DETAIL
     // Get details of events, event instances for specific event
-    const [event, users] = await Promise.all([
-        Event.findById(req.params.id).populate("game").populate('participants').populate("status").populate("max_size").exec(),
-    ]);
+    const event = await Event.findById(req.params.id)
+        .populate('game')
+        .populate('participants')
+        .populate("status")
+        .populate("max_size")
+        .populate("date")
+        .populate("platform")
+        .exec();
 
     if (event === null) {
         // No results.
@@ -83,13 +84,14 @@ exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DET
     //er is ook een join knop voor niet deelnemers
     if (await isUserSignedIn(req)) {
         const user = await getUserFromToken(req);
-        res.render("event_detail_signedin", {
-            title: event.title,
+        res.render("event_detail", {
             event: event,
             users: event.participants,
             user: user,
             status_event: event.status,
             max_size: event.max_size,
+            date : event.date,
+
         });
     } else {
         //een pug voor als je niet bent ingelogd
@@ -144,18 +146,30 @@ exports.event_create_post = [  //hookevent_create_post
     body("date", "Invalid date")
         .optional({ values: "falsy" })
         .isISO8601().withMessage("Date must be in ISO 8601 format.")
-        .toDate(),
+        .toDate()
+        .custom((value) => {
+                if (value && value <= new Date()) {
+                    throw new Error("Date must be in the future.");
+                }
+                return true}),
+    body("platform")
+        .trim()
+        .isIn(["PC", "PS", "xbox", "switch"]).withMessage("Invalid platform selected.")
+        .escape(),
     body("game")
         .trim()
         .isLength({ min: 1 }).withMessage("Game must not be empty if provided.")
         .escape(),
     body("max_size", "Invalid max size")
-        .optional() // Assuming max_size can be optional
-        .isInt({ min: 1 }).withMessage("Max size must be a positive integer."),
+        .optional({ checkFalsy: true }) // max_size can be empty, but if provided, it should be valid
+        .isInt({ min: 1, max: 40 }).withMessage("Max size must be a positive integer between 1 and 40."),
     // Process request after validation and sanitization.
 
     asyncHandler(async (req, res, next) => {
         // Extract the validation errors from a request.
+        if (!req.body.max_size) {
+            req.body.max_size = 6;
+        }
         const errors = validationResult(req);
         const maker = await getUserFromToken(req);
 
@@ -166,6 +180,7 @@ exports.event_create_post = [  //hookevent_create_post
             game: req.body.game,
             organizer: maker._id,
             date: req.body.date,
+            platform: req.body.platform,
             participants: [maker._id],
             max_size: req.body.max_size,
         });
@@ -175,7 +190,7 @@ exports.event_create_post = [  //hookevent_create_post
             // There are errors. Render form again with sanitized values/error messages.
             const allGames = await Game.find().sort({ name: 1 }).exec();
 
-            const selectedGame =  allGame.find(
+            const selectedGame =  allGames.find(
             (cat) => cat && cat._id === event.game
             );
 
@@ -188,14 +203,7 @@ exports.event_create_post = [  //hookevent_create_post
                   location: "body",
                 });
             }
-        /*
-            // Mark our selected genres as checked.
-            for (const game of allGame) {
-                if (event.game.includes(game._id)) {
-                    game.checked = "true";
-                }
-            }
-        */
+
             res.render("event_form", {
                 title: "Create Event",
                 games: allGames,
@@ -216,12 +224,14 @@ exports.event_create_post = [  //hookevent_create_post
 
 // Display event delete form on GET.
 exports.event_delete_get = asyncHandler(async (req, res, next) => {
-    //dit kan enkel gebeuren door organisator, alleen hij kan dit zijn door middel van event_detail.pug file
-    //hierdoor moeten we niet kijken of de user ingelogd is
+    const event = await Event.findById(req.params.id).populate("organizer") .exec();
 
-    const [event, games] = await Promise.all([
-        Event.findById(req.params.id).exec(),
-    ]);
+
+    //enkel de organisator kan dit
+    let user = await getUserFromToken(req);
+    if(event.organizer._id !== user._id){
+       return res.redirect("/home/events");
+    }
 
 
     if (event === null) {
@@ -239,9 +249,8 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
 // Handle event delete on POST.
 exports.event_delete_post = asyncHandler(async (req, res, next) => {
 // Get details of author and all their books (in parallel)
-    const [event] = await Promise.all([
-        Event.findById(req.params.id).exec(),
-    ]);
+    const event = await Event.findById(req.params.id).exec();
+    
 
 
     if (event === null) {
@@ -267,9 +276,9 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
 
 
 exports.join_get = asyncHandler(async (req, res, next) => {
-    const [event] = await Promise.all([
-        Event.findById(req.params.id).exec(),
-    ]);
+    const event = await
+        Event.findById(req.params.id).exec();
+
 
     if (event === null) {
         // No results.
@@ -283,10 +292,13 @@ exports.join_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.join_post = asyncHandler(async (req, res, next) => {
-    const [event] = await Promise.all([
-        Event.findById(req.params.id).populate('participants').populate("blacklist")
-            .populate("max_size").populate("status").exec(),
-    ]);
+    const event = await Event.findById(req.params.id)
+        .populate('participants')
+        .populate("blacklist")
+        .populate("max_size")
+        .populate("status")
+        .exec();
+
 
     //get user data
     const user = await getUserFromToken(req);
@@ -321,9 +333,8 @@ exports.join_post = asyncHandler(async (req, res, next) => {
 
 exports.leave_get = asyncHandler(async (req, res, next) => { //hookleave_get
 
-    const [event] = await Promise.all([
-        Event.findById(req.params.id).exec(),
-    ]);
+    const event = await Event.findById(req.params.id).exec();
+
 
     if (event === null) {
         // No results.
@@ -337,9 +348,8 @@ exports.leave_get = asyncHandler(async (req, res, next) => { //hookleave_get
 });
 
 exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
-    const [event] = await Promise.all([
-        Event.findById(req.params.id).populate('participants')
-    ]);
+    const event = await Event.findById(req.params.id).populate('participants');
+
 
     const user = await getUserFromToken(req);
 
@@ -359,9 +369,15 @@ exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
 exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
 
     const [event, game] = await Promise.all([
-        Event.findById(req.params.id).populate("game").exec(),
+        Event.findById(req.params.id).populate("game").populate("organizer").exec(),
         Game.find().sort({ name: 1 }).exec(),
     ]);
+
+    //enkel de organisator kan dit
+    let user = await getUserFromToken(req);
+    if (!event.organizer._id.equals(user._id)) {
+        return res.redirect("/home/events");
+    }
 
     if (event === null) {
         // No results.
@@ -393,19 +409,31 @@ exports.update_post = [ //hookupdate_post
     body("date", "Invalid date")
         .optional({ values: "falsy" })
         .isISO8601().withMessage("Date must be in ISO 8601 format.")
-        .toDate(),
+        .toDate()
+        .custom((value) => {
+            if (value && value <= new Date()) {
+                throw new Error("Date must be in the future.");
+            }
+            return true}),
+    body("platform")
+        .trim()
+        .isIn(["PC", "PS", "xbox", "switch"]).withMessage("Invalid platform selected.")
+        .escape(),
     body("game")
         .trim()
         .isLength({ min: 1 }).withMessage("Game must not be empty if provided.")
         .escape(),
     body("max_size", "Invalid max size")
-        .optional() // Assuming max_size can be optional
-        .isInt({ min: 1 }).withMessage("Max size must be a positive integer."),
+        .optional({ checkFalsy: true }) // max_size can be empty, but if provided, it should be valid
+        .isInt({ min: 1, max: 40 }).withMessage("Max size must be a positive integer between 1 and 40."),
     // Process request after validation and sanitization.
 
     //TODO error aanpasses, kijken dat de game niet leeg is en geen array is, kan maar 1tje zijn(kinda gefixt)
     asyncHandler(async (req, res, next) => {
         // Extract the validation errors from a request.
+        if (!req.body.max_size) {
+            req.body.max_size = 6;
+        }
         const errors = validationResult(req);
 
         const maker = await getUserFromToken(req);
@@ -416,6 +444,7 @@ exports.update_post = [ //hookupdate_post
             game: req.body.game,
             organizer: maker._id,
             date: req.body.date,
+            platform: req.body.platform,
             participants: [maker._id],
             max_size: req.body.max_size,
             _id: req.params.id,
@@ -425,9 +454,8 @@ exports.update_post = [ //hookupdate_post
             // There are errors. Render form again with sanitized values/error messages.
 
             // Get all authors and genres for form.
-            const allGame = await Promise(
-                Game.find().sort({ name: 1 }).exec(),
-            );
+            const allGame = await Game.find().sort({ name: 1 }).exec();
+
 
             const selectedGame =  allGame.find(
             (cat) => cat._id.toString() === event.game
@@ -441,15 +469,6 @@ exports.update_post = [ //hookupdate_post
                   location: "body",
                 });
             }
-
-            /*
-            // Mark our selected genres as checked.
-            for (const game of allGame) {
-                if (event.game.includes(game._id)) {
-                    game.checked = "true";
-                }
-            }
-            */
 
             res.render("event_form", {
                 title: "Create Event",
@@ -470,22 +489,19 @@ exports.update_post = [ //hookupdate_post
 //TODO afmaken
 //naast elke user een knop om te kicken, enkel organisator kan dit => nieuwe pug file enkel voor organisator
 exports.blacklist_get = asyncHandler(async (req, res, next) => { //hookupdate_get
-    const [event] = await Promise.all([
-        Event.findById(req.params.id)
-    ]);
+    const event = await Event.findById(req.params.id);
+
 
 
 });
 //TODO afmaken
 exports.blacklist_post = asyncHandler(async (req, res, next) => { //hookupdate_post
-    const [event] = await Promise.all([
-        Event.findById(req.params.id)
-    ]);
+    const event = await Event.findById(req.params.id);
 
     const user = await getUserFromToken(req);
 
     //TODO: via contains
-    if(user._id === event.organizer  ){
+    if(user._id === event.organizer){
 
     }
 });

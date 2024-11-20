@@ -4,35 +4,19 @@ https://gamergatherings.com/
 database: 
 
    users:
-- [x] username  
-- [x] email
-- [x] password
-- [x] subscribed events (past events deleted)
-- [x] rating (average rating on 10)
 - [ ] profile picture (standard picture = fb profile picture)
-- [x] time created
    
 events:
-- [x] title (name)
-- [x] discription (summary)
+
 - [x] datum
    - [ ] tijd invoegen TODO
-- [x] categorie (game)
-- [x] list of users (users)
-- [x] max size
-- [x] platform (pc, ps, xbox, switch)
-- [x] organizer
-- [x] time created
-     
-games or events:
-- [x] name
+- [] platform (pc, ps, xbox, switch)
+
 
 
 TODO:
-- [x] user aanmaken en register
-- [x] schema aanmaken voor db
-- [x] ww hashen
 - [x] uitloggen
+  - [ ] uitlog
 - [ ] andere users ne rating geven
 
 - [ ] events

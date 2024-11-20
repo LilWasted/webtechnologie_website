@@ -6,6 +6,12 @@ block content
     p #[strong game: ]
         a(href=event.game.url) #{event.game.name}
     p #[strong Summary:] #{event.description}
+    if date
+        p #[strong Date:] #{date.toDateString()} #{date.toLocaleTimeString()}
+    else
+        p #[strong Date:] Not specified
+
+    p #[strong platform:] #{event.platform}
 
     div(style='margin-left:20px;margin-top:20px')
         hr
@@ -24,6 +30,7 @@ block content
 
         else
             p There are no users
+
     hr
     p
     if event.organizer.equals(user._id)
@@ -35,7 +42,7 @@ block content
         for user1 in users
             if user1._id.equals(user._id)
                 a(href=event.url + '/leave') Leave event
-
-    p
-    if status_event === "Available"
-        a(href=event.url + '/join') join event
+            else
+                p
+                if status_event === "Available"
+                    a(href=event.url + '/join') join event

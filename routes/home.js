@@ -12,14 +12,15 @@ router.get("/", event_controller.index);
 // GET request for list of all event items.
 router.get("/events", event_controller.event_list);
 
-// GET request for one Book.
-router.get("/events/:id", event_controller.event_detail);
-
 // GET request for creating a Genre. NOTE This must come before route that displays Genre (uses id).
 router.get("/event/create", event_controller.event_create_get);
 
 // POST request for creating Genre.
 router.post("/event/create", event_controller.event_create_post);
+
+// GET request for one Book.
+router.get("/events/:id", event_controller.event_detail);
+
 
 // GET request to delete Book.
 router.get("/events/:id/delete", event_controller.event_delete_get);
@@ -57,6 +58,9 @@ router.post("/events/:id/kick", event_controller.kick_post);
 
 router.get("/games", game_controller.game_list);
 
-router.get("/games/:id", game_controller.game_detail);
 
+router.get("/games/create/", game_controller.game_create_get);
+router.post("/games/create/", game_controller.game_create_post);
+
+router.get("/games/:id", game_controller.game_detail);
 module.exports = router;

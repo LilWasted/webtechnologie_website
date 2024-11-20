@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const asyncHandler = require("express-async-handler");
-const {promise} = require("bcrypt/promises");
 const SECRET_KEY=process.env.SECRET_KEY
 
 const verifyToken = (token)=>{
@@ -84,13 +83,6 @@ exports.logout_post = async (req, res, next) => {
         });
     });
 };
-
-async function getUserFromToken(req) {
-    const token = req.cookies.token;
-    const verify = jwt.verify(token, SECRET_KEY);
-    const user = await User.findOne({ id: verify._id }).exec();
-    return user;
-}
 
 exports.profile = async (req, res, next) => {
     try {

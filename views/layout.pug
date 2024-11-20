@@ -21,19 +21,22 @@ html(lang='en')
               li
                 a(href='/home/games') All games
               li
-                hr
-              li
-                a(href='/home/event/create') Create new event
 
+              if user
                 hr
-              li
-                a(href='/user/login') login
-              li
-                a(href='/user/register') register
-              li
-                a(href='/user/logout') logout
-              li
-                a(href='/user/profile') profile
+                li
+                  a(href='/home/event/create') Create new event
+                li
+                  a(href='/home/games/create') Create new game
+                hr
+                li
+                  a(href='/user/logout') Logout
+                li
+                  a(href='/user/profile') Profile
+              else
+                hr
+                li
+                  a(href='/user/login') Login
 
         div(class='col-sm-10')
           block content

@@ -6,8 +6,8 @@ const User = require('../models/User'); // Your Mongoose User schema
 passport.use(
     new GoogleStrategy(
         {
-            clientID: '469813584564-gb3uldleaolrm3u6ndmg6hceslb8dqhs.apps.googleusercontent.com', // Add these to your .env file
-            clientSecret: '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',
+            clientID: process.env.google_client_id,
+            clientSecret: process.env.google_clientSecret,
             callbackURL: 'http://localhost:3000/user/auth/google/callback'
         },
         async (accessToken, refreshToken, profile, done) => {

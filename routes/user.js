@@ -35,11 +35,6 @@ router.get(
         // Set token as a third-party cookie
         await res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
 
-        const verify = jwt.verify(token, SECRET_KEY);
-
-        const usertest = await User.findOne({ _id: verify.userId }).exec();
-
-
         res.redirect('/home');
 
     }

@@ -10,7 +10,7 @@ const EventSchema = new Schema({
     participants:[{ type: Schema.Types.ObjectId, ref: 'User' }],
     blacklist:[{type: Schema.Types.ObjectId, ref: "User"}],
     max_size: {type:Number,min:1,max:40, default: 6},
-    platform:{type:String,enum: ["PC","PS","xbox","switch"]},
+    platform:{type:String,enum: ["PC","PS","xbox","switch"], required:true},
     organizer: {type:Schema.Types.ObjectId, ref: "User"},
     status: {type: String, enum: ["Available", "Full", "Cancelled"], default: "Available"},
     time_created:{type:Date,default:Date.now}},

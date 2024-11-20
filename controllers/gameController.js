@@ -35,3 +35,33 @@ exports.game_detail = asyncHandler(async (req, res, next) => {
         game_events: openEvents,
     });
 });
+
+
+exports.game_create_get = asyncHandler(async (req, res, next) => {
+    const game = Game.findById(req.params.id).populate("name").exec();
+
+    res.render("game_form", { title: "Create Game" });
+
+});
+
+exports.game_create_post = [
+    body("name", "Game name required").trim().isLength({ min: 1 }).escape(),
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+
+        const game = new Game({ name: req.body.name });
+
+        if (!errors.isEmpty()) {
+            res.render("game_form", {
+                title: "Create Game",
+                game: game,
+                errors: errors.array(),
+            });
+            return;
+        } else {
+            const game = new Game({ name: req.body.name });
+            await game.save();
+            res.redirect(game.url);
+        }
+    }),
+];
