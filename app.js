@@ -4,11 +4,16 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const session = require('express-session');
+
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 const homeRouter = require("./routes/home"); //Import routes for "catalog" area of sit
 const userRouter = require("./routes/user"); //Import routes for "catalog" area of sit
+
+
 
 var app = express();
 
@@ -34,15 +39,26 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: SECRET_KEY, // Replace with your own secret key
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use("/home", homeRouter); // Add catalog routes to middleware chain.
 app.use("/user", userRouter); // Add catalog routes to middleware chain.
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {

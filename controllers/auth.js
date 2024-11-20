@@ -81,20 +81,27 @@ exports.logout_get = async (req, res, next) => {
 exports.logout_post = async (req, res, next) => {
     console.log("logout post");
     res.clearCookie('token');
-    res.redirect('/home');
+    req.logout((err) => { // Passport.js logout method
+        if (err) { return next(err); }
+        req.session.regenerate((err) => { // Regenerate session to ensure it's destroyed
+            if (err) { return next(err); }
+            res.clearCookie('connect.sid'); // Clear session cookie
+            res.redirect('/home');
+        });
+    });
 };
 
 exports.profile = async (req, res, next) => {
     const { token } = req.cookies;
     const verify = jwt.verify(token, SECRET_KEY);
-    const user = await User.findOne({ username: verify.username })
+    const user = await User.findOne({ id: verify._id })
         .populate("rating")
         .populate("events")
         .populate("email")
         .populate("username")
         .exec();
 
-    console.log("help");
+    console.log(verify);
     res.render("profile", {
         title: "Profile", user
     });

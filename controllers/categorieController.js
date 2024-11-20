@@ -10,7 +10,6 @@ exports.categorie_list = asyncHandler(async (req, res, next) => {
     const allCategories = await Categorie.find().sort({name : 1}).exec();
 
     res.render("categorie_list", { title: "Categorie List", categorie_list: allCategories });
-
 });
 
 

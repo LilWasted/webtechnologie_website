@@ -3,9 +3,12 @@ const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
+        googleId: { type: String, required: true, unique: true},
         username:{type: String, required: true, unique: true},
         email: {type: String,required: true, unique: true},
-        password:{type: String, required: true},
+        password:{type: String, required: function() {
+                return !this.googleId; // Password is required if googleId is not present
+            }},
         role: {type: String, enum: ['user', 'admin'], default: 'user'},
         rating: {type: Number, default: 0},
         events: [{type: Schema.Types.ObjectId, ref: "Event"}],

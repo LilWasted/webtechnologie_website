@@ -53,7 +53,6 @@ router.get("/events/:id/kick", event_controller.kick_get);
 
 router.post("/events/:id/kick", event_controller.kick_post);
 
-
 /// Categories ROUTES ///
 
 router.get("/categories", categorie_controller.categorie_list);

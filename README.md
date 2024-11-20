@@ -9,7 +9,7 @@ database:
 - [x] password
 - [x] subscribed events (past events deleted)
 - [x] rating (average rating on 10)
-- [] profile picture (standard picture = fb profile picture)
+- [ ] profile picture (standard picture = fb profile picture)
 - [x] time created
    
 events:
@@ -32,7 +32,7 @@ TODO:
 - [x] user aanmaken en register
 - [x] schema aanmaken voor db
 - [x] ww hashen
-- [ ] uitloggen
+- [x] uitloggen
 - [ ] andere users ne rating geven
 
 - [ ] events
@@ -54,4 +54,3 @@ features:
    - [ ] destiny 2 api
 - [ ] organizer can kick a user and put him on blacklist
 - [ ] party members can rate a player
-- [ ] profile picture

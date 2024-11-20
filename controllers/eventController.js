@@ -5,13 +5,14 @@ const { body, validationResult } = require("express-validator");
 const { DateTime } = require("luxon");
 const asyncHandler = require("express-async-handler");
 
+
 const jwt = require('jsonwebtoken');
 const SECRET_KEY="mysecretkey"
 
 async function getUserFromToken(req) {
     const { token } = req.cookies;
     const verify = jwt.verify(token, SECRET_KEY);
-    const user = await User.findOne({ username: verify.username }).exec();
+    const user = await User.findOne({ id: verify._id }).exec();
     return user;
 }
 
@@ -105,6 +106,7 @@ exports.event_create_get = asyncHandler(async (req, res, next) => {
     // get the event and all categories
     const [event, categories] = await Promise.all([
         Event.findById(req.params.id).populate("categorie").exec(),
+        Categorie.find().sort({ name: 1 }).exec(),
     ]);
 
     if(!await isUserSignedIn(req)) {
@@ -114,7 +116,7 @@ exports.event_create_get = asyncHandler(async (req, res, next) => {
     res.render("event_form", {
         title: "Create Event",
         categories: categories,
-        event: event,
+        event: event || {},
     });
 
 });
@@ -124,24 +126,29 @@ exports.event_create_post = [  //hookevent_create_post
 
     // Convert the genre to an array.
 
-    //TODO filteren en alle inputs verschonen
+    //TODO filteren en alle inputs verschonen (kinda done)
 
     // Validate and sanitize fields.
     body("title", "Title must not be empty.")
         .trim()
-        .isLength({ min: 1 })
+        .isLength({ min: 1 }).withMessage("Title must not be empty.")
+        .isAscii().withMessage("Title must only contain ASCII characters.")
         .escape(),
     body("description", "Summary must not be empty.")
         .trim()
-        .isLength({ min: 1 })
+        .isLength({ min: 1 }).withMessage("Description must not be empty.")
         .escape(),
     body("date", "Invalid date")
         .optional({ values: "falsy" })
-        .isISO8601()
+        .isISO8601().withMessage("Date must be in ISO 8601 format.")
         .toDate(),
     body("categorie")
+        .trim()
+        .isLength({ min: 1 }).withMessage("Category must not be empty if provided.")
         .escape(),
-    body("max_size", "Invalid max size"),
+    body("max_size", "Invalid max size")
+        .optional() // Assuming max_size can be optional
+        .isInt({ min: 1 }).withMessage("Max size must be a positive integer."),
     // Process request after validation and sanitization.
 
     asyncHandler(async (req, res, next) => {
@@ -160,21 +167,34 @@ exports.event_create_post = [  //hookevent_create_post
             max_size: req.body.max_size,
         });
 
-        //TODO error aanpasses, kijken dat de categorie niet leeg is en geen array is, kan maar 1tje zijn
+        //TODO error aanpasses, kijken dat de categorie niet leeg is en geen array is, kan maar 1tje zijn (ik denk gefixt)
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
 
             // Get all authors and genres for form.
-            const allCategorie = await Promise(
+            const allCategorie = await Promise.all([
                 Categorie.find().sort({ name: 1 }).exec(),
+            ]);
+
+            const selectedCategorie =  allCategorie.find(
+            (cat) => cat && cat._id.toString() === event.categorie
             );
 
+            if (!selectedCategorie) {
+                errors.errors.push({
+                  msg: "Selected category is invalid.",
+                  param: "categorie",
+                  location: "body",
+                });
+            }
+        /*
             // Mark our selected genres as checked.
             for (const categorie of allCategorie) {
                 if (event.categorie.includes(categorie._id)) {
                     categorie.checked = "true";
                 }
             }
+        */
             res.render("event_form", {
                 title: "Create Event",
                 categories: categories,
@@ -185,6 +205,7 @@ exports.event_create_post = [  //hookevent_create_post
             // Data from form is valid. Save event.
             await event.save();
             maker.events.push(event._id);
+
             await maker.save();
             res.redirect(event.url);
 
@@ -216,10 +237,8 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
 
 // Handle event delete on POST.
 exports.event_delete_post = asyncHandler(async (req, res, next) => {
-    //TODO voor elke user in participants => delete event van user
-
 // Get details of author and all their books (in parallel)
-    const [event, categories] = await Promise.all([
+    const [event] = await Promise.all([
         Event.findById(req.params.id).exec(),
     ]);
 
@@ -229,7 +248,7 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
         res.redirect("/home/events");
     }
 
-    //elke user is event overlopen => event verwijderen van user
+    //elke user in event overlopen => event verwijderen van user
     for (const participant of event.participants) {
         //events verwijderen van user => user.events array updaten
         //pull = remove from array in mongoDB
@@ -243,7 +262,6 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
     //event verwijderen van DB
     await Event.findByIdAndDelete(req.body.eventid);
     res.redirect("/home/events");
-
 });
 
 
@@ -364,22 +382,27 @@ exports.update_post = [ //hookupdate_post
 
     body("title", "Title must not be empty.")
         .trim()
-        .isLength({ min: 1 })
+        .isLength({ min: 1 }).withMessage("Title must not be empty.")
+        .isAscii().withMessage("Title must only contain ASCII characters.")
         .escape(),
     body("description", "Summary must not be empty.")
         .trim()
-        .isLength({ min: 1 })
+        .isLength({ min: 1 }).withMessage("Description must not be empty.")
         .escape(),
     body("date", "Invalid date")
         .optional({ values: "falsy" })
-        .isISO8601()
+        .isISO8601().withMessage("Date must be in ISO 8601 format.")
         .toDate(),
     body("categorie")
+        .trim()
+        .isLength({ min: 1 }).withMessage("Category must not be empty if provided.")
         .escape(),
-    body("max_size", "Invalid max size"),
+    body("max_size", "Invalid max size")
+        .optional() // Assuming max_size can be optional
+        .isInt({ min: 1 }).withMessage("Max size must be a positive integer."),
     // Process request after validation and sanitization.
 
-    //TODO error aanpasses, kijken dat de categorie niet leeg is en geen array is, kan maar 1tje zijn
+    //TODO error aanpasses, kijken dat de categorie niet leeg is en geen array is, kan maar 1tje zijn(kinda gefixt)
     asyncHandler(async (req, res, next) => {
         // Extract the validation errors from a request.
         const errors = validationResult(req);
@@ -405,19 +428,34 @@ exports.update_post = [ //hookupdate_post
                 Categorie.find().sort({ name: 1 }).exec(),
             );
 
+            const selectedCategorie =  allCategorie.find(
+            (cat) => cat._id.toString() === event.categorie
+            );
+
+            if (!selectedCategorie) {
+                errors.errors.push({
+                  msg: "Selected category is invalid.",
+
+                  param: "categorie",
+                  location: "body",
+                });
+            }
+
+            /*
             // Mark our selected genres as checked.
             for (const categorie of allCategorie) {
                 if (event.categorie.includes(categorie._id)) {
                     categorie.checked = "true";
                 }
             }
+            */
+
             res.render("event_form", {
                 title: "Create Event",
                 categories: categories,
                 event: event,
                 errors: errors.array(),
             });
-            return;
         } else {
             const updatedEvent = await Event.findByIdAndUpdate(req.params.id, event, {});
             res.redirect(updatedEvent.url);
