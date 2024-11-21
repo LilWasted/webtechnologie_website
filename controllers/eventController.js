@@ -4,6 +4,7 @@ const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
+//TODO const user = await getUserFromToken(req); vervangen door res.locals.user
 
 const jwt = require('jsonwebtoken');
 const SECRET_KEY=process.env.SECRET_KEY
@@ -83,7 +84,9 @@ exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DET
     //als je ingelogd bent, is er een delete knop voor organisator en een leave knop voor deelnemers
     //er is ook een join knop voor niet deelnemers
     if (await isUserSignedIn(req)) {
-        const user = await getUserFromToken(req);
+        //const user = await getUserFromToken(req);
+        const user = await res.locals.user;
+
         res.render("event_detail", {
             event: event,
             users: event.participants,

@@ -7,13 +7,12 @@ require('dotenv').config();
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
+const User = require('./models/User'); // Your Mongoose User schema
 
 var indexRouter = require('./routes/index');
 
 const homeRouter = require("./routes/home"); //Import routes for "catalog" area of sit
 const userRouter = require("./routes/user"); //Import routes for "catalog" area of sit
-
-
 
 var app = express();
 
@@ -33,7 +32,6 @@ async function main() {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -50,10 +48,25 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-  res.locals.user = req.user;
+const jwt = require('jsonwebtoken');
+
+app.use(async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    const verify = jwt.verify(token, SECRET_KEY);
+    const user = await User.findOne({ _id: verify.userId }).exec();
+    if (user) {
+      console.log('User found:', user);
+      res.locals.user = user;
+
+    }
+  } catch (err) {
+    console.error('Error fetching user:', err);
+  }
   next();
 });
+
+
 
 app.use('/', indexRouter);
 app.use("/home", homeRouter); // Add catalog routes to middleware chain.

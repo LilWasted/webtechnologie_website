@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const asyncHandler = require("express-async-handler");
 const SECRET_KEY=process.env.SECRET_KEY
+const { sendMail } = require("../controllers/mailController");
+
 
 const verifyToken = (token)=>{
     try {

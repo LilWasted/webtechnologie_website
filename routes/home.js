@@ -4,6 +4,7 @@ const router = express.Router();
 const game_controller = require("../controllers/gameController");
 const event_controller = require("../controllers/eventController");
 
+
 /// Event ROUTES ///
 
 // GET catalog home page.
