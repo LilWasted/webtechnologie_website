@@ -3,18 +3,11 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const asyncHandler = require("express-async-handler");
 const SECRET_KEY=process.env.SECRET_KEY
-const { sendMail } = require("../controllers/mailController");
+const multer = require('multer');
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-const verifyToken = (token)=>{
-    try {
-        const verify = jwt.verify(token,SECRET_KEY);
-        if(verify.type==='user'){return true;}
-        else{return false;}
-    } catch (error) {
-        return false;
-    }
-}
 
 // Register a new user
 exports.register_post = async (req, res, next) => {
@@ -49,7 +42,6 @@ exports.login_post = async (req, res, next) => {
         const passwordMatch = await user.comparePassword(password);
         console.log("Password Match:", passwordMatch);
         if (!passwordMatch) {
-            console.log(user);
             return res.status(401).json({ message: 'Incorrect password' });
         }
 
@@ -99,6 +91,7 @@ exports.profile = async (req, res, next) => {
             .populate("events")
             .populate("email")
             .populate("username")
+            .populate("profilePicture")
             .exec();
 
         if (!user) {
@@ -113,3 +106,66 @@ exports.profile = async (req, res, next) => {
         next(error);
     }
 };
+
+
+exports.edit_profile_get = async (req, res, next) => {
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            console.log("No token provided");
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        const verify = jwt.verify(token, SECRET_KEY);
+        const user = await User.findOne({ _id: verify.userId });
+
+        console.log("edit");
+        res.render("edit_profile", {
+            title: "Edit Profile",
+            user: user
+        });
+
+        console.log("edit done");
+
+    } catch (error) {
+        next(error);
+        res.redirect('/user/profile');
+    }
+}
+
+exports.edit_profile_post = [
+    upload.single('profilePicture'),
+    async (req, res, next) => {
+        const { username, email, password } = req.body;
+        const profilePicture = req.file ? req.file.buffer : null;
+
+        try {
+            const token = req.cookies.token;
+            if (!token) {
+                return res.status(401).json({ message: 'No token provided' });
+            }
+            const verify = jwt.verify(token, SECRET_KEY);
+            const user = await User.findOne({ _id: verify.userId });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            if (username) user.username = username;
+            if (email) user.email = email;
+            if (password) {
+                const salt = await bcrypt.genSalt();
+                user.password = await bcrypt.hash(password, salt);
+            }
+            if (profilePicture) {
+                user.profilePicture = profilePicture;
+            }
+
+            await user.save();
+            console.log("User profile updated");
+            res.redirect('/user/profile');
+        } catch (error) {
+            next(error);
+            res.redirect('/user/profile');
+
+        }
+    }
+];

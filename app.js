@@ -8,6 +8,30 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const User = require('./models/User'); // Your Mongoose User schema
+const Event = require('./models/event');
+const cron = require('node-cron');
+const { sendEventReminder } = require('./controllers/mailController');
+
+//schedule a cron job to run every minute
+cron.schedule('* * * * *', async () => {
+  console.log('Cron job started at:', new Date().toISOString());
+  try {
+    const events = await Event.find({
+      date: { $gte: new Date(), $lt: new Date(Date.now() + 3600000) },
+      reminderSent: false
+    });
+
+    for (const event of events) {
+      await sendEventReminder(event._id);
+      event.reminderSent = true;
+      await event.save();
+    }
+
+    console.log('Cron job completed at:', new Date().toISOString());
+  } catch (error) {
+    console.error('Error in cron job:', error);
+  }
+});
 
 var indexRouter = require('./routes/index');
 
@@ -56,7 +80,6 @@ app.use(async (req, res, next) => {
     const verify = jwt.verify(token, SECRET_KEY);
     const user = await User.findOne({ _id: verify.userId }).exec();
     if (user) {
-      console.log('User found:', user);
       res.locals.user = user;
 
     }

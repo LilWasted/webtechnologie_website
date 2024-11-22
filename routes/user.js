@@ -41,4 +41,7 @@ router.get(
     }
 );
 
+router.get('/profile/edit', userController.edit_profile_get);
+router.post('/profile/edit', userController.edit_profile_post);
+
 module.exports = router;

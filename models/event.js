@@ -13,7 +13,7 @@ const EventSchema = new Schema({
     platform:{type:String,enum: ["PC","PS","xbox","switch"], required:true},
     organizer: {type:Schema.Types.ObjectId, ref: "User"},
     status: {type: String, enum: ["Available", "Full", "Cancelled"], default: "Available"},
-    remindersent: {type: Boolean, default: false},
+    reminderSent: {type: Boolean, default: false},
     time_created:{type:Date,default:Date.now}},
     { timestamps: true }
 );

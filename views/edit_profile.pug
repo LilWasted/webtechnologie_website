@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    h1= title
+    form(action='/user/profile/edit', method='post', enctype='multipart/form-data')
+        div
+            label(for='username') Username:
+            input(type='text', name='username', id='username', value=user.username)
+        div
+            label(for='email') Email:
+            input(type='email', name='email', id='email', value=user.email)
+        div
+            label(for='password') Password:
+            input(type='password', name='password', id='password')
+        div
+            label(for='profilePicture') Profile Picture:
+            input(type='file', name='profilePicture', id='profilePicture')
+        div
+            button(type='submit') Update Profile

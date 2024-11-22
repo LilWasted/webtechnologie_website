@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer');
 const Event = require('../models/event');
-const cron = require('node-cron');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -46,16 +45,4 @@ const sendEventReminder = async (eventId) => {
     }
 };
 
-//schedule a cron job to run every minute
-cron.schedule('* * * * *', async () => {
-    const events = await Event.find({
-        date: { $gte: new Date(), $lt: new Date(Date.now() + 3600000) },
-        remindersent: false
-    });
-
-    for (const event of events) {
-        await sendEventReminder(event._id);
-        event.remindersent = true;
-        await event.save();
-    }
-});
+module.exports = { sendEventReminder };

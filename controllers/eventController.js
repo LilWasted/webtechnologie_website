@@ -174,7 +174,7 @@ exports.event_create_post = [  //hookevent_create_post
             req.body.max_size = 6;
         }
         const errors = validationResult(req);
-        const maker = await getUserFromToken(req);
+        const maker = await res.locals.user;
 
         // Create a Event object with escaped and trimmed data.
         const event = new Event({
@@ -231,7 +231,7 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
 
 
     //enkel de organisator kan dit
-    let user = await getUserFromToken(req);
+    let user = await res.locals.user;
     if(event.organizer._id !== user._id){
        return res.redirect("/home/events");
     }
@@ -304,7 +304,7 @@ exports.join_post = asyncHandler(async (req, res, next) => {
 
 
     //get user data
-    const user = await getUserFromToken(req);
+    const user = await res.locals.user;
 
     // Create a Event object with escaped and trimmed data.
     for (const participant of event.participants) {
@@ -354,7 +354,7 @@ exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
     const event = await Event.findById(req.params.id).populate('participants');
 
 
-    const user = await getUserFromToken(req);
+    const user = await res.locals.user;
 
     await User.updateOne(
         { _id: user._id },
@@ -377,7 +377,7 @@ exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
     ]);
 
     //enkel de organisator kan dit
-    let user = await getUserFromToken(req);
+    let user = await res.locals.user;
     if (!event.organizer._id.equals(user._id)) {
         return res.redirect("/home/events");
     }
@@ -439,7 +439,7 @@ exports.update_post = [ //hookupdate_post
         }
         const errors = validationResult(req);
 
-        const maker = await getUserFromToken(req);
+        const maker = await res.locals.user;
        // Create a Event object with escaped and trimmed data.
         const event = new Event({
             title: req.body.title,
@@ -501,7 +501,7 @@ exports.blacklist_get = asyncHandler(async (req, res, next) => { //hookupdate_ge
 exports.blacklist_post = asyncHandler(async (req, res, next) => { //hookupdate_post
     const event = await Event.findById(req.params.id);
 
-    const user = await getUserFromToken(req);
+    const user = await res.locals.user;
 
     //TODO: via contains
     if(user._id === event.organizer){
@@ -519,7 +519,7 @@ exports.kick_post = asyncHandler(async (req, res, next) => { //hookupdate_post
         Event.findById(req.params.id)
     ]);
 
-    const user = await getUserFromToken(req);
+    const user = await res.locals.user;
 
     //TODO: via contains
     if(user._id === event.organizer  ){
