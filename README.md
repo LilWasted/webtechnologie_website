@@ -43,3 +43,11 @@ features:
    - [ ] destiny 2 api
 - [ ] organizer can kick a user and put him on blacklist
 - [ ] party members can rate a player
+
+Toegevoegd zodat ik dit kan onthouden indien fout:
+
+.sidebar-nav {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
