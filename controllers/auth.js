@@ -10,7 +10,7 @@ const upload = multer({ storage: storage });
 
 
 // Register a new user
-exports.register_post = async (req, res, next) => {
+exports.register_post = asyncHandler( async (req, res, next) => {
     const { username, email, password } = req.body;
 
     try {
@@ -22,15 +22,15 @@ exports.register_post = async (req, res, next) => {
     }
     res.redirect('/user/login'); // Redirect to a different page after successful registration
 
-};
+});
 
-exports.register_get = async (req, res, next) => {
+exports.register_get = async (req, res) => {
 
     res.render("register", { title: "Register" });
 };
 
 // Login with an existing user
-exports.login_post = async (req, res, next) => {
+exports.login_post = asyncHandler ( async (req, res, next) => {
     const { username, password } = req.body;
 
     try {
@@ -48,7 +48,7 @@ exports.login_post = async (req, res, next) => {
         const token = jwt.sign({username: username, userId: user._id, type: user.role }, SECRET_KEY, {
             expiresIn: '1 hour'
         });
-        res.cookie('token',token,{ maxAge: 3600000, httpOnly: true });  // maxAge: 2 hours
+        res.cookie('token',token,{ httpOnly: true });  // maxAge: 2 hours
         console.log("saved local token");
 
     } catch (error) {
@@ -56,17 +56,17 @@ exports.login_post = async (req, res, next) => {
     }
 
     res.redirect('/home');
-};
+});
 
-exports.login_get = async (req, res, next) => {
+exports.login_get = asyncHandler ( async (req, res) => {
     res.render("login", { title: "Login" });
-};
+});
 
-exports.logout_get = async (req, res, next) => {
+exports.logout_get = asyncHandler ( async (req, res) => {
     res.render("logout", { title: "logout" });
-};
+});
 
-exports.logout_post = async (req, res, next) => {
+exports.logout_post = asyncHandler ( async (req, res, next) => {
     res.clearCookie('token');
     req.logout((err) => { // Passport.js logout method
         if (err) { return next(err); }
@@ -76,9 +76,9 @@ exports.logout_post = async (req, res, next) => {
             res.redirect('/home');
         });
     });
-};
+});
 
-exports.profile = async (req, res, next) => {
+exports.profile = asyncHandler ( async (req, res, next) => {
     try {
         const token = req.cookies.token;
         if (!token) {
@@ -105,10 +105,10 @@ exports.profile = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-};
+});
 
 
-exports.edit_profile_get = async (req, res, next) => {
+exports.edit_profile_get = asyncHandler ( async (req, res, next) => {
     try {
         const token = req.cookies.token;
         if (!token) {
@@ -130,11 +130,11 @@ exports.edit_profile_get = async (req, res, next) => {
         next(error);
         res.redirect('/user/profile');
     }
-}
+});
 
 exports.edit_profile_post = [
     upload.single('profilePicture'),
-    async (req, res, next) => {
+    asyncHandler (async (req, res, next) => {
         const { username, email, password } = req.body;
         const profilePicture = req.file ? req.file.buffer : null;
 
@@ -167,5 +167,5 @@ exports.edit_profile_post = [
             res.redirect('/user/profile');
 
         }
-    }
+    })
 ];

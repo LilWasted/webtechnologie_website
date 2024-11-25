@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols
+
 const Game = require("../models/game");
 const asyncHandler = require("express-async-handler");
 const Event = require("../models/event");
@@ -57,7 +59,6 @@ exports.game_create_post = [
                 game: game,
                 errors: errors.array(),
             });
-            return;
         } else {
             const game = new Game({ name: req.body.name });
             await game.save();

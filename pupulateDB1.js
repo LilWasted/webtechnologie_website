@@ -1,4 +1,6 @@
 #! /usr/bin/env node
+// noinspection EqualityComparisonWithCoercionJS,JSUnusedLocalSymbols
+
 const { DateTime } = require("luxon");
 
 

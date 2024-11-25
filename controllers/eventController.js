@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols
+
 const Event = require("../models/event");
 const Game = require("../models/game");
 const User = require("../models/User");
@@ -15,8 +17,7 @@ async function getUserFromToken(req) {
         throw new Error("Token not found");
     }
     const verify = jwt.verify(token, SECRET_KEY);
-    const user = await User.findOne({ _id: verify.userId }).exec();
-    return user;
+    return await User.findOne({ _id: verify.userId }).exec();
 }
 
 async function isUserSignedIn(req) {
@@ -176,7 +177,7 @@ exports.event_create_post = [  //hookevent_create_post
         const errors = validationResult(req);
         const maker = await res.locals.user;
 
-        // Create a Event object with escaped and trimmed data.
+        // Create an Event object with escaped and trimmed data.
         const event = new Event({
             title: req.body.title,
             description: req.body.description,
@@ -193,6 +194,7 @@ exports.event_create_post = [  //hookevent_create_post
             // There are errors. Render form again with sanitized values/error messages.
             const allGames = await Game.find().sort({ name: 1 }).exec();
 
+            //TODO werkt dit?????
             const selectedGame =  allGames.find(
             (cat) => cat && cat._id === event.game
             );
@@ -237,7 +239,7 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
     }
 
 
-    if (event === null) {
+    if (!event) {
         const err = new Error("Event not found");
         err.status = 404;
         return next(err);
@@ -306,7 +308,7 @@ exports.join_post = asyncHandler(async (req, res, next) => {
     //get user data
     const user = await res.locals.user;
 
-    // Create a Event object with escaped and trimmed data.
+    // Create an Event object with escaped and trimmed data.
     for (const participant of event.participants) {
         if (participant._id.equals(user._id)) {
             console.log("user already in");
@@ -382,7 +384,7 @@ exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
         return res.redirect("/home/events");
     }
 
-    if (event === null) {
+    if (!event) {
         // No results.
         const err = new Error("event not found");
         err.status = 404;
@@ -440,7 +442,7 @@ exports.update_post = [ //hookupdate_post
         const errors = validationResult(req);
 
         const maker = await res.locals.user;
-       // Create a Event object with escaped and trimmed data.
+       // Create an Event object with escaped and trimmed data.
         const event = new Event({
             title: req.body.title,
             description: req.body.description,

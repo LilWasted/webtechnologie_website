@@ -20,10 +20,11 @@ const EventSchema = new Schema({
 
 // Virtual for book's URL
 EventSchema.virtual("url").get(function () {
-    // We don't use an arrow function as we'll need the this object
+    // We don't use an arrow function as we'll need this object
     return `/home/events/${this._id}`;
 });
 
+//TODO dit doet niets moet een url geven
 EventSchema.virtual("groupRating").get(function () {
   let som = 0;
   for (let i = 0; i < this.participants.length; i++) {

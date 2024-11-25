@@ -1,4 +1,5 @@
 #! /usr/bin/env node
+// noinspection EqualityComparisonWithCoercionJS
 
 console.log(
     'This script populates some test books, authors, genres and bookinstances to your database. Specified database as argument - e.g.: node populatedb "mongodb+srv://cooluser:coolpassword@cluster0.cojoign.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0"'

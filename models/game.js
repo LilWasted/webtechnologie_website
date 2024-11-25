@@ -6,7 +6,7 @@ const GameSchema = new Schema(
 
 // Virtual for book's URL
 GameSchema.virtual("url").get(function () {
-    // We don't use an arrow function as we'll need the this object
+    // We don't use an arrow function as we'll need this object
     return `/home/games/${this._id}`;
 });
 

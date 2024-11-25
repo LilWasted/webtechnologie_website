@@ -1,8 +1,8 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -19,7 +19,7 @@ cron.schedule('* * * * *', async () => {
     const events = await Event.find({
       date: { $gte: new Date(), $lt: new Date(Date.now() + 3600000) },
       reminderSent: false
-    });
+    }).exec();
 
     for (const event of events) {
       await sendEventReminder(event._id);
@@ -33,12 +33,12 @@ cron.schedule('* * * * *', async () => {
   }
 });
 
-var indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 
 const homeRouter = require("./routes/home"); //Import routes for "catalog" area of sit
 const userRouter = require("./routes/user"); //Import routes for "catalog" area of sit
 
-var app = express();
+const app = express();
 
 // Set up mongoose connection
 const mongoose = require("mongoose");
@@ -81,7 +81,6 @@ app.use(async (req, res, next) => {
     const user = await User.findOne({ _id: verify.userId }).exec();
     if (user) {
       res.locals.user = user;
-
     }
   } catch (err) {
     console.error('Error fetching user:', err);
