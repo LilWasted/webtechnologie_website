@@ -4,7 +4,7 @@ block content
   h1= title
   input.w3-input.w3-input-search#search(type="text" placeholder="Search games...")
   if game_list.length
-    ul#game-list(class='no-bullets')
+    ul#game-list(class='no-bullets', style='list-style-type:none;')
       each game in game_list
         li
           a(href=game.url) #{game.name}
