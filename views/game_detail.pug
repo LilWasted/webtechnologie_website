@@ -2,7 +2,7 @@ extends layout
 
 block content
   if game
-    h1 Game: #{game.name}
+    h1 #{game.name}
     if game_events.length
       h2 Open Events:
       ul(class='w3-ul w3-border w3-white')

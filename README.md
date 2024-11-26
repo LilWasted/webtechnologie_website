@@ -3,27 +3,29 @@ https://gamergatherings.com/
 
 TODO:
 - [ ] andere users ne rating geven
+- [ ] anderen kunnen kicken
 
 - [ ] events
    - [ ] duur event (optionaal)
    - [ ] end time (optional)
-   - [ ] toevoegen van availability option bij intializen
    - [ ] toevoegen updaten availability
-      - [x] als event is afgelopen, na 1 dag dan verwijderen uit db
-      - [x] als end time niet wordt gegeven, verwijderen na 1 dag start tijd
 
 todo css
 computer:
-side bar niet absoluut
-side bar boven zetten
-vast zetten, zelfs als je scrollt
-foto home zetten dat het volle scherm vult
-footer beden in pagina met: privacy policy, terms of use
+foto van boven zetten
+in event list: ook op date kiezen
+in event list: ook op game kiezen
+in event list: ook op availability kiezen
+title groter zetten
+game_detail -> niet een simpele witte achtergrond
+
+create event verschonen
+
+profile:
+
+terms en privacy policy opmaken
 
 pages:
-- [ ] privacy policy
-- [ ] terms of service
-- [ ] cookie policy
 - [ ] contact
 features:
 - [ ] organizer can kick a user and put him on blacklist
