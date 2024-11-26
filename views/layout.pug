@@ -14,13 +14,17 @@ html(lang='en')
                 font-family: 'Montserrat', sans-serif;
                 margin: 0;
                 padding: 0;
+            }
+
+            .body-container {
                 display: flex;
                 flex-direction: column;
-
+                min-height: 100vh;
             }
 
             #main-content {
-                flex: 1;
+                margin-top: 60px; /* Adjust this value based on the header height */
+
             }
 
             .footer {
@@ -107,7 +111,7 @@ html(lang='en')
 
 
 
-body(class='w3-black')
+body(class='w3-black body-container')
     // Top Navbar for Mobile (Hidden by default)
     header.w3-bar
         a.w3-bar-item.w3-button(href='/home') Home
