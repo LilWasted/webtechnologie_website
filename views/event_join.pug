@@ -1,14 +1,11 @@
 extends layout
 
 block content
-
   h1 #{title}: #{event.title}
 
+  p Do you really want to join this event?
 
-    p Do you really want to join this event?
-
-    form(method='POST')
-      div.form-group
-        input#eventid.form-control(type='hidden', name='eventid', value=event._id )
-
-      button.btn.btn-primary(type='submit') JOIN
+  form(method='POST')
+    div.form-group
+      input#eventid.form-control(type='hidden', name='eventid', value=event._id)
+    button.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(type='submit', style='padding: 20px 40px; font-size: 18px;') JOIN
