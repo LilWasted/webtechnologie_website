@@ -12,6 +12,14 @@ TODO:
       - [x] als event is afgelopen, na 1 dag dan verwijderen uit db
       - [x] als end time niet wordt gegeven, verwijderen na 1 dag start tijd
 
+todo css
+computer:
+side bar niet absoluut
+side bar boven zetten
+vast zetten, zelfs als je scrollt
+foto home zetten dat het volle scherm vult
+footer beden in pagina met: privacy policy, terms of use
+
 pages:
 - [ ] privacy policy
 - [ ] terms of service
