@@ -7,7 +7,7 @@ block content
     ul#game-list(class='no-bullets', style='list-style-type:none;')
       each game in game_list
         li
-          a(href=game.url) #{game.name}
+          a(href=game.url, style="font-size: 1.5rem; font-weight: bold;") #{game.name}
   else
     p There are no games.
 
