@@ -6,7 +6,6 @@ const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
-//TODO const user = await getUserFromToken(req); vervangen door res.locals.user
 
 const jwt = require('jsonwebtoken');
 const SECRET_KEY=process.env.SECRET_KEY
@@ -31,8 +30,7 @@ async function isUserSignedIn(req) {
     }
 }
 
-//TODO
-    //voor elke del en join etc => checken of het wel de juiste user is
+//TODO voor elke del en join etc => checken of het wel de juiste user is
     //anders kan er via de url vanalles gebeuren
 
 exports.index = asyncHandler(async (req, res, next) => {  //hookINDEX
@@ -189,7 +187,6 @@ exports.event_create_post = [  //hookevent_create_post
             max_size: req.body.max_size,
         });
 
-        //TODO error aanpasses, kijken dat de game niet leeg is en geen array is, kan maar 1tje zijn (ik denk gefixt)
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
             const allGames = await Game.find().sort({ name: 1 }).exec();
@@ -255,8 +252,6 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
 exports.event_delete_post = asyncHandler(async (req, res, next) => {
 // Get details of author and all their books (in parallel)
     const event = await Event.findById(req.params.id).exec();
-    
-
 
     if (event === null) {
         // No results.
@@ -285,7 +280,7 @@ exports.join_get = asyncHandler(async (req, res, next) => {
         Event.findById(req.params.id).exec();
 
 
-    if (event === null) {
+    if (!event) {
         // No results.
         res.redirect("/home/events");
     }

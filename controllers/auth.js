@@ -9,7 +9,6 @@ const Event = require("../models/event");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-
 // Register a new user
 exports.register_post = asyncHandler( async (req, res, next) => {
     const { username, email, password } = req.body;
@@ -73,7 +72,6 @@ exports.logout_post = asyncHandler ( async (req, res, next) => {
         if (err) { return next(err); }
         req.session.regenerate((err) => { // Regenerate session to ensure it's destroyed
             if (err) { return next(err); }
-            res.clearCookie('connect.sid'); // Clear session cookie
             res.redirect('/home');
         });
     });

@@ -5,7 +5,6 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const User = require('./models/User'); // Your Mongoose User schema
 const Event = require('./models/event');
@@ -32,7 +31,7 @@ cron.schedule('* * * * *', async () => {
     console.error('Error in cron job:', error);
   }
 
-  //dit misschien per uur duun ipv per minuut of zelfs per dag
+  //TODO dit misschien per uur duun ipv per minuut of zelfs per dag
   try {
     console.log('Cron job started at to delete event:', new Date().toISOString());
     const events = await Event.find({
