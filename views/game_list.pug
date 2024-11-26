@@ -2,9 +2,9 @@ extends layout
 
 block content
   h1= title
-  input#search(type="text" placeholder="Search games...")
+  input.w3-input.w3-input-search#search(type="text" placeholder="Search games...")
   if game_list.length
-    ul#game-list
+    ul#game-list(class='no-bullets')
       each game in game_list
         li
           a(href=`/game/${game._id}`) #{game.name}
@@ -14,10 +14,10 @@ block content
   // via chatgpt => weet een kleine beetje hierover, maar niet genoeg om het te kunnen uitleggen
   script.
     document.getElementById('search').addEventListener('input', function() {
-      const filter = this.value.toLowerCase();
+      const filter = this.value //toLowerCase();
       const games = document.querySelectorAll('#game-list li');
       games.forEach(function(category) {
-        const text = category.textContent.toLowerCase();
+        const text = category.textContent //toLowerCase();
         if (text.includes(filter)) {
           category.style.display = '';
         } else {

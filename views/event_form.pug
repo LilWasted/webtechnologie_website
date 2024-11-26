@@ -3,22 +3,22 @@ block content
   h1= title
 
   form(method='POST')
-    div.form-group
-      label(for='title') Title:
-      input#title.form-control(type='text', placeholder='Name of event' name='title' required value=(undefined===event ? '' : event.title) )
-    div.form-group
-      label(for='description') Summary:
-      textarea#description.form-control(placeholder='description' name='description' required)= undefined===event ? '' : event.summary
-    div.form-group
-      label(for='platform') Platform:
-      select#platform.form-control(name='platform' required)
+    div.form-group(style='display: flex; align-items: center;')
+      label(for='title' style='margin-right: 10px;') Title:
+      input.w3-input.w3-input-form#title.form-control(type='text', placeholder='Name of event' name='title' required value=(undefined===event ? '' : event.title))
+    div.form-group(style='display: flex; align-items: top;')
+      label(for='description' style='margin-right: 10px;') Summary:
+      textarea.w3-input#description.form-control(placeholder='description' name='description' required)= undefined===event ? '' : event.summary
+    div.form-group(style='display: flex; align-items: center;')
+      label(for='platform' style='margin-right: 10px;') Platform:
+      select.w3-input.w3-input-form#platform.form-control(name='platform', required style= 'max-height:40px; max-width: 100px;')
         option(value='PC') PC
         option(value='PS') PS
         option(value='xbox') Xbox
         option(value='switch') Switch
-    div.form-group
-      label game:
-        input(type='text', id='category-search', placeholder='Search games...', oninput="filtergames()")
+    div.form-group(style='display: flex; align-items: center;')
+      label(style='margin-right: 10px;') game:
+        input.w3-input.w3-input-form(type='text', id='category-search', placeholder='Search games...', oninput="filtergames()")
         div#category-list(style='max-height: 200px; overflow-y: auto;')
             for game in games
               div.category-item(style='padding: 5px;')
@@ -26,16 +26,17 @@ block content
                 label(for=game._id) &nbsp;#{game.name}
     div.form-group
       label(for='date') Date and Time of Event:
-        input#date.form-control(type='datetime-local' name='date' required value=(event && event.date ? event.date.toISOString().slice(0, 16) : '') )
+        input.w3-input.w3-input-form#date.form-control(type='datetime-local' name='date' required value=(event && event.date ? event.date.toISOString().slice(0, 16) : '') )
 
-      div.form-group
-      label(for='max_size') Maximal participants (including yourself):
-        input#max_size.form-control(
+      div.form-group(style='display: flex; align-items: top;')
+      label(for='max_size' style='margin-right: 10px;') Maximal participants (including yourself):
+        input.w3-input.w3-input-form#max_size.form-control(
           type='number',
           name='max_size',
           value=(event && event.max_size !== undefined ? event.max_size : ""),
           min='1',
-          max='40'
+          max='40',
+          required style='max-width: 60px;'
         )
 
     button.btn.btn-primary(type='submit') Submit
