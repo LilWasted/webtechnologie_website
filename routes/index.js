@@ -5,6 +5,14 @@ const router = express.Router();
 router.get("/", function (req, res) {
   res.redirect("/home");
 });
+
+router.get("/terms-of-service", function (req, res) {
+  res.render("terms_of_service");
+});
+
+router.get("/privacy-policy", function (req, res) {
+  res.render("privacy_policy");
+});
 //- [ ] privacy policy
 //- [ ] terms of service
 //- [ ] cookie policy

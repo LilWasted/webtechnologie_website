@@ -37,63 +37,42 @@ html(lang='en')
             margin-left: 0;
           }
         }
+
+        .w3-bar {
+          display: flex;
+          justify-content: flex-end; /* Align items to the right */
+        }
+
+        .w3-bar .w3-bar-item {
+          margin-left: 10px; /* Add some space between items */
+        }
     //link(rel='stylesheet', href='/stylesheets/style.css')
 
 
   body(class='w3-black')
     // Top Navbar for Mobile (Hidden by default)
-    nav.w3-top.w3-hide-medium.w3-hide-large.w3-opacity w3-hover-opacity-off
-      .w3-bar.w3-black.w3-opacity w3-hover-opacity-off.w3-center.w3-small
-        a.w3-bar-item.w3-button(href='/home') Home
-        a.w3-bar-item.w3-button(href='/home/events') All events
-        a.w3-bar-item.w3-button(href='/home/games') All games
-        if user
-          hr
-          a(href='/home/event/create' class='w3-bar-item w3-button') Create new event
-          a(href='/home/games/create' class='w3-bar-item w3-button') Create new game
-          hr
-          a(href='/user/logout' class='w3-bar-item w3-button') Logout
-          a(href='/user/profile' class='w3-bar-item w3-button') Profile
-        else
-          hr
-          a(href='/user/login' class='w3-bar-item w3-button') Login
-    // Sidebar
-    nav.w3-sidebar.w3-bar-block.w3-small.w3-hide-small.w3-center
-      block sidebar
-        ul(class='w3-bar-block')
-          li
-            a(href='/home' class='w3-bar-item w3-button') Home
-          li
-            a(href='/home/events' class='w3-bar-item w3-button') All events
-          li
-            a(href='/home/games' class='w3-bar-item w3-button') All games
-          if user
-            hr
-            li
-              a(href='/home/event/create' class='w3-bar-item w3-button') Create new event
-            li
-              a(href='/home/games/create' class='w3-bar-item w3-button') Create new game
-            hr
-            li
-              a(href='/user/logout' class='w3-bar-item w3-button') Logout
-            li
-              a(href='/user/profile' class='w3-bar-item w3-button') Profile
-          else
-            hr
-            li
-              a(href='/user/login' class='w3-bar-item w3-button') Login
+    header.w3-bar.w3-black
+      a.w3-bar-item.w3-button(href='/home') Home
+      a.w3-bar-item.w3-button(href='/home/events') All events
+      a.w3-bar-item.w3-button(href='/home/games') All games
+      if user
+        a.w3-bar-item.w3-button(href='/home/event/create') Create new event
+        a.w3-bar-item.w3-button(href='/home/games/create') Create new game
+        a.w3-bar-item.w3-button(href='/user/profile') Profile
+        a.w3-bar-item.w3-button(href='/user/logout') Logout
+      else
+        a.w3-bar-item.w3-button(href='/user/login') Login
 
     // Main Content
+
     div#main(class='w3-padding-large')
       block content
 
     // Footer
-    footer.w3-content.w3-padding-64.w3-text-grey.w3-xlarge
+    //footer.w3-content.w3-padding-64.w3-text-grey.w3-xlarge
       //i.fa.fa-facebook-official.w3-hover-opacity
       //i.fa.fa-instagram.w3-hover-opacity
       //i.fa.fa-snapchat.w3-hover-opacity
       //i.fa.fa-pinterest-p.w3-hover-opacity
       //i.fa.fa-twitter.w3-hover-opacity
       //i.fa.fa-linkedin.w3-hover-opacity
-
-
