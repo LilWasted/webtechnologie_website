@@ -1,21 +1,36 @@
 extends layout
 
 block content
-    h1= title
-    if event_list.length
-        ul
-            each event in event_list
-                li
-                    a(href=event.url) #{event.title}
-                        |  (#{event.game.name})
-                        if event.status === 'Available'
-                            p.text-success (#{event.game.name}) Available = #{event.participants.length} / #{event.max_size}
-                        else if event.status === 'Full'
-                            p.text-danger (#{event.game.name}) event is full, #{event.participants.length} / #{event.max_size}
-                        else
-                            p.text-warning #{event.status}
+  h1 All Events
 
-                //p.players = #{event.participants.length} / #{event.max_size}
+  div.w3-margin-bottom
+    input.w3-input.w3-border.w3-round(type='text', placeholder='Search events...', id='search-bar')
 
-    else
-        p There are no events.
+  if event_list && event_list.length
+    ul(style='list-style-type:none;')
+      each event in event_list
+        li.w3-padding-16
+          a(href=event.url, class='w3-text-blue w3-hover-text-light-blue') #{event.title}
+          p Game: #{event.game.name}
+          if event.status === 'Available'
+            p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
+          else if event.status === 'Full'
+            p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
+          else
+            p.w3-text-orange #{event.status}
+  else
+    p.w3-text-gray No events found.
+
+  script.
+    document.getElementById('search-bar').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const events = document.querySelectorAll('ul > li');
+        events.forEach(event => {
+            const title = event.querySelector('a').textContent.toLowerCase();
+            if (title.includes(query)) {
+                event.style.display = '';
+            } else {
+                event.style.display = 'none';
+            }
+        });
+    });
