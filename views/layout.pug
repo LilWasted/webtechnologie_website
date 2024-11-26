@@ -11,7 +11,15 @@ html(lang='en')
         link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
         style.
             body, h1, h2, h3, h4, h5, h6 {
-                font-family: "Montserrat", sans-serif
+                font-family: 'Montserrat', sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #main-content {
+                flex: 1;
             }
 
             .footer {
@@ -22,12 +30,18 @@ html(lang='en')
                 border-top: 2px solid white; /* Add a border to the top */
                 position: relative;
                 width: 100%;
+                position: relative;
+                bottom: 0;
             }
 
             .footer a {
                 color: white;
                 text-decoration: none;
                 margin: 0 10px;
+            }
+
+            .w3-hover-light-red-hover {
+                background-color: #ffcccc !important; /* Light red color */
             }
 
             .footer a:hover {
@@ -108,7 +122,7 @@ body(class='w3-black')
 
     // Main Content
 
-    div#main(class='w3-padding-large')
+    div#main-content(class='w3-padding-large')
         block content
 
     footer(class='footer')
