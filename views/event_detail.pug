@@ -1,48 +1,65 @@
 extends layout
 
 block content
-    h1 Title: #{event.title}
+  // Event Title Section
+  div.w3-container.w3-padding-32.w3-center
+    h1.w3-xxlarge.w3-text-white Title: #{event.title}
 
-    p #[strong game: ]
-        a(href=event.game.url) #{event.game.name}
-    p #[strong Summary:] #{event.description}
-    if date
-        p #[strong Date:] #{date.toDateString()} #{date.toLocaleTimeString()}
-    else
-        p #[strong Date:] Not specified
-
-    p #[strong platform:] #{event.platform}
-
-    div(style='margin-left:20px;margin-top:20px')
-        hr
-        if status_event==='Available'
-            p.text-success playes = #{users.length} / #{max_size}
-        else if status_event==='Full'
-            p.text-danger event is full
+  // Game and Description Section
+  div.w3-container.w3-padding-16
+    p.w3-large
+      strong Game:
+      span(style='margin-left: 10px;')
+      a.w3-text-blue.w3-hover-text-light-blue(href=event.game.url) #{event.game.name}
+    p.w3-large
+      strong Summary:
+      span(style='margin-left: 10px;') #{event.description}
+    p.w3-large
+      strong Date:
+      span(style='margin-left: 10px;')
+        if date
+          | #{date.toDateString()} #{date.toLocaleTimeString()}
         else
-            p.text-warning #{status_event}
+          | Not specified
+    p.w3-large
+      strong Platform:
+      span(style='margin-left: 10px;') #{event.platform}
 
-    div(style='margin-left:20px;margin-top:20px')
-        h2(style='font-size: 1.5rem;') users
-
-        each val in users
-            p.user #{val.username}
-
-        else
-            p There are no users
-
+  // Event Status Section
+  div.w3-container.w3-padding-16
     hr
-    p
-    if event.organizer.equals(user._id)
-        p
-            a(href=event.url + '/delete') Delete event
-        p
-            a(href=event.url + '/update') Edit event
+    if status_event === 'Available'
+      p.w3-text-green.w3-large Players: #{users.length} / #{max_size}
+    else if status_event === 'Full'
+      p.w3-text-red.w3-large This event is full
     else
-        for user1 in users
-            if user1._id.equals(user._id)
-                a(href=event.url + '/leave') Leave event
-            else
-                p
-                if status_event === "Available" && new Date(event.date) > new Date()
-                    a(href=event.url + '/join') join event
+      p.w3-text-orange.w3-large Status: #{status_event}
+
+  // User List Section
+  div.w3-container.w3-padding-16
+    h2.w3-large.w3-text-white Users
+    if users && users.length
+      div.w3-row-padding
+        each val in users
+          div.w3-third.w3-padding-small
+            div.w3-card.w3-white.w3-padding.w3-center
+              span.w3-text-black #{val.username}
+    else
+      p.w3-text-gray There are no users
+    hr
+
+  // Organizer Actions
+  if event.organizer.equals(user._id)
+    div.w3-container.w3-padding-16
+      p
+        a.w3-button.w3-red.w3-hover-pink.w3-round-large(href=event.url + '/delete') Delete Event
+      p
+        a.w3-button.w3-orange.w3-hover-yellow.w3-round-large(href=event.url + '/update') Edit Event
+  else
+    // User Participation Section
+    if users.some(user1 => user1._id.equals(user._id))
+      div.w3-container.w3-padding-16
+        a.w3-button.w3-red.w3-hover-pink.w3-round-large(href=event.url + '/leave') Leave Event
+    else if status_event === 'Available' && new Date(event.date) > new Date()
+      div.w3-container.w3-padding-16
+        a.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(href=event.url + '/join') Join Event

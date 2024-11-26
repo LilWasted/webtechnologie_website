@@ -12,7 +12,7 @@ block content
         h3 Email: #{user.email}
         h3 Rating: #{user.rating}
         h3 Events: #{numEvents}
-        ul
+        ul(style='list-style-type:none;')
             each event in user.events
                 li
                     a(href=event.url) #{event.title}

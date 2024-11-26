@@ -1,30 +1,45 @@
 extends layout
 
 block content
-    h1 Title: #{event.title}
+  // Event Title Section
+  div.w3-container.w3-padding-32.w3-center
+    h1.w3-xxlarge.w3-text-white Title:  #{event.title}
 
-    p #[strong game: ]
-        a(href=event.game.url) #{event.game.name}
-    p #[strong Summary:] #{event.description}
+  // Game and Description Section
+  div.w3-container.w3-padding-16
+    p.w3-large
+      strong Game:
+      span(style='margin-left: 10px;')
+      a.w3-text-blue.w3-hover-text-light-blue(href=event.game.url) #{event.game.name}
+    p.w3-large
+      strong Summary:
+      span(style='margin-left: 10px;')
+      | #{event.description}
 
-    div(style='margin-left:20px;margin-top:20px')
-        hr
-        if event.status==='Available'
-            p.text-success playes = #{users.length} / #{event.max_size}
-        else if val.status==='Full'
-            p.text-danger event is full
-        else
-            p.text-warning #{val.status}
-
-    div(style='margin-left:20px;margin-top:20px')
-        h2(style='font-size: 1.5rem;') users
-
-        each val in users
-            p.user #{val.username}
-
-        else
-            p There are no users
+  // Event Status Section
+  div.w3-container.w3-padding-16
     hr
+    if event.status === 'Available'
+      p.w3-text-green.w3-large Players: #{users.length} / #{event.max_size}
+    else if event.status === 'Full'
+      p.w3-text-red.w3-large This event is full.
+    else
+      p.w3-text-orange.w3-large Status: #{event.status}
 
-    if event.status==='Available'
-        a(href='/user/login') join event
+    // User List Section
+    div.w3-container.w3-padding-16
+        h2.w3-large.w3-text-white Users
+        if users && users.length
+            div.w3-row-padding
+                each val in users
+                    div.w3-third.w3-padding-small
+                        div.w3-card.w3-white.w3-padding.w3-center
+                            span.w3-text-black #{val.username}
+        else
+            p.w3-text-gray No users have joined this event yet.
+        hr
+
+  // Join Event Section
+  if event.status === 'Available'
+    div.w3-container.w3-padding-16.w3-center
+      a.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(href='/user/login') Join Event
