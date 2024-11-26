@@ -4,6 +4,7 @@ const User = require('../models/User');
 const asyncHandler = require("express-async-handler");
 const SECRET_KEY=process.env.SECRET_KEY
 const multer = require('multer');
+const Event = require("../models/event");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -98,9 +99,12 @@ exports.profile = asyncHandler ( async (req, res, next) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        const numEvents = await Event.countDocuments({ _id: { $in: user.events } }).exec();
+
         res.render("profile", {
             title: "Profile",
-            user: user
+            user: user,
+            numEvents : numEvents
         });
     } catch (error) {
         next(error);
@@ -118,10 +122,11 @@ exports.edit_profile_get = asyncHandler ( async (req, res, next) => {
         const verify = jwt.verify(token, SECRET_KEY);
         const user = await User.findOne({ _id: verify.userId });
 
+
         console.log("edit");
         res.render("edit_profile", {
             title: "Edit Profile",
-            user: user
+            user: user,
         });
 
         console.log("edit done");

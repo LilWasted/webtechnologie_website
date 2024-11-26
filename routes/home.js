@@ -65,3 +65,4 @@ router.post("/games/create/", game_controller.game_create_post);
 
 router.get("/games/:id", game_controller.game_detail);
 module.exports = router;
+

@@ -10,6 +10,12 @@ GameSchema.virtual("url").get(function () {
     return `/home/games/${this._id}`;
 });
 
+// Virtual for book's URL
+GameSchema.virtual("url").get(function () {
+    // We don't use an arrow function as we'll need this object
+    return `/home/games/${this._id}`;
+});
+
 // Export models
 module.exports = mongoose.model("game", GameSchema);
 

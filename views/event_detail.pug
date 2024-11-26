@@ -44,5 +44,5 @@ block content
                 a(href=event.url + '/leave') Leave event
             else
                 p
-                if status_event === "Available"
+                if status_event === "Available" && new Date(event.date) > new Date()
                     a(href=event.url + '/join') join event

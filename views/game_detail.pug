@@ -9,7 +9,7 @@ block content
       ul
         each event in game_events
           li
-            a(href=event.url) #{event.title}
+            a(href=event.url) event : #{event.title}
             p Available slots:   #{event.participants.length} / #{event.max_size}
     else
       p No open events in this category.

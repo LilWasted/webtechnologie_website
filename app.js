@@ -31,6 +31,34 @@ cron.schedule('* * * * *', async () => {
   } catch (error) {
     console.error('Error in cron job:', error);
   }
+
+  //dit misschien per uur duun ipv per minuut of zelfs per dag
+  try {
+    console.log('Cron job started at to delete event:', new Date().toISOString());
+    const events = await Event.find({
+      date: { $lt: new Date(Date.now() - (2 * 3600000)) },
+    }).exec();
+
+    for (const event of events) {
+      for (const participant of event.participants) {
+        //events verwijderen van user => user.events array updaten
+        //pull = remove from array in mongoDB
+        //geen user.save() nodig omdat updateOne al save doet
+        await User.updateOne(
+            { _id: participant._id },
+            { $pull: { events: event._id } }
+        );
+      }
+      console.log('Event removed :', event.title);
+      await Event.findByIdAndDelete(event._id);
+    }
+
+
+
+  } catch (error) {
+    console.error('Error in cron job:', error);
+  }
+
 });
 
 const indexRouter = require('./routes/index');
