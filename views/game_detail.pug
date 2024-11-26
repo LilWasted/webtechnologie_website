@@ -1,17 +1,18 @@
 extends layout
 
 block content
-  h1= title
   if game
-    h2 game: #{game.name}
+    h1 Game: #{game.name}
     if game_events.length
-      h3 Open Events:
-      ul
+      h2 Open Events:
+      ul(class='w3-ul w3-border w3-white')
         each event in game_events
-          li
-            a(href=event.url) event : #{event.title}
-            p Available slots:   #{event.participants.length} / #{event.max_size}
+          li(class='w3-padding')
+            a(href=event.url)
+              i(class='fa fa-gamepad')
+              |  Event: #{event.title}
+            p Available slots: #{event.participants.length} / #{event.max_size}
     else
       p No open events in this category.
   else
-    p game not found.
+    p Game not found.
