@@ -45,6 +45,11 @@ html(lang='en')
                 margin: 0 10px;
             }
 
+            footer span::before {
+                content: "|";
+                margin-right: 10px; /* Adjust the space here */
+            }
+
             .w3-hover-light {
                 background-color: #ffcccc !important; /* Light red color */
             }
@@ -79,7 +84,7 @@ html(lang='en')
                 top: 0;
                 width: 100%;
                 z-index: 1000; /* Ensure the header is above other content */
-                //background-color: #151519; /* Change background color to gray */
+                background-color: #151519; /* Change background color to gray */
                 border: 2px solid #151519; /* Add a border around the entire header */
                 display: flex;
                 justify-content: flex-end; /* Align items to the right */
@@ -96,7 +101,7 @@ html(lang='en')
             .hero {
                 position: relative;
                 width: 100%;
-                height: calc(100vh - 14vh); /* Full height minus header height */
+                height: calc(100vh - 13vh); /* Full height minus header height */
                 background: url("/images/pexels-a-darmel-7862414.jpg") no-repeat center center/cover;
                 background-size: cover; /* Ensure the image covers the entire area */
                 background-position: center; /* Center the image */
@@ -141,5 +146,5 @@ body(class='w3-black body-container')
         a(href='/privacy-policy') Privacy Policy
         |  |
         a(href='/terms-of-service') Terms of Use
-        |  |
+        |
         span     Copyright 2024
