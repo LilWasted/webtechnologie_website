@@ -3,9 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const bodyHeight = document.documentElement.scrollHeight;
     const viewportHeight = window.innerHeight;
 
-    console.log(window.outerHeight);
-
-    console.log(bodyHeight, viewportHeight);
     if (bodyHeight <= viewportHeight) {
         footer.style.position = 'absolute';
     } else {

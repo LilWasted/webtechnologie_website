@@ -228,13 +228,11 @@ exports.event_create_post = [  //hookevent_create_post
 exports.event_delete_get = asyncHandler(async (req, res, next) => {
     const event = await Event.findById(req.params.id).populate("organizer") .exec();
 
-
     //enkel de organisator kan dit
     let user = await res.locals.user;
-    if(event.organizer._id !== user._id){
+    if (!event.organizer.equals(user._id)) {
        return res.redirect("/home/events");
     }
-
 
     if (!event) {
         const err = new Error("Event not found");
@@ -255,6 +253,7 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
 
     if (event === null) {
         // No results.
+        console.log("event not found");
         res.redirect("/home/events");
     }
 
