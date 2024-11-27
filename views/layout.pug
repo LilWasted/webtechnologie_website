@@ -23,7 +23,7 @@ html(lang='en')
             }
 
             #main-content {
-                margin-top: 60px; /* Adjust this value based on the header height */
+                margin-top: 6vh; /* Adjust this value based on the header height */
             }
 
             .footer {
@@ -32,6 +32,11 @@ html(lang='en')
                 text-align: center;
                 padding: 10px 0;
                 width: 100%;
+                height: 4vh;
+                display: flex;
+                align-items: center; /* Center items vertically */
+                justify-content: center; /* Align items to the right */
+
             }
 
             .footer a {
@@ -74,21 +79,25 @@ html(lang='en')
                 top: 0;
                 width: 100%;
                 z-index: 1000; /* Ensure the header is above other content */
-                background-color: #151519; /* Change background color to gray */
+                //background-color: #151519; /* Change background color to gray */
                 border: 2px solid #151519; /* Add a border around the entire header */
                 display: flex;
                 justify-content: flex-end; /* Align items to the right */
+                align-items: center; /* Center items vertically */
+                height: 6vh;
             }
 
             .w3-bar .w3-bar-item {
                 margin-left: 10px; /* Add some space between items */
+                font-size: 2vh; /* Increase the font size */
+
             }
 
             .hero {
                 position: relative;
                 width: 100%;
-                height: calc(100vh - 120px); /* Full height minus header height */
-                background: url('/images/pexels-a-darmel-7862414.jpg') no-repeat center center/cover;
+                height: calc(100vh - 14vh); /* Full height minus header height */
+                background: url("/images/pexels-a-darmel-7862414.jpg") no-repeat center center/cover;
                 background-size: cover; /* Ensure the image covers the entire area */
                 background-position: center; /* Center the image */
                 display: flex;

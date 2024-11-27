@@ -11,12 +11,13 @@ const Event = require('./models/event');
 const cron = require('node-cron');
 const { sendEventReminder } = require('./controllers/mailController');
 
-//schedule a cron job to run every minute
-cron.schedule('* * * * *', async () => {
+//schedule a cron job to at the start of every hour
+cron.schedule('0 * * * *', async () => {
   console.log('Cron job started at:', new Date().toISOString());
   try {
     const events = await Event.find({
-      date: { $gte: new Date(), $lt: new Date(Date.now() + 3600000) },
+      //2 uur from now and only if reminderSent is false
+      date: { $gte: new Date(), $lt: new Date(Date.now() + 7200000) },
       reminderSent: false
     }).exec();
 

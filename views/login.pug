@@ -4,22 +4,106 @@ block content
     head
         title Login
     body
-        h1 Login
-        form(action="/user/login" method="POST")
-            div
-                label(for="username") Username:
-                input.w3-input.w3-input-search(type="text" name="username" id="username" required)
-            div
-                label(for="password") Password:
-                input.w3-input.w3-input-search(type="password" name="password" id="password" required)
-            div
-                button(type="submit") Login
+        style.
 
-        h2 or
-            div
-                a(href="/user/auth/google") Sign in with Google
+            h1 {
+                color: black;
+                font-size: 3rem;
+            }
+
+            .login-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 80vh;
+            }
+
+            .login-form {
+                background: dimgray;
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+
+            .input-container {
+                margin-bottom: 1.5rem;
+            }
+
+            .input-container label {
+                display: block;
+                margin-bottom: 1rem;
+                font-weight: bold;
+                font-size: 1.5rem; /* Increased font size */
+
+            }
+
+            .input-container input {
+                width: 100%;
+                padding: 1rem;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                font-size: 1.5rem; /* Increased font size */
+
+            }
+
+            .input-container button {
+                width: 100%;
+                padding: 0.5rem;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .alternative {
+                margin-top: 4rem;
+            }
+
+            .alternative h2 {
+                margin: 1rem 0;
+            }
+
+            .alternative .input-container a {
+                display: block;
+                width: 100%;
+                padding: 0.5rem;
+                text-align: center;
+                border-radius: 5px;
+                text-decoration: none;
+                color: white;
+            }
+
+            .w3-button.w3-blue {
+                background-color: #2196F3;
+            }
+
+            .w3-button.w3-red {
+                background-color: #f44336;
+            }
+
+            .w3-button.w3-green {
+                background-color: #4CAF50;
+            }
 
 
-        h2 or
-            div
-                a(href='/user/register') Register here
+
+
+        .login-container
+            .login-form
+
+                h1 Login
+                form(action="/user/login" method="POST")
+                    .input-container
+                        label(for="username") Username:
+                        input.w3-input(type="text" name="username" id="username" required)
+                    .input-container
+                        label(for="password") Password:
+                        input.w3-input(type="password" name="password" id="password" required)
+                    .input-container
+                        button.w3-button.w3-blue(type="submit") Login
+
+                .alternative
+                    .input-container
+                        a.w3-button.w3-red(href="/user/auth/google") Sign in with Google
+                    .input-container
+                        a.w3-button.w3-green(href='/user/register') Register here

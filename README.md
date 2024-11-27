@@ -25,6 +25,8 @@ profile:
 
 terms en privacy policy opmaken
 
+indien foute inlog gegevens, terug naar inlog pagina met login niet gevonden
+
 pages:
 - [ ] contact
 features:

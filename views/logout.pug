@@ -1,14 +1,50 @@
 extends layout
 
 block content
+    .logout-container
+        .logout-form
+            h1 #{title}
+            p Do you really want to logout?
+            form(method='POST')
+                div.form-group
+                    input#userid.form-control(type='hidden', name='userid', value="user")
+                button.btn.btn-primary(type='submit') Logout
 
-  h1 #{title}
+    style.
+        .logout-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
 
+        .logout-form {
+            background: #333; /* Dark gray background */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #fff; /* White text for contrast */
+        }
 
-    p Do you really want to logout
+        .logout-form h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
 
-    form(method='POST')
-      div.form-group
-        input#userid.form-control(type='hidden', name='userid', value="user" )
+        .logout-form p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
 
-      button.btn.btn-primary(type='submit') logout
+        .logout-form .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .logout-form button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            background-color: #007bff; /* Bootstrap primary button color */
+            color: #fff; /* White text for button */
+        }
