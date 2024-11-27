@@ -20,6 +20,7 @@ exports.game_detail = asyncHandler(async (req, res, next) => {
         Event.find({ game: req.params.id, status: "Available" }, "title summary")
             .populate("participants")
             .populate("max_size")
+            .populate("status")
             .sort({ title: 1 })
             .exec(),
     ]);

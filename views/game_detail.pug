@@ -11,7 +11,12 @@ block content
             a(href=event.url)
               i(class='fa fa-gamepad')
               |  Event: #{event.title}
-            p Available slots: #{event.participants.length} / #{event.max_size}
+            if event.status === 'Available'
+              p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
+            else if event.status === 'Full'
+              p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
+            else
+              p.w3-text-orange #{event.status}
     else
       p No open events in this category.
   else
