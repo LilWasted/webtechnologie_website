@@ -2,8 +2,9 @@
 https://gamergatherings.com/
 
 TODO:
-- [ ] andere users ne rating geven
-- [ ] anderen kunnen kicken
+- [ ] andere users ne rating geven(via profile andere user, tussen 1 en 10)
+- [ ] anderen kunnen kicken(als organizer)
+- [ ] blacklist(als organizer)
 
 - [ ] events
    - [ ] duur event (optionaal)
@@ -19,6 +20,7 @@ in event list: ook op availability kiezen
 title groter zetten
 game_detail -> niet een simpele witte achtergrond
 
+-zien profile van ander persoon zonder edit knop
 create event verschonen
 
 profile:
