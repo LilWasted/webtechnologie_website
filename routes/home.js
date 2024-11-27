@@ -5,6 +5,7 @@ const game_controller = require("../controllers/gameController");
 const event_controller = require("../controllers/eventController");
 
 
+
 /// Event ROUTES ///
 
 // GET catalog home page.
@@ -47,13 +48,10 @@ router.get("/events/:id/update", event_controller.update_get);
 // POST request to leave an event.
 router.post("/events/:id/update", event_controller.update_post);
 
-router.get("/events/:id/blacklist", event_controller.blacklist_get);
+router.get("/events/:id/kick/:kickId", event_controller.kick_get);
 
-router.post("/events/:id/blacklist", event_controller.blacklist_post);
+router.post("/events/:id/kick/:kickId", event_controller.kick_post);
 
-router.get("/events/:id/kick", event_controller.kick_get);
-
-router.post("/events/:id/kick", event_controller.kick_post);
 
 /// Games ROUTES ///
 

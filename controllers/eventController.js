@@ -291,6 +291,10 @@ exports.join_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.join_post = asyncHandler(async (req, res, next) => {
+    if (event.participants.length === event.max_size) {
+        red.redirect(event.url);
+    }
+
     const event = await Event.findById(req.params.id)
         .populate('participants')
         .populate("blacklist")
@@ -485,40 +489,41 @@ exports.update_post = [ //hookupdate_post
 
 ];
 
-//TODO afmaken
-//naast elke user een knop om te kicken, enkel organisator kan dit => nieuwe pug file enkel voor organisator
-exports.blacklist_get = asyncHandler(async (req, res, next) => { //hookupdate_get
-    const event = await Event.findById(req.params.id);
-
-
-
+exports.kick_get = asyncHandler(async (req, res, next) => {
+    res.send("Kick GET request received");
 });
-//TODO afmaken
-exports.blacklist_post = asyncHandler(async (req, res, next) => { //hookupdate_post
-    const event = await Event.findById(req.params.id);
 
+//TODO afmaken
+exports.kick_post = asyncHandler(async (req, res, next) => {
+    console.log("kick post");
+    const event = await Event.findById(req.params.id).populate('participants').exec();
+    const userToKick = await User.findById(req.params.kickId).exec();
     const user = await res.locals.user;
 
-    //TODO: via contains
-    if(user._id === event.organizer){
-
+    if (!event.organizer.equals(user._id)) {
+        return res.redirect("/home/events");
     }
-});
-//TODO afmaken
-exports.kick_get = asyncHandler(async (req, res, next) => { //hookupdate_get
 
-});
-
-//TODO afmaken
-exports.kick_post = asyncHandler(async (req, res, next) => { //hookupdate_post
-    const [event] = await Promise.all([
-        Event.findById(req.params.id)
-    ]);
-
-    const user = await res.locals.user;
-
-    //TODO: via contains
-    if(user._id === event.organizer  ){
-
+    if (!userToKick) {
+        return res.redirect("/home/events");
     }
+
+    // Remove the user from the event participants
+    event.participants.pull(userToKick._id);
+
+    // Add the user to the event blacklist
+    event.blacklist.push(userToKick._id);
+
+    // Check if the event is no longer full
+    if (event.participants.length < event.max_size) {
+        event.status = 'Available';
+    }
+
+    await event.save();
+
+    // Remove the event from the user's events list
+    userToKick.events.pull(event._id);
+    await userToKick.save();
+
+    res.redirect(`/events/${event._id}`);
 });
