@@ -273,35 +273,20 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
     res.redirect("/home/events");
 });
 
-
-exports.join_get = asyncHandler(async (req, res, next) => {
-    const event = await
-        Event.findById(req.params.id).exec();
-
-
-    if (!event) {
-        // No results.
-        res.redirect("/home/events");
-    }
-
-    res.render("event_join", {
-        title: "join Event",
-        event: event,
-    });
-});
-
 exports.join_post = asyncHandler(async (req, res, next) => {
-    if (event.participants.length === event.max_size) {
-        red.redirect(event.url);
-    }
 
     const event = await Event.findById(req.params.id)
         .populate('participants')
         .populate("blacklist")
         .populate("max_size")
         .populate("status")
+        .populate("game")
+        .populate("date")
         .exec();
 
+    if (event.participants.length === event.max_size) {
+        red.redirect(event.url);
+    }
 
     //get user data
     const user = await res.locals.user;
@@ -317,7 +302,15 @@ exports.join_post = asyncHandler(async (req, res, next) => {
     for (const participant of event.blacklist) {
         if (user._id.equals(participant._id)) {
             console.log("user blacklisted");
-            return res.redirect(event.url);
+            return res.render("event_detail", {
+                event: event,
+                users: event.participants,
+                user: user,
+                status_event: event.status,
+                max_size: event.max_size,
+                date : event.date,
+                error: "You are blacklisted from this event.",
+            });
         }
     }
 
@@ -489,41 +482,58 @@ exports.update_post = [ //hookupdate_post
 
 ];
 
-exports.kick_get = asyncHandler(async (req, res, next) => {
-    res.send("Kick GET request received");
-});
 
 //TODO afmaken
 exports.kick_post = asyncHandler(async (req, res, next) => {
-    console.log("kick post");
+    console.log("kick post 1");
     const event = await Event.findById(req.params.id).populate('participants').exec();
     const userToKick = await User.findById(req.params.kickId).exec();
     const user = await res.locals.user;
+
+    console.log("kick post 2");
 
     if (!event.organizer.equals(user._id)) {
         return res.redirect("/home/events");
     }
 
+    console.log("kick post 4");
+
+
     if (!userToKick) {
         return res.redirect("/home/events");
     }
 
+    console.log("kick post 4");
+
+
     // Remove the user from the event participants
     event.participants.pull(userToKick._id);
 
+    console.log("kick post 5");
+
     // Add the user to the event blacklist
     event.blacklist.push(userToKick._id);
+
+    console.log("kick post 6");
+
 
     // Check if the event is no longer full
     if (event.participants.length < event.max_size) {
         event.status = 'Available';
     }
 
+    console.log("kick post 7");
+
     await event.save();
+
+    console.log("kick post 8");
 
     // Remove the event from the user's events list
     userToKick.events.pull(event._id);
     await userToKick.save();
 
-    res.redirect(`/events/${event._id}`);
+    console.log("kick post 8");
+
+
+    res.redirect(event.url);
 });

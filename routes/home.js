@@ -30,7 +30,7 @@ router.get("/events/:id/delete", event_controller.event_delete_get);
 // POST request to delete Book.
 router.post("/events/:id/delete", event_controller.event_delete_post);
 
-router.get("/events/:id/join", event_controller.join_get);
+// router.get("/events/:id/join", event_controller.join_get);
 
 // POST request to update Book.
 router.post("/events/:id/join", event_controller.join_post);
@@ -47,8 +47,6 @@ router.get("/events/:id/update", event_controller.update_get);
 
 // POST request to leave an event.
 router.post("/events/:id/update", event_controller.update_post);
-
-router.get("/events/:id/kick/:kickId", event_controller.kick_get);
 
 router.post("/events/:id/kick/:kickId", event_controller.kick_post);
 
