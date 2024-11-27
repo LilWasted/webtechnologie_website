@@ -2,22 +2,21 @@ extends layout
 
 block content
   div(class='w3-container w3-padding-large')
-    h1= title
-    form(method='POST', style='max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #333; border-radius: 10px; background-color: #333;')
-
+    form(method='POST', style='max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #333; border-radius: 10px; background-color: #333; text-align: center;')
+      h1= title
       // Title input field
       div.form-group(style='margin-bottom: 20px;')
-        label(for='title' style='font-size: 16px; display: block; margin-bottom: 5px;') Title:
+        label(for='title' style=' display: block; margin-bottom: 5px;') Title:
         input.w3-input.w3-border.w3-round-large#title.form-control(type='text', placeholder='Name of event', name='title', required value=(undefined === event ? '' : event.title), style='width: 100%;')
 
       // Summary textarea field
       div.form-group(style='margin-bottom: 20px;')
-        label(for='description' style='font-size: 16px; display: block; margin-bottom: 5px;') Summary:
+        label(for='description' style=' display: block; margin-bottom: 5px;') Summary:
         textarea.w3-input.w3-border.w3-round-large#description.form-control(placeholder='Description', name='description', readonly, style='width: 100%; height: 80px; padding: 10px; background-color: #f1f1f1;')
 
       // Platform select field
       div.form-group(style='margin-bottom: 20px;')
-        label(for='platform' style='font-size: 16px; display: block; margin-bottom: 5px;') Platform:
+        label(for='platform' style=' display: block; margin-bottom: 5px;') Platform:
         select.w3-input.w3-border.w3-round-large#platform.form-control(name='platform', required style='max-height: 40px; width: 100%;')
           option(value='PC') PC
           option(value='PS') PS
@@ -26,7 +25,7 @@ block content
 
       // Game search input field
       div.form-group(style='margin-bottom: 20px;')
-        label(for='game' style='font-size: 16px; display: block; margin-bottom: 5px;') Game:
+        label(for='game' style=' display: block; margin-bottom: 5px;') Game:
         input.w3-input.w3-border.w3-round-large#category-search.form-control(type='text', placeholder='Search games...', oninput="filtergames()", required style='width: 100%;')
 
       // Game options (displayed based on search)
@@ -34,16 +33,16 @@ block content
         each game in games
           div.category-item(style='display: flex; align-items: center; padding: 5px 0;')
             input(type='radio', name='game', id=game._id, value=game._id, style='margin-right: 10px;')
-            label(for=game._id) &nbsp;#{game.name}
+            label(for=game._id, style='font-size: 16px;') &nbsp;#{game.name}
 
       // Date and time input field
       div.form-group(style='margin-bottom: 20px;')
-        label(for='date' style='font-size: 16px; display: block; margin-bottom: 5px;') Date and Time of Event:
+        label(for='date' style=' display: block; margin-bottom: 5px;') Date and Time of Event:
         input.w3-input.w3-border.w3-round-large#date.form-control(type='datetime-local', name='date', required value=(event && event.date ? event.date.toISOString().slice(0, 16) : ''), style='width: 100%;')
 
       // Max participants input field
       div.form-group(style='margin-bottom: 20px;')
-        label(for='max_size' style='font-size: 16px; display: block; margin-bottom: 5px;') Maximal participants (including yourself):
+        label(for='max_size' style=' display: block; margin-bottom: 5px;') Maximal participants (including yourself):
         input.w3-input.w3-border.w3-round-large#max_size.form-control(type='number', name='max_size', value=(event && event.max_size !== undefined ? event.max_size : ""), min='1', max='40', required style='width: 100%;')
 
       // Submit button
@@ -54,6 +53,13 @@ block content
       ul(style='color: red;')
         each error in errors
           li= error.msg
+  style.
+    form label {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
 
   script.
     function filtergames() {
