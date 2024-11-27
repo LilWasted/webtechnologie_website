@@ -36,26 +36,23 @@ exports.login_post = asyncHandler ( async (req, res, next) => {
     try {
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.render('login', { title: 'Login', error: 'User not found, try again' });
         }
 
         const passwordMatch = await user.comparePassword(password);
         console.log("Password Match:", passwordMatch);
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Incorrect password' });
+            return res.render('login', { title: 'Login', error: 'Incorrect password, try again' });
         }
 
         const token = jwt.sign({username: username, userId: user._id, type: user.role }, SECRET_KEY, {
             expiresIn: '1 hour'
         });
         res.cookie('token',token,{ httpOnly: true });  // maxAge: 2 hours
-        console.log("saved local token");
-
+        res.redirect('/home');
     } catch (error) {
         next(error);
     }
-
-    res.redirect('/home');
 });
 
 exports.login_get = asyncHandler ( async (req, res) => {
