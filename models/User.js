@@ -4,8 +4,6 @@ const Schema = mongoose.Schema;
 const fs = require('fs');
 const path = require('path');
 
-
-
 const userSchema = new mongoose.Schema({
         googleId: { type: String, required: false, unique: true},
         username:{type: String, required: true, unique: true},
@@ -14,7 +12,6 @@ const userSchema = new mongoose.Schema({
                 return !this.googleId; // Password is required if googleId is not present
             }},
         role: {type: String, enum: ['user', 'admin'], default: 'user'},
-        rating: {type: Number, default: 0},
         events: [{type: Schema.Types.ObjectId, ref: "Event"}],
         profilePicture: { type: Buffer, required: false},
         createdAt: {type: Date, default: Date.now()}},
@@ -24,7 +21,6 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.register = async function () {
      this.save();
 };
-
 
 // Compare the given password with the hashed password in the database
 userSchema.methods.comparePassword = async function (password) {
@@ -41,7 +37,6 @@ userSchema.pre('register', async function (next) {
         user.profilePicture = fs.readFileSync(defaultImagePath);
     }
 
-
     try {
         const salt = await bcrypt.genSalt();
         user.password = await bcrypt.hash(user.password, salt);
@@ -50,6 +45,5 @@ userSchema.pre('register', async function (next) {
         return next(error);
     }
 });
-
 
 module.exports = mongoose.model('User', userSchema);

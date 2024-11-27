@@ -521,6 +521,7 @@ exports.kick_post = asyncHandler(async (req, res, next) => {
     if (event.participants.length < event.max_size) {
         event.status = 'Available';
     }
+    console.log(event.groeprating);
 
     console.log("kick post 7");
 

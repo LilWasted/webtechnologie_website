@@ -24,14 +24,5 @@ EventSchema.virtual("url").get(function () {
     return `/home/events/${this._id}`;
 });
 
-//TODO dit doet niets moet een url geven
-EventSchema.virtual("groupRating").get(function () {
-  let som = 0;
-  for (let i = 0; i < this.participants.length; i++) {
-    som += this.participants[i].rating;
-  }
-  return this.participants.length > 0 ? som / this.participants.length : 0;
-});
-
 // Export model
 module.exports = mongoose.model("Event", EventSchema);
