@@ -53,12 +53,22 @@ function filterGamesList() {
     const searchTerm = document.getElementById('search').value.trim().toLowerCase();
     const gameItems = document.querySelectorAll('#game-list li');
 
+    if (!searchTerm) {
+        // If no search term, make all items visible
+        gameItems.forEach(item => {
+            item.style.display = 'block'; //block
+        });
+        // Ensure the game list is visible
+        document.getElementById('game-list').style.display = 'block';
+        return;
+    }
+
     let anyVisible = false;
 
     gameItems.forEach(item => {
         const gameName = item.textContent.trim().toLowerCase();
         if (gameName.includes(searchTerm)) {
-            item.style.display = 'block';
+            item.style.display = 'block'; //block
             anyVisible = true;
         } else {
             item.style.display = 'none';
@@ -117,7 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', adjustFooter);
     //document.getElementById('search').addEventListener('input', filtergames);
     document.getElementById('search').addEventListener('input', filterGamesList);
-
 });
 
 

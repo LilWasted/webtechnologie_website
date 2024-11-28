@@ -4,14 +4,29 @@ block content
   div.w3-container.w3-padding-32
     h1 All Events
 
-      input.w3-input.w3-border.w3-round(type='text', placeholder='Search events...', id='search-bar')
-      input.w3-input.w3-border.w3-round(type='text', placeholder='Search by game...', id='game-search-bar')
-      div#game-list(style='max-width: 600px; width: 100%; background-color: #fff; display: none; color: black; border-radius: 10px;')
+    // Create a flex container for the search bar with three sections
+    div(style='display: flex; justify-content: space-between; gap: 10px; max-width: 800px; margin: 0 auto;')
+      // Event search section (left part)
+      input.w3-input.w3-border.w3-round(style='flex: 1; border-radius: 8px;')(
+        type='text', placeholder='Search events...', id='search-bar'
+      )
+      // Game search section (middle part)
+      div(style='position: relative; flex: 1;')
+        input.w3-input.w3-border.w3-round(style='flex: 1; border-radius: 8px;')(
+          type='text', placeholder='Search by game...', id='game-search-bar'
+        )
+        // Game list dropdown (hidden by default)
+        div#game-list(style='max-width: 600px; width: 100%; background-color: #fff; display: none; color: black; border-radius: 10px; overflow-y: auto; max-height: 200px; position: absolute; z-index: 1000;')
           each game in games
-              div.game-item(style='padding: 10px; cursor: pointer;')
-                  span= game.name
-                  input(type='hidden', value=game._id, class='game-id')
-      input.w3-input.w3-border.w3-round(type='date', id='date-search-bar')
+            div.game-item(style='padding: 10px; cursor: pointer;')
+              span= game.name
+              input(type='hidden', value=game._id, class='game-id')
+
+      // Date search section (right part)
+      input.w3-input.w3-border.w3-round(style='flex: 1; border-radius: 8px;')(
+        type='date', id='date-search-bar'
+      )
+
 
 
     if event_list && event_list.length
@@ -34,10 +49,37 @@ block content
     else
       p.w3-text-gray No events found.
 
+  style.
+    .game-item:hover {
+      background-color: #f0f0f0; /* Change to your desired hover color */
+      border-radius: 10px;
+    }
+
+    #game-list {
+      max-height: 160px; /* Approx 4 items if each is 40px tall */
+      overflow-y: auto;
+      border: 1px solid #ccc; /* Optional: To give a visual separation */
+      padding: 5px;
+      position: absolute;
+      width: 100%; /* Ensure the dropdown matches the input width */
+      max-width: 100%;
+    }
+
+    #game-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #game-list::-webkit-scrollbar-thumb {
+      background: #888; /* Scrollbar color */
+      border-radius: 4px;
+    }
+
+    #game-list::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
   script(src="/javascripts/scripts.js")
   script.
-
-
     // Event listener for selecting a game
     document.addEventListener('click', function (event) {
       const gameList = document.getElementById('game-list');
@@ -59,14 +101,24 @@ block content
       }
     });
 
-    // Show dropdown again on input focus
+    // Show dropdown again on input focus or typing
     document.getElementById('game-search-bar').addEventListener('focus', function () {
       const gameList = document.getElementById('game-list');
       if (this.value.trim() !== '') {
-        gameList.style.display = 'block';
+        gameList.style.display = 'block'; // Show dropdown if there is text in the input
       }
     });
 
+    document.getElementById('game-search-bar').addEventListener('input', function () {
+      const gameList = document.getElementById('game-list');
+      if (this.value.trim() !== '') {
+        gameList.style.display = 'block'; // Show dropdown if there is text in the input
+      } else {
+        gameList.style.display = 'none'; // Hide dropdown if input is empty
+      }
+    });
+
+    // Filter the events based on search criteria
     function filterEvents() {
       const searchTerm = document.getElementById('search-bar').value.toLowerCase();
       const gameTerm = document.getElementById('game-search-bar').value.toLowerCase();
@@ -94,11 +146,10 @@ block content
     document.getElementById('game-search-bar').addEventListener('input', filterEvents);
     document.getElementById('date-search-bar').addEventListener('input', filterEvents);
 
-
     // Show all events when pressing enter on an empty search query
     document.getElementById('game-search-bar').addEventListener('keydown', function (event) {
-        if (event.key === 'Enter' && this.value.trim() === '') {
-            this.dataset.selectedId = '';
-            filterEvents();
-        }
+      if (event.key === 'Enter' && this.value.trim() === '') {
+        this.dataset.selectedId = '';
+        filterEvents();
+      }
     });
