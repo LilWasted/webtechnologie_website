@@ -12,7 +12,7 @@ const cron = require('node-cron');
 const { sendEventReminder } = require('./controllers/mailController');
 
 //schedule a cron job to at the start of every hour
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
   console.log('Cron job started at:', new Date().toISOString());
   try {
     const events = await Event.find({

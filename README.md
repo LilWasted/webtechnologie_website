@@ -23,5 +23,6 @@ Toegevoegd zodat ik dit kan onthouden indien fout:
 
 all events
 all games
+game detail
 register
 
