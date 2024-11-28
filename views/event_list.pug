@@ -97,6 +97,7 @@ block content
         gameInput.dataset.selectedId = gameId; // Store ID in a data attribute for later use
 
         gameList.style.display = 'none'; // Hide dropdown
+        filterEvents();
       } else if (!event.target.closest('#game-search-bar')) {
         // Hide the dropdown if clicked outside the input or dropdown
         gameList.style.display = 'none';
