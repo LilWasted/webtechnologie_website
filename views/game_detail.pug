@@ -1,35 +1,37 @@
 extends layout
 
 block content
-  if game
-    h1 #{game.name}
+  div.w3-container.w3-padding-32
+    if game
+      h1 #{game.name}
 
-    if game.YTlink
-      - var videoId
-      // Check for the shortened YouTube link format
-      iframe(width="560" height="315"
-        src=game.YTlink
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen)
+      div.w3-center
+        if game.YTlink
+          - var videoId
+          // Check for the shortened YouTube link format
+          iframe(width="560" height="315"
+            src=game.YTlink
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen)
 
-    if game_events.length
-      h2 Open Events:
-      ul(class='w3-ul w3-border w3-white')
-        each event in game_events
-          li(class='w3-padding')
-            a(href=event.url)
-              i(class='fa fa-gamepad')
-              |  Event: #{event.title}
-            if event.status === 'Available'
-              p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
-            else if event.status === 'Full'
-              p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
-            else
-              p.w3-text-orange #{event.status}
+      if game_events.length
+        h2 Open Events:
+        ul(class='w3-ul w3-border w3-white')
+          each event in game_events
+            li(class='w3-padding')
+              a(href=event.url)
+                i(class='fa fa-gamepad')
+                |  Event: #{event.title}
+              if event.status === 'Available'
+                p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
+              else if event.status === 'Full'
+                p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
+              else
+                p.w3-text-orange #{event.status}
+      else
+        p No open events in this category.
     else
-      p No open events in this category.
-  else
-    p Game not found.
+      p Game not found.

@@ -1,13 +1,12 @@
 extends layout
 
 block content
-  h1 #{title}: #{event.title}
+  div.w3-container.w3-padding-32.w3-center
+    h1 #{title}: #{event.title}
+    p Do you really want to leave this event?
+    form(method='POST')
+      div.form-group
+        input#eventid.form-control(type='hidden', name='eventid', value=event._id )
 
-  p Do you really want to leave this event?
-
-  form(method='POST')
-    div.form-group
-      input#eventid.form-control(type='hidden', name='eventid', value=event._id )
-
-    button.w3-button.w3-red.w3-hover-pink.w3-round-large(type='submit', style='padding: 20px 40px; font-size: 18px;') LEAVE
+      button.w3-button.w3-red.w3-hover-pink.w3-round-large(type='submit', style='padding: 20px 40px; font-size: 18px;') LEAVE
 

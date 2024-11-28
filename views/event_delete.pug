@@ -1,14 +1,11 @@
 extends layout
 
 block content
+  div.w3-container.w3-padding-32.w3-center
 
-  h1 #{title}: #{event.title}
-
-
-    p Do you really want to delete this Event?
-
-    form(method='POST')
-      div.form-group
-        input#eventid.form-control(type='hidden', name='eventid', value=event._id )
-
-      button.w3-button.w3-red.w3-hover-pink.w3-round-large(type='submit') Delete
+    h1 #{title}: #{event.title}
+      p Do you really want to delete this Event?
+      form(method='POST')
+        div.form-group
+          input#eventid.form-control(type='hidden', name='eventid', value=event._id )
+        button.w3-button.w3-red.w3-hover-pink.w3-round-large(type='submit') Delete
