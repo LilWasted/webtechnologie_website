@@ -4,16 +4,106 @@ block content
     head
         title Register
     body
-        h1 Register
-        form(action="/user/register" method="POST")
-            div
-                label(for="username") Username:
-                input(type="text" name="username" id="username" required)
-            div
-                label(for="email") Email:
-                input(type="email" name="email" id="email" required)
-            div
-                label(for="password") Password:
-                input(type="password" name="password" id="password" required)
-            div
-                button(type="submit") Register
+        style.
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            h1 {
+                font-size: 3rem;
+                text-align: center;
+                margin-top: 2rem;
+            }
+
+            .register-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-grow: 1;
+            }
+
+            .register-form {
+                background: #333;
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .input-container {
+                margin-bottom: 1.5rem;
+            }
+
+            .input-container label {
+                display: block;
+                margin-bottom: 1rem;
+                font-weight: bold;
+                font-size: 1.5rem;
+                color: #fff;
+            }
+
+            .input-container input {
+                width: 100%;
+                padding: 1rem;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                font-size: 1.5rem;
+                color: #333;
+            }
+
+            .input-container button {
+                width: 100%;
+                padding: 0.5rem;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                background-color: #2196F3;
+                color: white;
+                font-size: 1.5rem;
+                margin-top: 1rem;
+            }
+
+            .input-container button:hover {
+                background-color: #1976D2;
+            }
+
+            .alternative {
+                margin-top: 3rem;
+            }
+
+            .alternative a {
+                display: block;
+                text-align: center;
+                text-decoration: none;
+                color: #2196F3;
+                font-size: 1.2rem;
+            }
+
+            .alternative a:hover {
+                text-decoration: underline;
+            }
+
+        .register-container
+            .register-form
+                h1 Register
+                form(action="/user/register" method="POST")
+                    .input-container
+                        label(for="username") Username:
+                        input(type="text" name="username" id="username" required)
+                    .input-container
+                        label(for="email") Email:
+                        input(type="email" name="email" id="email" required)
+                    .input-container
+                        label(for="password") Password:
+                        input(type="password" name="password" id="password" required)
+                    .input-container
+                        button(type="submit") Register
+
+                .alternative
+                    a.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(href='/user/login') Already have an account? Login here
