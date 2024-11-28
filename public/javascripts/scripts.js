@@ -1,3 +1,24 @@
+function filtergames() {
+    const searchTerm = document.getElementById('game').value.trim(); // Trim to handle accidental spaces
+    const gameItems = document.querySelectorAll('.game-item');
+    const gameList = document.getElementById('game-list');
+
+    let anyVisible = false;
+
+    gameItems.forEach(function (item) {
+        const gameName = item.querySelector('span').textContent;
+
+        if (gameName.toLowerCase().includes(searchTerm.toLowerCase())) {
+            item.style.display = 'block';
+            anyVisible = true;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+
+    gameList.style.display = anyVisible ? 'block' : 'none';
+}
+
 function adjustFooter() {
     const footer = document.querySelector('.footer');
     const bodyHeight = document.documentElement.scrollHeight;
@@ -26,26 +47,6 @@ function handleCookieConsent() {
         localStorage.setItem('cookiesAccepted', 'true');
         cookieConsentPopup.style.display = 'none';
     });
-}
-
-function filterGames() {
-    const searchTerm = document.getElementById('search').value.trim().toLowerCase();
-    const gameItems = document.querySelectorAll('#game-list li');
-
-    let anyVisible = false;
-
-    gameItems.forEach(item => {
-        const gameName = item.textContent.trim().toLowerCase();
-        if (gameName.includes(searchTerm)) {
-            item.style.display = 'block';
-            anyVisible = true;
-        } else {
-            item.style.display = 'none';
-        }
-    });
-
-    const gameList = document.getElementById('game-list');
-    gameList.style.display = anyVisible ? 'block' : 'none';
 }
 
 
