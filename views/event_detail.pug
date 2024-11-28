@@ -44,8 +44,8 @@ block content
           div.w3-third.w3-padding-small
             div.w3-card.w3-white.w3-padding.w3-center
               a.w3-text-black(href=`/user/profile/${val._id}`) #{val.username}
-              //span.w3-text-black #{val.username}
-              if event.organizer.equals(user._id) && !val._id.equals(user._id)
+              //span.w3-text-black #{val.username}  //!val._id.equals(user._id)
+              if event.organizer === user._id && !(val._id === user._id)
                 form(action=`${event.url}/kick/${val._id}` method='POST' style='display: inline;')
                   button(type='submit' class='kick-icon' style='background: none; border: none; cursor: pointer;')
                     i.fa.fa-times-circle(style='color: red; margin-left: 10px;')
@@ -58,16 +58,16 @@ block content
     div.w3-container.w3-padding-16
       h2.w3-large.w3-text-red #{error}
 
-  // Organizer Actions
-  if event.organizer.equals(user._id)
+  // Organizer Actions   // event.organizer.equals(user._id)
+  if event.organizer === user._id
     div.w3-container.w3-padding-16
       p
         a.w3-button.w3-red.w3-hover-pink.w3-round-large(href=event.url + '/delete') Delete Event
       p
         a.w3-button.w3-orange.w3-hover-yellow.w3-round-large(href=event.url + '/update') Edit Event
   else
-    // User Participation Section
-    if users.some(user1 => user1._id.equals(user._id))
+    // User Participation Section   //users.some(user1 => user1._id.equals(user._id))
+    if users.some(user1 => user1._id === user._id)
       div.w3-container.w3-padding-16
         a.w3-button.w3-red.w3-hover-pink.w3-round-large(href=event.url + '/leave') Leave Event
     else if status_event === 'Available' && new Date(event.date) > new Date()
