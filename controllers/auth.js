@@ -14,6 +14,10 @@ exports.register_post = asyncHandler( async (req, res, next) => {
     const { username, email, password } = req.body;
 
     try {
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.render('register', { title: 'Register', error: 'Username or email already exists' });
+        }
         const user = new User({ username, email, password: password });
         await user.register();
         console.log("user made");

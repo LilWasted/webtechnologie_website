@@ -92,6 +92,9 @@ block content
         .register-container
             .register-form
                 h1 Register
+                if error
+                    .error-message(style="color: red; margin-bottom: 1rem;")
+                        p #{error}
                 form(action="/user/register" method="POST")
                     .input-container
                         label(for="username") Username:
