@@ -33,7 +33,7 @@ userSchema.pre('register', async function (next) {
     if (!user.isModified('password')) return next();
 
     if (!user.profilePicture) {
-        const defaultImagePath = path.join(__dirname, '../public/images/default.png');
+        const defaultImagePath = path.join(__dirname, '../public/images/default2.png');
         user.profilePicture = fs.readFileSync(defaultImagePath);
     }
 
