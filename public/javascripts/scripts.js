@@ -24,7 +24,6 @@ function adjustFooter() {
     const bodyHeight = document.documentElement.scrollHeight;
     const viewportHeight = window.innerHeight;
 
-    console.log(bodyHeight, viewportHeight);
     if (bodyHeight <= viewportHeight) {
         footer.style.position = 'absolute';
         footer.style.bottom = '0';
@@ -48,6 +47,26 @@ function handleCookieConsent() {
         localStorage.setItem('cookiesAccepted', 'true');
         cookieConsentPopup.style.display = 'none';
     });
+}
+
+function filterGames() {
+    const searchTerm = document.getElementById('search').value.trim().toLowerCase();
+    const gameItems = document.querySelectorAll('#game-list li');
+
+    let anyVisible = false;
+
+    gameItems.forEach(item => {
+        const gameName = item.textContent.trim().toLowerCase();
+        if (gameName.includes(searchTerm)) {
+            item.style.display = 'block';
+            anyVisible = true;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+
+    const gameList = document.getElementById('game-list');
+    gameList.style.display = anyVisible ? 'block' : 'none';
 }
 
 
@@ -96,6 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('resize', adjustFooter);
+    document.getElementById('search').addEventListener('input', filterGames);
+
 });
 
 

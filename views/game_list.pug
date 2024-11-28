@@ -12,16 +12,4 @@ block content
     p There are no games.
 
   // via chatgpt => weet een kleine beetje hierover, maar niet genoeg om het te kunnen uitleggen
-  script.
-    document.getElementById('search').addEventListener('input', function() {
-      const filter = this.value //toLowerCase();
-      const games = document.querySelectorAll('#game-list li');
-      games.forEach(function(category) {
-        const text = category.textContent //toLowerCase();
-        if (text.includes(filter)) {
-          category.style.display = '';
-        } else {
-          category.style.display = 'none';
-        }
-      });
-    });
+  script(src="/javascripts/scripts.js")
