@@ -88,16 +88,16 @@ block content
 
   script.
     function filtergames() {
-      const searchTerm = document.getElementById('game').value;   //.toLowerCase()
+      const searchTerm = document.getElementById('game').value.trim(); // Trim to handle accidental spaces
       const gameItems = document.querySelectorAll('.game-item');
       const gameList = document.getElementById('game-list');
 
       let anyVisible = false;
 
       gameItems.forEach(function (item) {
-        const gameName = item.querySelector('span').textContent; //.toLowerCase();
+        const gameName = item.querySelector('span').textContent;
 
-        if (gameName.indexOf(searchTerm) !== -1) {
+        if (gameName.toLowerCase().includes(searchTerm.toLowerCase())) {
           item.style.display = 'block';
           anyVisible = true;
         } else {
@@ -105,27 +105,34 @@ block content
         }
       });
 
-      if (anyVisible) {
-        gameList.style.display = 'block';
-      } else {
-        gameList.style.display = 'none';
-      }
+      gameList.style.display = anyVisible ? 'block' : 'none';
     }
 
     // Event listener for selecting a game
     document.addEventListener('click', function (event) {
       const gameList = document.getElementById('game-list');
+      const gameInput = document.getElementById('game');
+
       if (event.target.closest('#game-list .game-item')) {
+        // Clicked on a dropdown item
         const selectedGame = event.target.closest('.game-item');
         const gameName = selectedGame.querySelector('span').textContent;
         const gameId = selectedGame.querySelector('.game-id').value;
 
-        document.getElementById('game').value = gameName;  // Set the input value
-        // You can also store the game ID in a hidden field if needed for form submission
-        document.getElementById('game-id').value = gameId;
+        gameInput.value = gameName; // Set input value to selected game name
+        gameInput.dataset.selectedId = gameId; // Store ID in a data attribute for later use
 
-        gameList.style.display = 'none';  // Hide the list after selection
-      } else {
-        gameList.style.display = 'none';  // Hide the list if clicked outside
+        gameList.style.display = 'none'; // Hide dropdown
+      } else if (!event.target.closest('#game')) {
+        // Hide the dropdown if clicked outside the input or dropdown
+        gameList.style.display = 'none';
+      }
+    });
+
+    // Show dropdown again on input focus
+    document.getElementById('game').addEventListener('focus', function () {
+      const gameList = document.getElementById('game-list');
+      if (this.value.trim() !== '') {
+        gameList.style.display = 'block';
       }
     });
