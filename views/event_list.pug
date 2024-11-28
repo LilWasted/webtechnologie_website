@@ -2,7 +2,7 @@ extends layout
 
 block content
   div.w3-container.w3-padding-32
-    h1 All Events
+    h1.w3-center All Events
 
     // Create a flex container for the search bar with three sections
     div(style='display: flex; justify-content: space-between; gap: 10px; max-width: 800px; margin: 0 auto;')
@@ -27,29 +27,53 @@ block content
         type='date', id='date-search-bar'
       )
 
-
-
     if event_list && event_list.length
-      ul(style='list-style-type:none;')
+      ul(style='list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;')
         each event in event_list
-          li.w3-padding-16(style='font-size: 1.2rem;')
-            a(href=event.url, class='w3-text-blue w3-hover-text-light-blue', style='font-size: 1.5rem;' ) #{event.title}
-            p Game: #{event.game.name}
+          li.w3-card-4.w3-padding.w3-round-large(style='border: 1px solid #ddd; list-style: none; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;')
+            h3.w3-text-blue.w3-hover-text-light-blue(style='font-size: 1.5rem; font-weight: bold;')
+              a(href=event.url) #{event.title}
+            p(style='margin: 0; font-size: 1rem;')
+              b Game:
+              span #{event.game.name}
             if event.date
-              p Date: #{event.date.toDateString()}
+              p(style='margin: 0; font-size: 1rem;')
+                b Date:
+                span #{event.date.toDateString()}
             else
-              p Date: Not specified
+              p(style='margin: 0; font-size: 1rem;')
+                b Date:
+                span Not specified
 
-            if event.status === 'Available'
-              p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
-            else if event.status === 'Full'
-              p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
-            else
-              p.w3-text-orange #{event.status}
+            p(style='margin: 0; font-size: 1rem;')
+              if event.status === 'Available'
+                span.w3-text-green
+                  b Available:
+                  | #{event.participants.length} / #{event.max_size}
+              else if event.status === 'Full'
+                span.w3-text-red
+                  b Full:
+                  | #{event.participants.length} / #{event.max_size}
+              else
+                span.w3-text-orange #{event.status}
     else
-      p.w3-text-gray No events found.
+      p.w3-text-gray(style='text-align: center; font-size: 1.2rem; margin-top: 20px;') No events found.
 
   style.
+    .w3-card-4 {
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Event Card Styles */
+    .w3-card-4 {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .w3-card-4:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
     .game-item:hover {
       background-color: #f0f0f0; /* Change to your desired hover color */
       border-radius: 10px;
