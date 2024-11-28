@@ -59,13 +59,16 @@ html(lang='en')
                 padding: 0;
             }
 
+
+
             .body-container {
                 display: flex;
                 flex-direction: column;
-                min-height: 100vh;
             }
 
             #main-content {
+                min-height: 90vh;
+                background-color: #212027;
                 margin-top: 6vh; /* Adjust this value based on the header height */
             }
 
@@ -147,7 +150,7 @@ html(lang='en')
             .hero {
                 position: relative;
                 width: 100%;
-                height: calc(100vh - 13vh); /* Full height minus header height */
+                height: 90vh; /* Full height minus header height */
                 background: url("/images/pexels-a-darmel-7862414.jpg") no-repeat center center/cover;
                 background-size: cover; /* Ensure the image covers the entire area */
                 background-position: center; /* Center the image */
@@ -169,7 +172,7 @@ html(lang='en')
 
 
 
-body(class='w3-black body-container')
+body(class='body-container w3-black')
     // Top Navbar for Mobile (Hidden by default)
     header.w3-bar
         a.w3-bar-item.w3-button(href='/home') Home
@@ -185,7 +188,7 @@ body(class='w3-black body-container')
 
     // Main Content
 
-    div#main-content(class='w3-padding-large')
+    div#main-content
         block content
 
     footer(class='footer')

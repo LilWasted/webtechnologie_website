@@ -4,7 +4,7 @@ block content
   h1 All Events
 
     input.w3-input.w3-border.w3-round(type='text', placeholder='Search events...', id='search-bar')
-    input.w3-input.w3-border.w3-round(type='text', placeholder='Search by game...', id='game-search-bar', oninput="filtergames()")
+    input.w3-input.w3-border.w3-round(type='text', placeholder='Search by game...', id='game-search-bar')
     div#game-list(style='max-width: 600px; width: 100%; background-color: #fff; display: none; color: black; border-radius: 10px;')
         each game in games
             div.game-item(style='padding: 10px; cursor: pointer;')
@@ -33,27 +33,9 @@ block content
   else
     p.w3-text-gray No events found.
 
+  script(src="/javascripts/scripts.js")
   script.
-    function filtergames() {
-      const searchTerm = document.getElementById('game-search-bar').value.trim(); // Trim to handle accidental spaces
-      const gameItems = document.querySelectorAll('.game-item');
-      const gameList = document.getElementById('game-list');
 
-      let anyVisible = false;
-
-      gameItems.forEach(function (item) {
-        const gameName = item.querySelector('span').textContent;
-
-        if (gameName.toLowerCase().includes(searchTerm.toLowerCase())) {
-          item.style.display = 'block';
-          anyVisible = true;
-        } else {
-          item.style.display = 'none';
-        }
-      });
-
-      gameList.style.display = anyVisible ? 'block' : 'none';
-    }
 
     // Event listener for selecting a game
     document.addEventListener('click', function (event) {
