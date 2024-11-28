@@ -83,7 +83,6 @@ exports.profile = asyncHandler ( async (req, res, next) => {
 
         const verify = jwt.verify(token, SECRET_KEY);
         const user = await User.findOne({ _id: verify.userId })
-            .populate("rating")
             .populate("events")
             .populate("email")
             .populate("username")
