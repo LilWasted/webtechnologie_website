@@ -3,6 +3,18 @@ extends layout
 block content
   if game
     h1 #{game.name}
+
+    if game.YTlink
+      - var videoId
+      // Check for the shortened YouTube link format
+      iframe(width="560" height="315"
+        src=game.YTlink
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen)
+
     if game_events.length
       h2 Open Events:
       ul(class='w3-ul w3-border w3-white')
