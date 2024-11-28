@@ -1,8 +1,62 @@
 extends layout
 
 block content
-    .w3-container
-        h1.w3-center Terms of Service
+    style.
+        .terms-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 60px;
+            background: #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+            color: #fff;
+            text-align: center;
+        }
+
+        .terms-container h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        .terms-container h2 {
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .terms-container p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .terms-container ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+
+        .terms-container ul li {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .terms-container a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+
+        .terms-container a:hover {
+            text-decoration: underline;
+        }
+
+    .terms-container
+        h1 Terms of Service
         p These Terms of Service govern your use of our website and services. Please read them carefully.
 
         h2 Acceptance of Terms

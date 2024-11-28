@@ -13,6 +13,10 @@ router.get("/terms-of-service", function (req, res) {
 router.get("/privacy-policy", function (req, res) {
   res.render("privacy_policy");
 });
+
+router.get("/cookie-policy", function (req, res) {
+    res.render("cookie_policy");
+});
 //- [ ] privacy policy
 //- [ ] terms of service
 //- [ ] cookie policy

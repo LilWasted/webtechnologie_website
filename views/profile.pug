@@ -11,6 +11,9 @@ block content
             text-align: center;
             background-color: #333;
             border-radius: 10px;
+            max-width: 600px; /* Set a maximum width */
+            margin: 20px auto; /* Center the container */
+            border-radius: 10px;
         }
 
         .profile-picture {
@@ -53,22 +56,21 @@ block content
 
     .profile-container
         if user.profilePicture
-            img(src=`data:image/png;base64,${user.profilePicture.toString('base64')}`, alt='Profile Picture', style='width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 20px;')
+            img(src=`data:image/png;base64,${user.profilePicture.toString('base64')}`, alt='Profile Picture', class='profile-picture')
         else
-            img(src='/images/default.png', alt='Default Profile Picture', style='width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 20px;')
+            img(src='/images/default.png', alt='Default Profile Picture', class='profile-picture')
 
         if user
-            div(style='color: #f1f1f1;')
+            .user-info
                 h2 Username: #{user.username}
                 h3 Email: #{user.email}
                 h3 Events: #{numEvents}
                 ul(style='padding: 0; margin: 10px 0; list-style-type: none;')
                     each event in user.events
-                        li(style='margin: 5px 0;')
-                            a(href=event.url, style='color: #4f9afa; text-decoration: none; font-weight: bold;') #{event.title}
+                        li
+                            a(href=event.url, class='event-link') #{event.title}
             if !visitor
                 a.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(href='/user/profile/edit', style='margin-top: 20px;') Edit Profile
         else
-            div(style='color: red; font-size: 1.2em;')
+            .error-message
                 p User not found.
-        //#1c1c1c
