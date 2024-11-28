@@ -26,14 +26,13 @@ block content
       // Game search input field
       div.form-group(style='margin-bottom: 20px;')
         label(for='game' style=' display: block; margin-bottom: 5px;') Game:
-        input.w3-input.w3-border.w3-round-large#category-search.form-control(type='text', placeholder='Search games...', oninput="filtergames()", required style='width: 100%;')
-
-      // Game options (displayed based on search)
-      div#category-list(style='max-height: 200px; overflow-y: auto; width: 100%; margin-top: 10px; display: none;')
-        each game in games
-          div.category-item(style='display: flex; align-items: center; padding: 5px 0;')
-            input(type='radio', name='game', id=game._id, value=game._id, style='margin-right: 10px;')
-            label(for=game._id, style='font-size: 16px;') &nbsp;#{game.name}
+        input.w3-input.w3-border.w3-round-large#game.form-control(type='text', placeholder='Search games...', oninput="filtergames()", required style='width: 100%;')
+        // Custom dropdown menu
+        div#game-list(style=' max-width: 600px; width: 100%;   background-color: #fff; display: none; color: black; border-radius: 10px;')
+          each game in games
+            div.game-item(style='padding: 10px; cursor: pointer;')
+              span= game.name
+              input(type='hidden', value=game._id, class='game-id')
 
       // Date and time input field
       div.form-group(style='margin-bottom: 20px;')
@@ -60,29 +59,73 @@ block content
       display: block;
     }
 
+    .game-item:hover {
+      background-color: #f0f0f0; /* Change to your desired hover color */
+      border-radius: 10px;
+    }
+
+    #game-list {
+      max-height: 160px; /* Approx 4 items if each is 40px tall */
+      overflow-y: auto;
+      border: 1px solid #ccc; /* Optional: To give a visual separation */
+      padding: 5px;
+    }
+
+    /* Optional: Style the scrollbar */
+    #game-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #game-list::-webkit-scrollbar-thumb {
+      background: #888; /* Scrollbar color */
+      border-radius: 4px;
+    }
+
+    #game-list::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
 
   script.
     function filtergames() {
-      const searchTerm = document.getElementById('category-search').value.toLowerCase();
-      const categoryItems = document.querySelectorAll('.category-item');
+      const searchTerm = document.getElementById('game').value;   //.toLowerCase()
+      const gameItems = document.querySelectorAll('.game-item');
+      const gameList = document.getElementById('game-list');
+
       let anyVisible = false;
 
-      categoryItems.forEach(function (item) {
-        const label = item.querySelector('label');
-        const categoryName = label ? label.textContent.trim().toLowerCase() : '';
+      gameItems.forEach(function (item) {
+        const gameName = item.querySelector('span').textContent; //.toLowerCase();
 
-        if (categoryName.indexOf(searchTerm) !== -1) {
-          item.style.display = 'flex';
+        if (gameName.indexOf(searchTerm) !== -1) {
+          item.style.display = 'block';
           anyVisible = true;
         } else {
           item.style.display = 'none';
         }
       });
 
-      const categoryList = document.getElementById('category-list');
       if (anyVisible) {
-        categoryList.style.display = 'block';
+        gameList.style.display = 'block';
       } else {
-        categoryList.style.display = 'none';
+        gameList.style.display = 'none';
       }
     }
+
+    // Event listener for selecting a game
+    document.addEventListener('click', function (event) {
+      const gameList = document.getElementById('game-list');
+      if (event.target.closest('#game-list .game-item')) {
+        const selectedGame = event.target.closest('.game-item');
+        const gameName = selectedGame.querySelector('span').textContent;
+        const gameId = selectedGame.querySelector('.game-id').value;
+
+        document.getElementById('game').value = gameName;  // Set the input value
+        // You can also store the game ID in a hidden field if needed for form submission
+        document.getElementById('game-id').value = gameId;
+
+        gameList.style.display = 'none';  // Hide the list after selection
+      } else {
+        gameList.style.display = 'none';  // Hide the list if clicked outside
+      }
+    });
