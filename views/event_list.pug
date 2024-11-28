@@ -1,37 +1,38 @@
 extends layout
 
 block content
-  h1 All Events
+  div.w3-container.w3-padding-32
+    h1 All Events
 
-    input.w3-input.w3-border.w3-round(type='text', placeholder='Search events...', id='search-bar')
-    input.w3-input.w3-border.w3-round(type='text', placeholder='Search by game...', id='game-search-bar')
-    div#game-list(style='max-width: 600px; width: 100%; background-color: #fff; display: none; color: black; border-radius: 10px;')
-        each game in games
-            div.game-item(style='padding: 10px; cursor: pointer;')
-                span= game.name
-                input(type='hidden', value=game._id, class='game-id')
-    input.w3-input.w3-border.w3-round(type='date', id='date-search-bar')
+      input.w3-input.w3-border.w3-round(type='text', placeholder='Search events...', id='search-bar')
+      input.w3-input.w3-border.w3-round(type='text', placeholder='Search by game...', id='game-search-bar')
+      div#game-list(style='max-width: 600px; width: 100%; background-color: #fff; display: none; color: black; border-radius: 10px;')
+          each game in games
+              div.game-item(style='padding: 10px; cursor: pointer;')
+                  span= game.name
+                  input(type='hidden', value=game._id, class='game-id')
+      input.w3-input.w3-border.w3-round(type='date', id='date-search-bar')
 
 
-  if event_list && event_list.length
-    ul(style='list-style-type:none;')
-      each event in event_list
-        li.w3-padding-16(style='font-size: 1.2rem;')
-          a(href=event.url, class='w3-text-blue w3-hover-text-light-blue', style='font-size: 1.5rem;' ) #{event.title}
-          p Game: #{event.game.name}
-          if event.date
-            p Date: #{event.date.toDateString()}
-          else
-            p Date: Not specified
+    if event_list && event_list.length
+      ul(style='list-style-type:none;')
+        each event in event_list
+          li.w3-padding-16(style='font-size: 1.2rem;')
+            a(href=event.url, class='w3-text-blue w3-hover-text-light-blue', style='font-size: 1.5rem;' ) #{event.title}
+            p Game: #{event.game.name}
+            if event.date
+              p Date: #{event.date.toDateString()}
+            else
+              p Date: Not specified
 
-          if event.status === 'Available'
-            p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
-          else if event.status === 'Full'
-            p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
-          else
-            p.w3-text-orange #{event.status}
-  else
-    p.w3-text-gray No events found.
+            if event.status === 'Available'
+              p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
+            else if event.status === 'Full'
+              p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
+            else
+              p.w3-text-orange #{event.status}
+    else
+      p.w3-text-gray No events found.
 
   script(src="/javascripts/scripts.js")
   script.
