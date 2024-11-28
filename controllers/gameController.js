@@ -48,11 +48,17 @@ exports.game_create_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.game_create_post = [
-    body("name", "Game name required").trim().isLength({ min: 1 }).escape(),
+    body("name", "Game name required")
+        .trim()
+        .isLength({ min: 1 })
+        .toLowerCase()
+        .escape(),
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
 
-        const existingGame = await Game.findOne({ name: new RegExp('^' + req.body.name + '$', 'i') }).exec();
+        const existingGame = await Game.findOne({ name: req.body.name }).exec();
+
+        //const existingGame = await Game.findOne({ name: new RegExp('^' + req.body.name + '$', 'i') }).exec();
         if (existingGame) {
             errors.errors.push({ msg: "Game name already exists." });
         }
