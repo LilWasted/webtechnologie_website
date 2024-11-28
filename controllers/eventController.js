@@ -30,9 +30,6 @@ async function isUserSignedIn(req) {
     }
 }
 
-//TODO voor elke del en join etc => checken of het wel de juiste user is
-    //anders kan er via de url vanalles gebeuren
-
 exports.index = asyncHandler(async (req, res, next) => {  //hookINDEX
     // Get details of events, event instances, authors and genre counts (in parallel)
     const numEvents = await Event.countDocuments({}).exec();
@@ -483,7 +480,6 @@ exports.update_post = [ //hookupdate_post
 ];
 
 
-//TODO afmaken
 exports.kick_post = asyncHandler(async (req, res, next) => {
     console.log("kick post 1");
     const event = await Event.findById(req.params.id).populate('participants').exec();
