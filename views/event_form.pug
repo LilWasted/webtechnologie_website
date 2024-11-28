@@ -12,7 +12,7 @@ block content
       // Summary textarea field
       div.form-group(style='margin-bottom: 20px;')
         label(for='description' style=' display: block; margin-bottom: 5px;') Summary:
-        textarea.w3-input.w3-border.w3-round-large#description.form-control(placeholder='Description', name='description', style='width: 100%; height: 80px; padding: 10px; background-color: #f1f1f1; resize: vertical;')
+        textarea.w3-input.w3-border.w3-round-large#description.form-control(placeholder='Description', name='description', required value=(undefined === event ? '' : event.title), style='width: 100%; height: 80px; padding: 10px; background-color: #f1f1f1; resize: vertical;')
 
       // Platform select field
       div.form-group(style='margin-bottom: 20px;')
@@ -24,7 +24,7 @@ block content
           option(value='switch') Switch
 
       // Game search input field
-      div.form-group(style='margin-bottom: 20px;')
+      div.form-group(style='margin-bottom: 20px; position: relative;')
         label(for='game' style=' display: block; margin-bottom: 5px;') Game:
         input.w3-input.w3-border.w3-round-large#game.form-control(type='text', placeholder='Search games...', oninput="filtergames()", required style='width: 100%;')
         input(type='hidden', name='game', id='selected-game-id')
@@ -70,6 +70,9 @@ block content
       overflow-y: auto;
       border: 1px solid #ccc; /* Optional: To give a visual separation */
       padding: 5px;
+      position: absolute;
+      width: 100%; /* Ensure the dropdown matches the input width */
+      max-width: 100%;
     }
 
     /* Optional: Style the scrollbar */
