@@ -20,6 +20,8 @@ in event list: ook op availability kiezen
 title groter zetten
 game_detail -> niet een simpele witte achtergrond
 
+Profiel fotos toevoegen aan user lijsten bij events !!!!
+Ergens toch nog embedded youtube filmpje ofzo tonen voor zeker te zijn dat we multimedia element meehebben.
 
 features:
 - [ ] party members can rate a player
