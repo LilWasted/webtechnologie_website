@@ -178,7 +178,7 @@ body(class='w3-black body-container')
         if user
             a.w3-bar-item.w3-button(href='/home/event/create') Create new event
             a.w3-bar-item.w3-button(href='/home/games/create') Create new game
-            a.w3-bar-item.w3-button(href='/user/profile') Profile
+            a.w3-bar-item.w3-button(href=`/user/profile/${user._id}`) Profile
             a.w3-bar-item.w3-button(href='/user/logout') Logout
         else
             a.w3-bar-item.w3-button(href='/user/login') Login

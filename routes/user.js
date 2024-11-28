@@ -15,7 +15,7 @@ router.get('/login', userController.login_get);
 router.get('/logout', userController.logout_get);
 router.post('/logout', userController.logout_post);
 
-router.get('/profile', userController.profile);
+
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -42,5 +42,7 @@ router.get(
 
 router.get('/profile/edit', userController.edit_profile_get);
 router.post('/profile/edit', userController.edit_profile_post);
+
+router.get('/profile/:id', userController.profile);
 
 module.exports = router;

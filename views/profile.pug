@@ -16,7 +16,8 @@ block content
                     each event in user.events
                         li(style='margin: 5px 0;')
                             a(href=event.url, style='color: #4f9afa; text-decoration: none; font-weight: bold;') #{event.title}
-            button.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(href='/user/profile/edit', style='margin-top: 20px;') Edit Profile
+            if !visitor
+                a.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(href='/user/profile/edit', style='margin-top: 20px;') Edit Profile
         else
             div(style='color: red; font-size: 1.2em;')
                 p User not found.

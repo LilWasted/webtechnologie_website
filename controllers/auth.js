@@ -76,13 +76,13 @@ exports.logout_post = asyncHandler ( async (req, res, next) => {
 
 exports.profile = asyncHandler ( async (req, res, next) => {
     try {
-        const token = req.cookies.token;
-        if (!token) {
-            return res.status(401).json({ message: 'No token provided' });
-        }
+        visitor = false;
 
-        const verify = jwt.verify(token, SECRET_KEY);
-        const user = await User.findOne({ _id: verify.userId })
+        if (!res.locals.user._id.equals(req.params.id)) {
+            console.log("User is visitor");
+            visitor = true;
+        }
+        const user = await User.findById(req.params.id)
             .populate("events")
             .populate("email")
             .populate("username")
@@ -90,7 +90,7 @@ exports.profile = asyncHandler ( async (req, res, next) => {
             .exec();
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.redirect('/home');
         }
 
         const numEvents = await Event.countDocuments({ _id: { $in: user.events } }).exec();
@@ -98,7 +98,8 @@ exports.profile = asyncHandler ( async (req, res, next) => {
         res.render("profile", {
             title: "Profile",
             user: user,
-            numEvents : numEvents
+            numEvents : numEvents,
+            visitor : visitor
         });
     } catch (error) {
         next(error);
@@ -107,7 +108,9 @@ exports.profile = asyncHandler ( async (req, res, next) => {
 
 
 exports.edit_profile_get = asyncHandler ( async (req, res, next) => {
+    console.log("edit get");
     try {
+        console.log("edit get");
         const token = req.cookies.token;
         if (!token) {
             console.log("No token provided");

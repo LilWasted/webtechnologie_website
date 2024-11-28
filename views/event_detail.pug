@@ -43,7 +43,8 @@ block content
         each val in users
           div.w3-third.w3-padding-small
             div.w3-card.w3-white.w3-padding.w3-center
-              span.w3-text-black #{val.username}
+              a.w3-text-black(href=`/user/profile/${val._id}`) #{val.username}
+              //span.w3-text-black #{val.username}
               if event.organizer.equals(user._id) && !val._id.equals(user._id)
                 form(action=`${event.url}/kick/${val._id}` method='POST' style='display: inline;')
                   button(type='submit' class='kick-icon' style='background: none; border: none; cursor: pointer;')
