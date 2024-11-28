@@ -50,11 +50,15 @@ exports.event_list = asyncHandler(async (req, res, next) => {  //hookEVENT_LIST
         .populate("participants")
         .populate("max_size")
         .populate("status")
+        .populate("date")
         .exec();
+
+    const games = await Game.find().exec(); // Fetch the list of games
 
     res.render("event_list", {
         title: "Event List",
         event_list: allEvents,
+        games : games,
     });
 });
 
