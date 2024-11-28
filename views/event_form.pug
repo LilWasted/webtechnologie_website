@@ -27,6 +27,7 @@ block content
       div.form-group(style='margin-bottom: 20px;')
         label(for='game' style=' display: block; margin-bottom: 5px;') Game:
         input.w3-input.w3-border.w3-round-large#game.form-control(type='text', placeholder='Search games...', oninput="filtergames()", required style='width: 100%;')
+        input(type='hidden', name='game', id='selected-game-id')
         // Custom dropdown menu
         div#game-list(style=' max-width: 600px; width: 100%;   background-color: #fff; display: none; color: black; border-radius: 10px;')
           each game in games
@@ -111,25 +112,27 @@ block content
     // Event listener for selecting a game
     document.addEventListener('click', function (event) {
       const gameList = document.getElementById('game-list');
-      const gameInput = document.getElementById('game');
+      const gameInput = document.getElementById('game'); // Display field
+      const hiddenGameIdInput = document.getElementById('selected-game-id'); // Hidden form input
 
-      if (event.target.closest('#game-list .game-item')) {
+      if (event.target.closest('.game-item')) {
         // Clicked on a dropdown item
         const selectedGame = event.target.closest('.game-item');
         const gameName = selectedGame.querySelector('span').textContent;
         const gameId = selectedGame.querySelector('.game-id').value;
 
-        gameInput.value = gameName; // Set input value to selected game name
-        gameInput.dataset.selectedId = gameId; // Store ID in a data attribute for later use
+        // Update input fields
+        gameInput.value = gameName; // Set visible input to the game name
+        hiddenGameIdInput.value = gameId; // Store game ID for form submission
 
         gameList.style.display = 'none'; // Hide dropdown
       } else if (!event.target.closest('#game')) {
-        // Hide the dropdown if clicked outside the input or dropdown
+        // Hide the dropdown if clicked outside
         gameList.style.display = 'none';
       }
     });
 
-    // Show dropdown again on input focus
+    // Show dropdown again on focus
     document.getElementById('game').addEventListener('focus', function () {
       const gameList = document.getElementById('game-list');
       if (this.value.trim() !== '') {
