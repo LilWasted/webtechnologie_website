@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const GameSchema = new Schema({
-    name : { type: String, min: 1, max: 100, required: true },
+    name : { type: String, min: 1, max: 100, required: true, distinct: true },
     YTlink : { type: String, max: 100, default: ""}
 });
 

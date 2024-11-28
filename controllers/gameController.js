@@ -43,7 +43,7 @@ exports.game_detail = asyncHandler(async (req, res, next) => {
 exports.game_create_get = asyncHandler(async (req, res, next) => {
     const game = Game.findById(req.params.id).populate("name").exec();
 
-    res.render("game_form", { title: "Create Game" });
+    res.render("game_form", { title: "Create Game"});
 
 });
 
@@ -52,14 +52,18 @@ exports.game_create_post = [
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
 
-        const game = new Game({ name: req.body.name });
+        const existingGame = await Game.findOne({ name: new RegExp('^' + req.body.name + '$', 'i') }).exec();
+        if (existingGame) {
+            errors.errors.push({ msg: "Game name already exists." });
+        }
 
         if (!errors.isEmpty()) {
             res.render("game_form", {
                 title: "Create Game",
-                game: game,
+                game: req.body,
                 errors: errors.array(),
             });
+            console.log(errors.array());
         } else {
             const game = new Game({ name: req.body.name });
             await game.save();

@@ -6,6 +6,10 @@ block content
             .form-group
                 label(for="name") Game Name:
                 input.w3-input.w3-input-form#name.form-control(type="text" name="name" required).w3-margin-bottom
+                if errors && errors.length > 0
+                    ul.errors
+                        each error in errors
+                            li.error= error.msg
 
             button.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(type="submit") Create Game
 
@@ -63,4 +67,15 @@ block content
 
         form button:hover {
             background-color: #0056b3; /* Darker blue on hover */
+        }
+
+
+        .errors {
+            color: red;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .error {
+            margin-top: 5px;
         }
