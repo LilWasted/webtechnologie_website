@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
     { timestamps: true }
 );
 
+
 userSchema.methods.register = async function () {
      this.save();
 };
@@ -33,7 +34,7 @@ userSchema.pre('register', async function (next) {
     if (!user.isModified('password')) return next();
 
     if (!user.profilePicture) {
-        const defaultImagePath = path.join(__dirname, '../public/images/default2.png');
+        const defaultImagePath = path.join(__dirname, '../public/images/default.png');
         user.profilePicture = fs.readFileSync(defaultImagePath);
     }
 

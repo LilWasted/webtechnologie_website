@@ -8,7 +8,6 @@ https://gamergatherings.com/
 
 todo css
 computer:
-foto van boven zetten
 in event list: ook op date kiezen
 in event list: ook op game kiezen
 in event list: ook op availability kiezen
@@ -19,3 +18,10 @@ Profiel fotos toevoegen aan user lijsten bij events !!!!
 Ergens toch nog embedded youtube filmpje ofzo tonen voor zeker te zijn dat we multimedia element meehebben.
 
 Toegevoegd zodat ik dit kan onthouden indien fout:
+
+
+
+all events
+all games
+register
+

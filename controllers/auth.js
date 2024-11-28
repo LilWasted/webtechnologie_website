@@ -107,6 +107,7 @@ exports.profile = asyncHandler ( async (req, res, next) => {
 });
 
 
+
 exports.edit_profile_get = asyncHandler ( async (req, res, next) => {
     console.log("edit get");
     try {
@@ -119,11 +120,14 @@ exports.edit_profile_get = asyncHandler ( async (req, res, next) => {
         const verify = jwt.verify(token, SECRET_KEY);
         const user = await User.findOne({ _id: verify.userId });
 
+        const isGoogleAccount = await !!user.googleId;
+
 
         console.log("edit");
         res.render("edit_profile", {
             title: "Edit Profile",
             user: user,
+            isGoogleAccount: isGoogleAccount,
         });
 
         console.log("edit done");

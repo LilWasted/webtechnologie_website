@@ -1,5 +1,6 @@
 extends layout
 
+
 block content
   div(class='w3-container w3-padding-large')
     form(method='POST', action='/user/profile/edit', enctype='multipart/form-data', style='max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #333; border-radius: 10px; background-color: #333; text-align: center;')
@@ -11,19 +12,20 @@ block content
         input.w3-input.w3-border.w3-round-large#username.form-control(type='text', name='username', required value=user.username, placeholder='Enter your username', style='width: 100%;')
 
       // Email input field
-      div.form-group(style='margin-bottom: 20px;')
-        label(for='email', style='display: block; margin-bottom: 5px;') Email:
-        input.w3-input.w3-border.w3-round-large#email.form-control(type='email', name='email', required value=user.email, placeholder='Enter your email', style='width: 100%;')
+      if !isGoogleAccount
+        div.form-group(style='margin-bottom: 20px;')
+          label(for='email', style='display: block; margin-bottom: 5px;') Email:
+          input.w3-input.w3-border.w3-round-large#email.form-control(type='email', name='email', required value=user.email, placeholder='Enter your email', style='width: 100%;')
 
-      // Password input field
-      div.form-group(style='margin-bottom: 20px;')
-        label(for='password', style='display: block; margin-bottom: 5px;') Password:
-        input.w3-input.w3-border.w3-round-large#password.form-control(type='password', name='password', placeholder='Enter your password', style='width: 100%;')
+        // Password input field
+        div.form-group(style='margin-bottom: 20px;')
+          label(for='password', style='display: block; margin-bottom: 5px;') Password:
+          input.w3-input.w3-border.w3-round-large#password.form-control(type='password', name='password', placeholder='Enter your password', style='width: 100%;')
 
-      // Profile picture upload field
-      div.form-group(style='margin-bottom: 20px;')
-        label(for='profilePicture', style='display: block; margin-bottom: 5px;') Profile Picture:
-        input.w3-input.w3-border.w3-round-large#profilePicture.form-control(type='file', name='profilePicture', style='width: 100%;')
+        // Profile picture upload field
+        div.form-group(style='margin-bottom: 20px;')
+          label(for='profilePicture', style='display: block; margin-bottom: 5px;') Profile Picture:
+          input.w3-input.w3-border.w3-round-large#profilePicture.form-control(type='file', name='profilePicture', style='width: 100%;')
 
       // Submit button
       button.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(type='submit') Update Profile
