@@ -19,7 +19,7 @@ function filtergames() {
     gameList.style.display = anyVisible ? 'block' : 'none';
 }
 
-function adjustFooter() {
+/*function adjustFooter() {
     const footer = document.querySelector('.footer');
     const bodyHeight = document.documentElement.scrollHeight;
     const viewportHeight = window.innerHeight;
@@ -34,6 +34,7 @@ function adjustFooter() {
 
     footer.style.left = '0';
 }
+ */
 
 function handleCookieConsent() {
     const cookieConsentPopup = document.getElementById('cookie-consent-popup');
@@ -99,7 +100,7 @@ function handleGameSelection(event) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    adjustFooter();
+    //adjustFooter();
     handleCookieConsent();
 
     const searchBar = document.getElementById('search-bar');
@@ -108,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search');
 
     if (searchBar) {
-        searchBar.addEventListener('input', adjustFooter);
+        //searchBar.addEventListener('input', adjustFooter);
     }
 
     if (gameInput) {
@@ -148,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', handleGameSelection);
-    window.addEventListener('resize', adjustFooter);
+    //window.addEventListener('resize', adjustFooter);
     //document.getElementById('search').addEventListener('input', filtergames);
     //document.getElementById('search').addEventListener('input', filterGamesList);
 });

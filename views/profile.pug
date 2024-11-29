@@ -13,7 +13,9 @@ block content
             border-radius: 10px;
             max-width: 600px; /* Set a maximum width */
             margin: 20px auto; /* Center the container */
-            border-radius: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .profile-picture {
@@ -25,9 +27,7 @@ block content
             margin-bottom: 20px;
         }
 
-        .user-info {
-            color: #f1f1f1;
-        }
+
 
         ul {
             padding: 0;
@@ -37,12 +37,15 @@ block content
 
         li {
             margin: 5px 0;
+            white-space: nowrap;
         }
 
         .event-link {
             color: #4f9afa;
             text-decoration: none;
             font-weight: bold;
+            padding-left: 10px;
+            padding-right: 10px;
         }
 
         .error-message {

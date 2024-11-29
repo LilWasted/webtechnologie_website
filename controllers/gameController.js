@@ -7,9 +7,16 @@ const { body, validationResult } = require("express-validator");
 
 // Display list of all Game.
 exports.game_list = asyncHandler(async (req, res, next) => {
-    const allGames = await Game.find().sort({name : 1}).exec();
+    const allGames = await Game.find().sort({ name: 1 }).exec();
+    const gamesWithEvents = await Promise.all(
+        allGames.map(async (game) => {
+            const openEventCount = await Event.countDocuments({ game: game._id, status: "Available" }).exec();
+            console.log(openEventCount);
+            return { ...game.toObject(), openEventCount };
+        })
+    );
 
-    res.render("game_list", { title: "Game List", game_list: allGames });
+    res.render("game_list", { title: "Game List", game_list: gamesWithEvents });
 });
 
 // Display detail page for a specific Game.

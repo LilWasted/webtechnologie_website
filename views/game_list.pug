@@ -5,42 +5,33 @@ block content
   input.w3-input.w3-round.w3-border#search(type="text" placeholder="Search games...")
 
   if game_list.length
-    ul#game-list(style='list-style-type:none; padding: 0; margin-top: 1rem;')
+    ul(style='list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;')
       each game in game_list
-        li.w3-padding-small.custom-hover-gray(style="margin-bottom: 0.5rem; border-radius: 10px;")
-          a(href=game.url, style="font-size: 1.2rem; font-weight: bold; text-decoration: none;")
-            | #{game.name}
+        a(href=game.url style='text-decoration: none; color: inherit;')
+          li.w3-card-4.w3-padding.w3-round-large(style='border: 1px solid #ddd; list-style: none; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;')
+            h3.w3-text-blue(style='font-size: 1.5rem; font-weight: bold;') #{game.name}
+            p(style='margin: 0; font-size: 1rem;')
+              b Open Events:
+              span #{game.openEventCount}
   else
     p(style="color: #f44336; text-align: center; margin-top: 1rem; font-size: 1.2rem;") There are no games.
+
   style.
-    #game-list {
-      z-index: 9999; /* Higher than other elements */
-      position: relative; /* Ensures it's not covered by other fixed elements */
+    .w3-card-4 {
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    #search {
-      z-index: 9999; /* Higher than other elements */
-      position: relative; /* Ensures it's not covered by other fixed elements */
-      max-width: 500px;
-      margin: 0 auto;
-      display: block;
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-      font-size: 1rem;
-      background-color: #f9f9f9;
+    .w3-card-4 {
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
 
-    ul#game-list {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    li a:hover {
-      text-decoration: underline;
+    .w3-card-4:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
     }
 
     .custom-hover-gray:hover {
-      background-color: #333; /* Slightly darker than #f1f1f1 */
+      background-color: #333;
     }
 
   script(src="/javascripts/scripts.js")
