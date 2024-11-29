@@ -52,7 +52,7 @@ function handleCookieConsent() {
 
 function filterGamesList() {
     const searchTerm = document.getElementById('search').value.trim().toLowerCase();
-    const gameItems = document.querySelectorAll('#game-list li');
+    const gameItems = document.querySelectorAll('#game-list .game-item');
     const gameList = document.getElementById('game-list');
 
     let anyVisible = false;
@@ -61,19 +61,19 @@ function filterGamesList() {
         gameItems.forEach(item => {
             const gameName = item.textContent.trim().toLowerCase();
             const isVisible = searchTerm ?  gameName.includes(searchTerm) : true;
-            item.style.display = isVisible ? 'block' : 'none';
+            item.style.display = isVisible ? 'grid' : 'none';
             anyVisible = anyVisible || isVisible;
         });
     }
 
-    gameList.style.display = anyVisible ? 'block' : 'none';
+    gameList.style.display = anyVisible ? 'grid' : 'none';
 }
 
 
 function resetGameList() {
-    const gameItems = document.querySelectorAll('#game-list li');
-    gameItems.forEach(item => item.style.display = 'block');
-    document.getElementById('game-list').style.display = 'block';
+    const gameItems = document.querySelectorAll('#game-list .game-item');
+    gameItems.forEach(item => item.style.display = 'grid');
+    document.getElementById('game-list').style.display = 'grid';
 }
 
 
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameInput) {
         gameInput.addEventListener('focus', () => {
             if (gameInput.value.trim() !== '') {
-                gameList.style.display = 'block';
+                gameList.style.display = 'grid';
             }
         });
     }
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         searchInput.addEventListener('focus', () => {
             if (searchInput.value.trim() === '') {
-                gameList.style.display = 'block';  // Always show the list when focusing if search is empty
+                gameList.style.display = 'grid';  // Always show the list when focusing if search is empty
             }
         });
     }
@@ -141,10 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const layout = document.querySelector('.body-container');
 
         if (searchInput.contains(event.target) || gameList.contains(event.target)) {
-            gameList.style.display = 'block';  // Keep list visible if clicking inside
+            gameList.style.display = 'grid';  // Keep list visible if clicking inside
         } else if (layout.contains(event.target)) {
             // Only hide the list if clicking outside the layout (and search field)
-            gameList.style.display = 'block';  // Hide game list when clicking outside
+            gameList.style.display = 'grid';  // Hide game list when clicking outside
         }
     });
 

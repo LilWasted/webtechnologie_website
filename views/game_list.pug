@@ -2,36 +2,22 @@ extends layout
 
 block content
   h1.w3-center(style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;")= title
-  input.w3-input.w3-round.w3-border#search(type="text" placeholder="Search games...")
+  input.w3-input.w3-round.w3-border.w3-input-search#search(type="text" placeholder="Search games...")
 
   if game_list.length
-    ul(style='list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;')
+    ul#game-list(style='list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;')
       each game in game_list
-        a(href=game.url style='text-decoration: none; color: inherit;')
-          li.w3-card-4.w3-padding.w3-round-large(style='border: 1px solid #ddd; list-style: none; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;')
-            h3.w3-text-blue(style='font-size: 1.5rem; font-weight: bold;') #{game.name}
-            p(style='margin: 0; font-size: 1rem;')
-              b Open Events:
-              span #{game.openEventCount}
+        li.w3-card-4.w3-padding.w3-round-large.game-item(style='border: 1px solid #ddd; list-style: none; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;')
+          h3.w3-text-blue(style='font-size: 1.5rem; font-weight: bold;')
+            a(href=game.url) #{game.name}
+          p(style='margin: 0; font-size: 1rem;')
+            b Open Events:
+            span #{game.openEventCount}
   else
-    p(style="color: #f44336; text-align: center; margin-top: 1rem; font-size: 1.2rem;") There are no games.
-
+    p There are no games.
   style.
-    .w3-card-4 {
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    #search, #game-list {
+      z-index: 9999; /* Higher than other elements */
+      position: relative; /* Ensures it's not covered by other fixed elements */
     }
-
-    .w3-card-4 {
-      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-
-    .w3-card-4:hover {
-      transform: translateY(-5px);
-      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .custom-hover-gray:hover {
-      background-color: #333;
-    }
-
   script(src="/javascripts/scripts.js")
