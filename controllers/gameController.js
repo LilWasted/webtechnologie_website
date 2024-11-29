@@ -12,7 +12,7 @@ exports.game_list = asyncHandler(async (req, res, next) => {
         allGames.map(async (game) => {
             const openEventCount = await Event.countDocuments({ game: game._id, status: "Available" }).exec();
             console.log(openEventCount);
-            return { ...game.toObject(), openEventCount };
+            return { ...game.toObject(), openEventCount, url: game.url };
         })
     );
 
