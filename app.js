@@ -103,8 +103,11 @@ app.use(passport.session());
 const jwt = require('jsonwebtoken');
 
 app.use(async (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return next();
+  }
   try {
-    const token = req.cookies.token;
     const verify = jwt.verify(token, SECRET_KEY);
     const user = await User.findOne({ _id: verify.userId }).exec();
     if (user) {
