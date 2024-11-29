@@ -66,10 +66,35 @@ html(lang='en')
                 flex-direction: column;
             }
 
+
             #main-content {
                 min-height: 90vh;
                 background-color: #212027;
                 margin-top: 6vh; /* Adjust this value based on the header height */
+            }
+
+            ::-webkit-scrollbar {
+                width: 10px; /* Set the width of the scrollbar */
+                height: 10px; /* Set the height of the scrollbar (for horizontal scrollbars) */
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #1f1f1f; /* Dark background for the track */
+                border-radius: 5px; /* Rounded corners */
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: linear-gradient(to bottom, #4f9afa, #651ae6); /* Gradient color for the thumb */
+                border-radius: 5px; /* Rounded corners */
+                border: 2px solid #1f1f1f; /* Add a border for contrast */
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(to bottom, #651ae6, #4f9afa); /* Reverse the gradient on hover */
+            }
+
+            ::-webkit-scrollbar-corner {
+                background: #1f1f1f; /* Match the track background */
             }
 
             .footer {
@@ -166,6 +191,9 @@ html(lang='en')
                 padding: 20px;
                 border-radius: 10px;
             }
+
+
+
         script(src='/javascripts/scripts.js')
         //link(rel='stylesheet', href='/stylesheets/style.css')
 
