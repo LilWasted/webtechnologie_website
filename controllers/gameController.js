@@ -16,7 +16,7 @@ exports.game_list = asyncHandler(async (req, res, next) => {
         })
     );
 
-    res.render("game_list", { title: "Game List", game_list: gamesWithEvents });
+    res.render("game_list", { title: "Games", game_list: gamesWithEvents });
 });
 
 // Display detail page for a specific Game.
