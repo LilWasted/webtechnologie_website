@@ -1,18 +1,46 @@
 extends layout
 
 block content
-  h1= title
-  input.w3-input.w3-input-search#search(type="text" placeholder="Search games...")
+  h1.w3-center(style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;")= title
+  input.w3-input.w3-round.w3-border#search(type="text" placeholder="Search games...")
+
   if game_list.length
-    ul#game-list(style='list-style-type:none;')
+    ul#game-list(style='list-style-type:none; padding: 0; margin-top: 1rem;')
       each game in game_list
-        li
-          a(href=game.url, style="font-size: 1.5rem; font-weight: bold;") #{game.name}
+        li.w3-padding-small.custom-hover-gray(style="margin-bottom: 0.5rem; border-radius: 10px;")
+          a(href=game.url, style="font-size: 1.2rem; font-weight: bold; text-decoration: none;")
+            | #{game.name}
   else
-    p There are no games.
+    p(style="color: #f44336; text-align: center; margin-top: 1rem; font-size: 1.2rem;") There are no games.
   style.
-    #search, #game-list {
+    #game-list {
       z-index: 9999; /* Higher than other elements */
       position: relative; /* Ensures it's not covered by other fixed elements */
     }
+
+    #search {
+      z-index: 9999; /* Higher than other elements */
+      position: relative; /* Ensures it's not covered by other fixed elements */
+      max-width: 500px;
+      margin: 0 auto;
+      display: block;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+    }
+
+    ul#game-list {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    li a:hover {
+      text-decoration: underline;
+    }
+
+    .custom-hover-gray:hover {
+      background-color: #333; /* Slightly darker than #f1f1f1 */
+    }
+
   script(src="/javascripts/scripts.js")
