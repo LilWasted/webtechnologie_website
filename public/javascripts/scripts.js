@@ -52,31 +52,34 @@ function handleCookieConsent() {
 function filterGamesList() {
     const searchTerm = document.getElementById('search').value.trim().toLowerCase();
     const gameItems = document.querySelectorAll('#game-list li');
+    const gameList = document.getElementById('game-list');
 
-    if (!searchTerm) {
-        // If no search term, make all items visible
-        gameItems.forEach(item => {
-            item.style.display = 'block'; //block
-        });
-        // Ensure the game list is visible
-        document.getElementById('game-list').style.display = 'block';
-        return;
-    }
 
     let anyVisible = false;
 
-    gameItems.forEach(item => {
-        const gameName = item.textContent.trim().toLowerCase();
-        if (gameName.includes(searchTerm)) {
-            item.style.display = 'block'; //block
-            anyVisible = true;
-        } else {
-            item.style.display = 'none';
-        }
-    });
+    if (searchTerm) {
+        gameItems.forEach(item => {
+            const gameName = item.textContent.trim().toLowerCase();
+            const isVisible = gameName.includes(searchTerm);
+            item.style.display = isVisible ? 'block' : 'none';
+            anyVisible = anyVisible || isVisible;
+        });
+    } else {
+        // If no search term, show all games
+        gameItems.forEach(item => {
+            item.style.display = 'block'; // Ensure all games are visible
+        });
+        anyVisible = true;
+    }
 
-    const gameList = document.getElementById('game-list');
     gameList.style.display = anyVisible ? 'block' : 'none';
+}
+
+
+function resetGameList() {
+    const gameItems = document.querySelectorAll('#game-list li');
+    gameItems.forEach(item => item.style.display = 'block');
+    document.getElementById('game-list').style.display = 'block';
 }
 
 
@@ -107,26 +110,56 @@ document.addEventListener('DOMContentLoaded', () => {
     handleCookieConsent();
 
     const searchBar = document.getElementById('search-bar');
+    const gameInput = document.getElementById('game');
+    const gameList = document.getElementById('game-list');
+    const searchInput = document.getElementById('search');
+
     if (searchBar) {
         searchBar.addEventListener('input', adjustFooter);
     }
 
-    document.addEventListener('click', handleGameSelection);
-
-
-    const gameInput = document.getElementById('game');
     if (gameInput) {
         gameInput.addEventListener('focus', () => {
-            const gameList = document.getElementById('game-list');
             if (gameInput.value.trim() !== '') {
                 gameList.style.display = 'block';
             }
         });
     }
 
+
+    if (searchInput) {
+        searchInput.addEventListener('input', filterGamesList);
+
+        searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim() === '') {
+            resetGameList();  // Show all games if input is empty
+        } else {
+            filterGamesList(); // Apply filtering if there is any text
+        }
+    });
+
+        searchInput.addEventListener('blur', () => {
+            if (!searchInput.value.trim()) resetGameList();
+        });
+    }
+
+    document.addEventListener('click', (event) => {
+        const searchInputElement = document.getElementById('search');
+        if (!searchInputElement.contains(event.target) && !gameList.contains(event.target)) {
+            // If the search input is empty, show all games
+
+            if (!searchInputElement.value.trim()) {
+                resetGameList();
+            } else {
+                filterGamesList();
+            }
+        }
+    });
+
+    document.addEventListener('click', handleGameSelection);
     window.addEventListener('resize', adjustFooter);
     //document.getElementById('search').addEventListener('input', filtergames);
-    document.getElementById('search').addEventListener('input', filterGamesList);
+    //document.getElementById('search').addEventListener('input', filterGamesList);
 });
 
 
