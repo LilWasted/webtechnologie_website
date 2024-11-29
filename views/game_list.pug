@@ -10,5 +10,9 @@ block content
           a(href=game.url, style="font-size: 1.5rem; font-weight: bold;") #{game.name}
   else
     p There are no games.
-
+  style.
+    #search, #game-list {
+      z-index: 9999; /* Higher than other elements */
+      position: relative; /* Ensures it's not covered by other fixed elements */
+    }
   script(src="/javascripts/scripts.js")
