@@ -54,22 +54,15 @@ function filterGamesList() {
     const gameItems = document.querySelectorAll('#game-list li');
     const gameList = document.getElementById('game-list');
 
-
     let anyVisible = false;
 
     if (searchTerm) {
         gameItems.forEach(item => {
             const gameName = item.textContent.trim().toLowerCase();
-            const isVisible = gameName.includes(searchTerm);
+            const isVisible = searchTerm ?  gameName.includes(searchTerm) : true;
             item.style.display = isVisible ? 'block' : 'none';
             anyVisible = anyVisible || isVisible;
         });
-    } else {
-        // If no search term, show all games
-        gameItems.forEach(item => {
-            item.style.display = 'block'; // Ensure all games are visible
-        });
-        anyVisible = true;
     }
 
     gameList.style.display = anyVisible ? 'block' : 'none';
@@ -126,33 +119,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     if (searchInput) {
-        searchInput.addEventListener('input', filterGamesList);
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.trim();
+                if (searchTerm === '') {
+                    resetGameList(); // Laat alle spellen zien
+                } else {
+                    filterGamesList(); // Filter spellen
+                }
+        });
 
         searchInput.addEventListener('focus', () => {
-        if (searchInput.value.trim() === '') {
-            resetGameList();  // Show all games if input is empty
-        } else {
-            filterGamesList(); // Apply filtering if there is any text
-        }
-    });
-
-        searchInput.addEventListener('blur', () => {
-            if (!searchInput.value.trim()) resetGameList();
+            if (searchInput.value.trim() === '') {
+                gameList.style.display = 'block';  // Always show the list when focusing if search is empty
+            }
         });
     }
 
     document.addEventListener('click', (event) => {
-        const searchInputElement = document.getElementById('search');
-        if (!searchInputElement.contains(event.target) && !gameList.contains(event.target)) {
-            // If the search input is empty, show all games
+        const layout = document.querySelector('.body-container');
 
-            if (!searchInputElement.value.trim()) {
-                resetGameList();
-            } else {
-                filterGamesList();
-            }
+        if (searchInput.contains(event.target) || gameList.contains(event.target)) {
+            gameList.style.display = 'block';  // Keep list visible if clicking inside
+        } else if (layout.contains(event.target)) {
+            // Only hide the list if clicking outside the layout (and search field)
+            gameList.style.display = 'block';  // Hide game list when clicking outside
         }
     });
 
