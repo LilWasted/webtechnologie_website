@@ -1,7 +1,7 @@
 extends layout
 
 block content
-    .game-form-container
+    .game-form-container.w3-center
         form(action="/home/games/create" method="post")
             .form-group
                 label(for="name") Game Name:
@@ -78,4 +78,28 @@ block content
 
         .error {
             margin-top: 5px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .game-form-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh; /* Full viewport height to center vertically */
+                padding: 1rem; /* Add padding for smaller screens */
+            }
+
+            form {
+                padding: 2rem; /* Reduce padding on smaller screens */
+                width: 100%; /* Full width on smaller screens */
+            }
+
+            form h1 {
+                font-size: 2rem; /* Reduce font size for smaller screens */
+            }
+
+            form button {
+                font-size: 1rem; /* Reduce button font size for smaller screens */
+                padding: 0.5rem 1rem; /* Adjust button padding for smaller screens */
+            }
         }
