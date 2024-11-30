@@ -2,7 +2,7 @@ extends layout
 
 block content
     style.
-        .privacy-container {
+        .cookie-container {
             max-width: 800px;
             margin: 20px auto;
             padding: 60px;
@@ -10,101 +10,67 @@ block content
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             font-family: Arial, sans-serif;
-            color: #fff; /* Set text color to white */
-            text-align: center; /* Center all text */
-
+            color: #fff;
+            text-align: center;
         }
 
-        .privacy-container h1 {
+        .cookie-container h1 {
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 20px;
         }
 
-        .privacy-container h2 {
+        .cookie-container h2 {
             font-size: 1.8rem;
             margin-top: 40px;
-            color: #fff; /* Set text color to white */
+            color: #fff;
         }
 
-        .privacy-container p {
+        .cookie-container p {
             font-size: 1.2rem;
             line-height: 1.6;
-            color: #fff; /* Set text color to white */
+            color: #fff;
             margin-bottom: 10px;
         }
 
-        .privacy-container ul {
+        .cookie-container ul {
             list-style-type: none;
-            padding-left: 20px;
+            padding-left: 0;
             margin-bottom: 15px;
         }
 
-        .privacy-container ul li {
+        .cookie-container ul li {
             font-size: 1.2rem;
-            color: #fff; /* Set text color to white */
+            color: #fff;
             margin-bottom: 10px;
         }
 
-        .privacy-container a {
+        .cookie-container a {
             color: #2196F3;
             text-decoration: none;
         }
 
-        .privacy-container a:hover {
+        .cookie-container a:hover {
             text-decoration: underline;
         }
 
-        @media only screen and (max-width: 600px) {
-            .privacy-container {
-                margin: 60px auto;
-            }
+    .cookie-container.w3-padding-large
+        h1 Cookie Policy
+        p This Cookie Policy explains how we use cookies and similar technologies on our website.
 
-        }
+        h2 What Are Cookies?
+        p Cookies are small text files that are placed on your device to help the website provide a better user experience.
 
-    .privacy-container.w3-padding-large
-        h1 Privacy Policy
-        p This Privacy Policy outlines how we collect, use, and protect your personal information in compliance with GDPR.
-
-        h2 Information We Collect
-        p We collect the following types of information:
+        h2 How We Use Cookies
+        p We use cookies to:
         ul
-            li Personal data you provide (e.g., name, email).
-            li Data collected automatically (e.g., cookies, IP address).
-            li Data from third parties (e.g., analytics providers).
+            li Understand and save user preferences for future visits.
+            li Compile aggregate data about site traffic and interactions to offer better site experiences and tools in the future.
 
-        h2 How We Use Your Data
-        p Your data is used for:
-        ul
-            li Providing and improving our services.
-            li Communicating with you.
-            li Marketing and analytics purposes (with your consent).
-
-        h2 Legal Basis for Data Processing
-        p We process your data based on:
-        ul
-            li Consent provided by you.
-            li Performance of a contract.
-            li Compliance with legal obligations.
-
-        h2 Sharing Your Information
-        p We share your information only with trusted third parties, as required by law, or for service provision.
-
-        h2 Your GDPR Rights
-        ul
-            li Access your personal data.
-            li Correct inaccuracies.
-            li Request deletion ("right to be forgotten").
-            li Restrict data processing.
-            li Data portability.
-
-        h2 Retention Policy
-        p We retain personal data only as long as necessary for the purposes outlined in this Privacy Policy.
-
-        h2 Cookies
-        p We use cookies to enhance your experience.
-        a(href='/cookie-policy') here.
+        h2 Managing Cookies
+        p You can control and/or delete cookies as you wish. For details, see
+        a(href='https://www.aboutcookies.org') aboutcookies.org.
 
         h2 Contact Us
-        p For questions about your data or this policy, contact us at
+        p If you have any questions about our use of cookies, please contact us at
         a(href='mailto:feniks.desmet@student.kuleuven.be') feniks.desmet@student.kuleuven.be.
