@@ -17,9 +17,11 @@ html(lang='en')
                 top: 0;
                 left: 0;
                 background-color: #151519;
-                overflow-x: hidden;
                 transition: 0.5s;
                 padding-top: 60px;
+                overflow: hidden;
+                white-space: nowrap; /* Prevent links from wrapping to multiple lines */
+
             }
 
             .sidebar a {
@@ -29,6 +31,7 @@ html(lang='en')
                 color: white;
                 display: block;
                 transition: 0.3s;
+                overflow: hidden;
             }
 
             .sidebar a:hover {

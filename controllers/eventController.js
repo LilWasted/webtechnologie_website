@@ -72,6 +72,7 @@ exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DET
         .populate("max_size")
         .populate("date")
         .populate("platform")
+        .populate('organizer') // Ensure organizer is populated
         .exec();
 
     if (event === null) {
@@ -367,6 +368,17 @@ exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
         { _id: event._id },
         { $pull: { participants: user._id } }
     );
+
+    if (event.participants.length < event.max_size) {
+        event.status = 'Available';
+    }
+
+    await event.save();
+
+    if (event.participants.length === 0) {
+        await Event.findByIdAndDelete(event._id);
+    }
+
     res.redirect("/home/events");
 });
 

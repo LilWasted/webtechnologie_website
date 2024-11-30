@@ -39,7 +39,6 @@ block content
   div.w3-container.w3-padding-16
     h2.w3-large.w3-text-white Users
     if user
-        h1 hallo
     if users && users.length
       div.w3-row-padding
         each val in users
@@ -61,7 +60,7 @@ block content
       h2.w3-large.w3-text-red #{error}
 
   // Organizer Actions   // event.organizer.equals(user._id)
-  if event.organizer.equals(user._id)
+  if event.organizer && event.organizer.equals(user._id)
     div.w3-container.w3-padding-16
       p
         a.w3-button.w3-red.w3-hover-pink.w3-round-large(href=event.url + '/delete') Delete Event
