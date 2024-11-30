@@ -87,6 +87,13 @@ exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DET
         //const user = await getUserFromToken(req);
         const user = await res.locals.user;
 
+        let participant_bool = false;
+        for (const participant of event.participants) {
+            if (participant._id.equals(user._id)) {
+                participant_bool = true;
+            }
+        }
+
         res.render("event_detail", {
             event: event,
             users: event.participants,
@@ -94,6 +101,7 @@ exports.event_detail = asyncHandler(async (req, res, next) => { //hookEVENTS_DET
             status_event: event.status,
             max_size: event.max_size,
             date : event.date,
+            participant : participant_bool,
 
         });
     } else {

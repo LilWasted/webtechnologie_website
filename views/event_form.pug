@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  div(class='w3-container w3-padding-large')
+  div(class='w3-container')
     form(method='POST', style='max-width: 600px; margin: 0 auto; padding: 20px; border: 2px solid #333; border-radius: 10px; background-color: #333; text-align: center;')
       h1= title
       // Title input field
@@ -87,6 +87,16 @@ block content
 
     #game-list::-webkit-scrollbar-thumb:hover {
       background: #555;
+    }
+
+    .w3-container {
+      padding: 70px;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .w3-container {
+        padding-top: 55px;
+      }
     }
 
   script(src='/javascripts/scripts.js')

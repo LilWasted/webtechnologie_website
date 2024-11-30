@@ -8,6 +8,54 @@ html(lang='en')
         link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
 
         style.
+
+            .sidebar {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1001;
+                top: 0;
+                left: 0;
+                background-color: #151519;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+            }
+
+            .sidebar a {
+                padding: 10px 15px;
+                text-decoration: none;
+                font-size: 25px;
+                color: white;
+                display: block;
+                transition: 0.3s;
+            }
+
+            .sidebar a:hover {
+                background-color: #333;
+                color: white;
+            }
+
+            .sidebar .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+            .hamburger {
+                font-size: 30px;
+                cursor: pointer;
+                color: white;
+                margin-right: 20px;
+                display: none;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                z-index: 1002; /* Ensure it is above the main content */
+            }
+
             #cookie-consent-popup {
                 display: none;
                 position: fixed;
@@ -27,30 +75,25 @@ html(lang='en')
                 max-width: 500px;
                 background-color: gray;
                 color: white;
-                text-align: center; /* Center all text */
-
+                text-align: center;
             }
 
             #cookie-consent-popup .w3-container {
                 color: white;
-                text-align: center; /* Center all text */
-
+                text-align: center;
             }
 
 
             #cookie-consent-popup header {
-                background-color: gray; /* Custom background color */
-                padding: 10px;
-                text-align: center; /* Center all text */
-
+                background-color: gray;
+                padding: 10%;
+                text-align: center;
             }
 
             #cookie-consent-popup footer {
-                background-color: gray; /* Custom background color */
-                padding: 10px;
+                background-color: gray;
+                padding:10px;
                 text-align: center;
-                text-align: center; /* Center all text */
-
             }
 
             body, h1, h2, h3, h4, h5, h6 {
@@ -59,56 +102,52 @@ html(lang='en')
                 padding: 0;
             }
 
-
-
             .body-container {
                 display: flex;
                 flex-direction: column;
             }
 
-
             #main-content {
                 min-height: 90vh;
                 background-color: #212027;
-                margin-top: 6vh; /* Adjust this value based on the header height */
+                margin-top: 6vh;
             }
 
             ::-webkit-scrollbar {
-                width: 10px; /* Set the width of the scrollbar */
-                height: 10px; /* Set the height of the scrollbar (for horizontal scrollbars) */
+                width: 10px;
+                height: 10px;
             }
 
             ::-webkit-scrollbar-track {
-                background: #1f1f1f; /* Dark background for the track */
-                border-radius: 5px; /* Rounded corners */
+                background: #1f1f1f;
+                border-radius: 5px;
             }
 
             ::-webkit-scrollbar-thumb {
-                background: linear-gradient(to bottom, #4f9afa, #651ae6); /* Gradient color for the thumb */
-                border-radius: 5px; /* Rounded corners */
-                border: 2px solid #1f1f1f; /* Add a border for contrast */
+                background: linear-gradient(to bottom, #4f9afa, #651ae6);
+                border-radius: 5px;
+                border: 2px solid #1f1f1f;
             }
 
             ::-webkit-scrollbar-thumb:hover {
-                background: linear-gradient(to bottom, #651ae6, #4f9afa); /* Reverse the gradient on hover */
+                background: linear-gradient(to bottom, #651ae6, #4f9afa);
             }
 
             ::-webkit-scrollbar-corner {
-                background: #1f1f1f; /* Match the track background */
+                background: #1f1f1f;
             }
 
             .footer {
-                background: linear-gradient(to right, #4f9afa, #651ae6); /* Gradient background */
+                background: linear-gradient(to right, #4f9afa, #651ae6);
                 color: white;
                 text-align: center;
                 padding: 10px 0;
                 width: 100%;
                 height: 4vh;
                 display: flex;
-                align-items: center; /* Center items vertically */
-                justify-content: center; /* Align items to the right */
+                align-items: center;
+                justify-content: center;
                 position: relative;
-
             }
 
             .footer a {
@@ -119,21 +158,19 @@ html(lang='en')
 
             footer span::before {
                 content: "|";
-                margin-right: 10px; /* Adjust the space here */
+                margin-right: 10px;
             }
-
 
             .footer a:hover {
                 text-decoration: underline;
             }
 
             .w3-bar-block {
-                list-style-type: none; /* Removes the default bullet points */
+                list-style-type: none;
             }
 
-
             .w3-row-padding img {
-                margin-bottom: 12px
+                margin-bottom: 12px;
             }
 
             .w3-sidebar {
@@ -141,45 +178,37 @@ html(lang='en')
                 background: #222;
             }
 
-
-            @media only screen and (max-width: 600px) {
-                #main {
-                    margin-top: 60px;
-                    margin-left: 0;
-                }
-            }
-
             header.w3-bar {
                 position: fixed;
                 top: 0;
                 width: 100%;
-                z-index: 1000; /* Ensure the header is above other content */
-                background-color: #151519; /* Change background color to gray */
-                border: 2px solid #151519; /* Add a border around the entire header */
+                z-index: 1000;
+                background-color: #151519;
+                border: 2px solid #151519;
                 display: flex;
-                justify-content: flex-end; /* Align items to the right */
-                align-items: center; /* Center items vertically */
+                justify-content: flex-end;
+                align-items: center;
                 height: 6vh;
             }
 
             .w3-bar .w3-bar-item {
-                margin-left: 10px; /* Add some space between items */
-                font-size: 2vh; /* Increase the font size */
+                margin-left: 10px;
+                font-size: 2vh;
             }
 
             .w3-bar .w3-bar-item:hover {
                 background-color: #333 !important;
-                color:white !important;
+                color: white !important;
                 border-radius: 10px;
             }
 
             .hero {
                 position: relative;
                 width: 100%;
-                height: 90vh; /* Full height minus header height */
+                height: 90vh;
                 background: url("/images/pexels-a-darmel-7862414.jpg") no-repeat center center/cover;
-                background-size: cover; /* Ensure the image covers the entire area */
-                background-position: center; /* Center the image */
+                background-size: cover;
+                background-position: center;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -188,21 +217,31 @@ html(lang='en')
             }
 
             .hero-text {
-                background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+                background: rgba(0, 0, 0, 0.5);
                 padding: 20px;
                 border-radius: 10px;
             }
 
+            @media only screen and (max-width: 600px) {
+                header.w3-bar {
+                    display: none;
+                }
 
+                .hamburger {
+                    display: block;
+                    z-index: 1000;
+                }
+
+                #main-content {
+                    min-height: 96vh;
+                    margin-top: 0;
+                }
+
+            }
 
         script(src='/javascripts/scripts.js')
-        //link(rel='stylesheet', href='/stylesheets/style.css')
-
-
-
 
 body(class='body-container w3-black')
-    // Top Navbar for Mobile (Hidden by default)
     header.w3-bar
         a.w3-bar-item.w3-button(href='/home') Home
         a.w3-bar-item.w3-button(href='/home/events') All events
@@ -215,7 +254,9 @@ body(class='body-container w3-black')
         else
             a.w3-bar-item.w3-button(href='/user/login') Login
 
-    // Main Content
+    header.hamburger
+        span.hamburger(onclick='openNav()') &#9776;
+
 
     div#main-content
         block content
@@ -225,7 +266,7 @@ body(class='body-container w3-black')
         |  |
         a(href='/terms-of-service') Terms of Use
         |
-        span     Copyright 2024
+        span Copyright 2024
 
     div#cookie-consent-popup.w3-modal
         div.w3-modal-content.w3-animate-opacity.w3-card-4(style='max-width: 300px;')
@@ -235,3 +276,16 @@ body(class='body-container w3-black')
                 p By visiting our site, you accept that we collect only the necessary cookies.
             footer
                 button#accept-cookies.w3-button.w3-green.w3-round-large Accept
+
+    div.sidebar(id='mySidebar')
+        a(href='javascript:void(0)', class='closebtn', onclick='closeNav()') &times;
+        a(href='/home') Home
+        a(href='/home/events') All events
+        a(href='/home/games') All games
+        if user
+            a(href='/home/event/create') Create new event
+            a(href='/home/games/create') Create new game
+            a(href=`/user/profile/${user._id}`) Profile
+            a(href='/user/logout') Logout
+        else
+            a(href='/user/login') Login

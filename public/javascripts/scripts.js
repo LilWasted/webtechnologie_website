@@ -19,6 +19,14 @@ function filtergames() {
     gameList.style.display = anyVisible ? 'block' : 'none';
 }
 
+function openNav() {
+    document.getElementById("mySidebar").style.width = "250px";
+}
+
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+}
+
 /*function adjustFooter() {
     const footer = document.querySelector('.footer');
     const bodyHeight = document.documentElement.scrollHeight;
@@ -102,6 +110,8 @@ function handleGameSelection(event) {
 document.addEventListener('DOMContentLoaded', () => {
     //adjustFooter();
     handleCookieConsent();
+    document.querySelector('.hamburger').addEventListener('click', openNav);
+    document.querySelector('.closebtn').addEventListener('click', closeNav);
 
     const searchBar = document.getElementById('search-bar');
     const gameInput = document.getElementById('game');
