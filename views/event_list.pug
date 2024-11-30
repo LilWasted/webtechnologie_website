@@ -2,7 +2,6 @@ extends layout
 
 block content
 
-
   div.w3-container.w3-padding-32
     h1.w3-center(style= 'font-weight: bold;') All Events
 
@@ -32,33 +31,32 @@ block content
     if event_list && event_list.length
       ul(style='list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;')
         each event in event_list
-          a(href=event.url style='display: block; text-decoration: none; color: inherit;')
-
-            li.w3-card-4.w3-padding.w3-round-large(style='border: 1px solid #ddd; list-style: none; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;')
-              h3.w3-text-blue.w3-hover-text-light-blue(style='font-size: 1.5rem; font-weight: bold;') #{event.title}
+          li.w3-card-4.w3-padding.w3-round-large(style='border: 1px solid #ddd; list-style: none; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;')
+            h3.w3-text-blue.w3-hover-text-light-blue(style='font-size: 1.5rem; font-weight: bold;')
+              a(href=event.url) #{event.title}
+            p(style='margin: 0; font-size: 1rem;')
+              b Game:
+              span #{event.game.name}
+            if event.date
               p(style='margin: 0; font-size: 1rem;')
-                b Game:&nbsp;
-                span #{event.game.name}
-              if event.date
-                p(style='margin: 0; font-size: 1rem;')
-                  b Date:&nbsp;
-                  span #{event.date.toDateString()}
+                b Date:
+                span #{event.date.toDateString()}
+            else
+              p(style='margin: 0; font-size: 1rem;')
+                b Date:
+                span Not specified
+
+            p(style='margin: 0; font-size: 1rem;')
+              if event.status === 'Available'
+                span.w3-text-green
+                  b Available:
+                  | #{event.participants.length} / #{event.max_size}
+              else if event.status === 'Full'
+                span.w3-text-red
+                  b Full:
+                  | #{event.participants.length} / #{event.max_size}
               else
-                p(style='margin: 0; font-size: 1rem;')
-                  b Date:&nbsp;
-                  span Not specified
-
-              p(style='margin: 0; font-size: 1rem;')
-                if event.status === 'Available'
-                  span.w3-text-green
-                    b Available:&nbsp;
-                    | #{event.participants.length} / #{event.max_size}
-                else if event.status === 'Full'
-                  span.w3-text-red
-                    b Full:&nbsp;
-                    | #{event.participants.length} / #{event.max_size}
-                else
-                  span.w3-text-orange #{event.status}
+                span.w3-text-orange #{event.status}
     else
       p.w3-text-gray(style='text-align: center; font-size: 1.2rem; margin-top: 20px;') No events found.
 
@@ -77,17 +75,16 @@ block content
       box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .game-item:hover {
-      background-color: #f0f0f0; /* Change to your desired hover color */
-      border-radius: 10px;
-    }
-
     .w3-card-4 h3 {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
+    .game-item:hover {
+      background-color: #f0f0f0; /* Change to your desired hover color */
+      border-radius: 10px;
+    }
 
     #game-list {
       max-height: 160px; /* Approx 4 items if each is 40px tall */
