@@ -3,35 +3,60 @@ extends layout
 block content
   div.w3-container.w3-padding-32
     if game
-      h1 #{game.name}
+      h1.w3-center(style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;")= game.name
 
-      div.w3-center
-        if game.YTlink
-          - var videoId
-          // Check for the shortened YouTube link format
-          iframe(width="560" height="315"
+      if game.YTlink
+        div.w3-center
+          iframe(
+            width="560"
+            height="315"
             src=game.YTlink
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen)
+            allowfullscreen
+          )
 
       if game_events.length
-        h2 Open Events:
-        ul(class='w3-ul w3-border w3-white')
+        h2.w3-center(style="font-size: 2rem; margin-top: 2rem; margin-bottom: 1rem;") Open Events:
+        ul(style="list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;")
           each event in game_events
-            li(class='w3-padding')
-              a(href=event.url)
-                i(class='fa fa-gamepad')
-                |  Event: #{event.title}
-              if event.status === 'Available'
-                p.w3-text-green Available: #{event.participants.length} / #{event.max_size}
-              else if event.status === 'Full'
-                p.w3-text-red Full: #{event.participants.length} / #{event.max_size}
-              else
-                p.w3-text-orange #{event.status}
+            li.w3-card-4.w3-padding.w3-round-large.event-item(style="border: 1px solid #ddd;")
+              a(href=event.url style="display: block; text-decoration: none; color: inherit;")
+                h3.w3-text-blue(style="font-size: 1.5rem; font-weight: bold;") Event: #{event.title}
+                if event.status === 'Available'
+                  p.w3-text-green(style="margin: 0; font-size: 1rem;") Available: #{event.participants.length} / #{event.max_size}
+                else if event.status === 'Full'
+                  p.w3-text-red(style="margin: 0; font-size: 1rem;") Full: #{event.participants.length} / #{event.max_size}
+                else
+                  p.w3-text-orange(style="margin: 0; font-size: 1rem;") #{event.status}
       else
-        p No open events in this category.
+        p.w3-center(style="margin-top: 2rem; font-size: 1.2rem;") No open events in this category.
     else
-      p Game not found.
+      p.w3-center(style="margin-top: 2rem; font-size: 1.2rem;") Game not found.
+
+  script(src="/javascripts/scripts.js")
+
+  style.
+    .w3-card-4 {
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .w3-card-4:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .event-item h3 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .w3-container {
+        padding: 16px;
+      }
+    }
