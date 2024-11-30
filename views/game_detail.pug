@@ -7,7 +7,7 @@ block content
 
       if game.YTlink
         div.w3-center
-          iframe(
+          iframe.mobile-friendly(
             width="560"
             height="315"
             src=game.YTlink
@@ -55,8 +55,15 @@ block content
       text-overflow: ellipsis;
     }
 
+
     @media only screen and (max-width: 600px) {
       .w3-container {
         padding: 16px;
+      }
+
+      iframe.mobile-friendly {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
       }
     }
