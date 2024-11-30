@@ -388,7 +388,7 @@ exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
     }
 
     res.render("event_form", {
-        title: "Update Book",
+        title: "Update Event",
         games: game,
         event: event,
 
