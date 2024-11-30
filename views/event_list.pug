@@ -35,25 +35,25 @@ block content
             h3.w3-text-blue.w3-hover-text-light-blue(style='font-size: 1.5rem; font-weight: bold;')
               a(href=event.url) #{event.title}
             p(style='margin: 0; font-size: 1rem;')
-              b Game:
+              b Game:&nbsp;
               span #{event.game.name}
             if event.date
               p(style='margin: 0; font-size: 1rem;')
-                b Date:
+                b Date:&nbsp;
                 span #{event.date.toDateString()}
             else
               p(style='margin: 0; font-size: 1rem;')
-                b Date:
+                b Date:&nbsp;
                 span Not specified
 
             p(style='margin: 0; font-size: 1rem;')
               if event.status === 'Available'
                 span.w3-text-green
-                  b Available:
+                  b Available:&nbsp;
                   | #{event.participants.length} / #{event.max_size}
               else if event.status === 'Full'
                 span.w3-text-red
-                  b Full:
+                  b Full:&nbsp;
                   | #{event.participants.length} / #{event.max_size}
               else
                 span.w3-text-orange #{event.status}
