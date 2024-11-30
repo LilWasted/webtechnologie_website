@@ -70,7 +70,9 @@ block content
     // User Participation Section   //users.some(user1 => user1._id.equals(user._id))
     if (participant)
       div.w3-container.w3-padding-16
-        a.w3-button.w3-red.w3-hover-pink.w3-round-large(href=event.url + '/leave') Leave Event
+        form(action=`${event.url}/leave` method='POST' style='display: inline;')
+          button(type='submit' class='w3-button w3-red w3-hover-light-pink w3-round-large' style='background: none; border: none; cursor: pointer;')
+            | leave Event
     else if status_event === 'Available' && new Date(event.date) > new Date()
       div.w3-container.w3-padding-16
         form(action=`${event.url}/join` method='POST' style='display: inline;')
