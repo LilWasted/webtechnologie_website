@@ -77,6 +77,14 @@ block content
                 font-size: 0.9em; /* Adjust font size for smaller screens */
             }
 
+            .event-list {
+                max-height: 300px; /* Set a max height for the event list */
+                overflow-y: auto; /* Enable vertical scrolling */
+                margin: 10px;
+                padding: 0;
+                list-style-type: none;
+            }
+
             .edit-profile-button {
                 font-size: 0.9em; /* Adjust button font size for smaller screens */
                 padding: 0.5rem 1rem; /* Adjust button padding for smaller screens */
@@ -94,7 +102,7 @@ block content
                 h2 Username: #{user.username}
                 h3 Email: #{user.email}
                 h3 Events: #{numEvents}
-                ul(style='padding: 0; margin: 10px 0; list-style-type: none;')
+                ul.event-list
                     each event in user.events
                         li
                             a(href=event.url, class='event-link') #{event.title}
