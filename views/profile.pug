@@ -57,6 +57,32 @@ block content
             margin-top: 20px;
         }
 
+        @media only screen and (max-width: 600px) {
+            .profile-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 80vh; /* Full viewport height to center vertically */
+                max-width: 90%; /* Full width on smaller screens */
+                margin: 60px auto;
+            }
+
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
+
+            .event-link {
+                font-size: 0.9em; /* Adjust font size for smaller screens */
+            }
+
+            .edit-profile-button {
+                font-size: 0.9em; /* Adjust button font size for smaller screens */
+                padding: 0.5rem 1rem; /* Adjust button padding for smaller screens */
+            }
+        }
+
     .profile-container
         if user.profilePicture
             img(src=`data:image/png;base64,${user.profilePicture.toString('base64')}`, alt='Profile Picture', class='profile-picture')
