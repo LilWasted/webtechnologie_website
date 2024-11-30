@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler");
 const SECRET_KEY=process.env.SECRET_KEY
 const multer = require('multer');
 const Event = require("../models/event");
+const {log} = require("debug");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -151,12 +152,15 @@ exports.edit_profile_post = [
         try {
             const token = req.cookies.token;
             if (!token) {
-                return res.status(401).json({ message: 'No token provided' });
+                log("No token provided");
+                return res.redirect('/home');
+
             }
             const verify = jwt.verify(token, SECRET_KEY);
             const user = await User.findOne({ _id: verify.userId });
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                log("User not found");
+                return res.redirect('/home');
             }
 
             if (username) user.username = username;
@@ -171,7 +175,7 @@ exports.edit_profile_post = [
 
             await user.save();
             console.log("User profile updated");
-            res.redirect('/user/profile');
+            res.redirect('/user/profile/' + user._id);
         } catch (error) {
             next(error);
             res.redirect('/user/profile');

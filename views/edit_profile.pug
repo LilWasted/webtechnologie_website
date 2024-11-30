@@ -52,3 +52,16 @@ block content
         padding: 10px;
         font-size: 1.2rem;
     }
+
+    @media only screen and (max-width: 600px) {
+      .w3-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh; /* Full viewport height to center vertically */
+        min-width: 80%; /* Full width on smaller screens */
+        margin: 60px auto;
+      }
+
+    }
