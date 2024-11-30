@@ -40,7 +40,7 @@ block content
             if event.date
               p(style='margin: 0; font-size: 1rem;')
                 b Date:&nbsp;
-                span #{event.date.toDateString()}
+                span #{event.date.toDateString()} #{event.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             else
               p(style='margin: 0; font-size: 1rem;')
                 b Date:&nbsp;
