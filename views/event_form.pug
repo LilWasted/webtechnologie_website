@@ -97,6 +97,14 @@ block content
       .w3-container {
         padding-top: 55px;
       }
+
+      #game-list {
+        z-index: 10; /* Ensure the dropdown is above other elements */
+      }
+
+      #date {
+        z-index: 1; /* Ensure the date input is below the dropdown */
+      }
     }
 
   script(src='/javascripts/scripts.js')

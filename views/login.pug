@@ -90,8 +90,27 @@ block content
                 background-color: #4CAF50;
             }
 
+            @media only screen and (max-width: 600px) {
+                h1 {
+                    font-size: 2rem; /* Adjust font size for mobile */
+                }
 
+                .input-container label {
+                    font-size: 1.2rem; /* Adjust font size for mobile */
+                }
 
+                .input-container input {
+                    font-size: 1.2rem; /* Adjust font size for mobile */
+                }
+
+                .login-form {
+                    padding: 1rem; /* Adjust padding for mobile */
+                }
+
+                .login-container {
+                    width: 100%; /* Make the login container wider on mobile */
+                }
+            }
 
         .login-container.w3-display-middle
             .login-form
