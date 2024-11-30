@@ -9,3 +9,15 @@ block content
         div.form-group
           input#eventid.form-control(type='hidden', name='eventid', value=event._id )
         button.w3-button.w3-red.w3-hover-pink.w3-round-large(type='submit') Delete
+
+        style.
+          @media only screen and (max-width: 600px) {
+            .w3-container {
+              padding-top: 50px; /* Adjust padding to create space at the top */
+            }
+
+            /* Alternatively, add margin to individual elements */
+            h1, p, button {
+              margin-top: 20px; /* Adjust this value to create space between elements */
+            }
+          }
