@@ -3,7 +3,7 @@ extends layout
 block content
   // Event Title Section
   div.w3-container.w3-padding-32.w3-center
-    h1.w3-xxlarge.w3-text-white Title:  #{event.title}
+    h1.w3-xxlarge.w3-text-white(style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;') #{event.title}
 
   // Game and Description Section
   div.w3-container.w3-padding-16
@@ -13,8 +13,17 @@ block content
       a.w3-text-blue.w3-hover-text-light-blue(href=event.game.url) #{event.game.name}
     p.w3-large
       strong Summary:
+      span(style='margin-left: 10px;') #{event.description}
+    p.w3-large
+      strong Date:
       span(style='margin-left: 10px;')
-      | #{event.description}
+        if event.date
+          | #{event.date.toDateString()} #{event.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        else
+          | Not specified
+    p.w3-large
+      strong Platform:
+      span(style='margin-left: 10px;') #{event.platform}
 
   // Event Status Section
   div.w3-container.w3-padding-16
@@ -28,18 +37,28 @@ block content
 
     // User List Section
     div.w3-container.w3-padding-16
-        h2.w3-large.w3-text-white Users
-        if users && users.length
-            div.w3-row-padding
-                each val in users
-                    div.w3-third.w3-padding-small
-                        div.w3-card.w3-white.w3-padding.w3-center
-                            span.w3-text-black #{val.username}
-        else
-            p.w3-text-gray No users have joined this event yet.
-        hr
+      h2.w3-large.w3-text-white Users
+      if users && users.length
+        div.w3-row-padding
+          each val in users
+            div.w3-third.w3-padding-small
+              div.w3-card.w3-white.w3-padding.w3-center
+                span.w3-text-black #{val.username}
+      else
+        p.w3-text-gray No users have joined this event yet.
+      hr
 
   // Join Event Section
-  if event.status === 'Available'
+  if event.status === 'Available' && new Date(event.date) > new Date()
     div.w3-container.w3-padding-16.w3-center
       a.w3-button.w3-blue.w3-hover-light-blue.w3-round-large(href='/user/login') Join Event
+
+  style.
+    @media only screen and (max-width: 600px) {
+      .w3-container .w3-button {
+        display: block;
+        margin: 0 auto;
+        width: 50vw;
+        text-align: center;
+      }
+    }
