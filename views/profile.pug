@@ -57,6 +57,12 @@ block content
             margin-top: 20px;
         }
 
+        .event-list {
+            max-height: 300px; /* Limit the height */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+
         @media only screen and (max-width: 600px) {
             .profile-container {
                 display: flex;
@@ -81,16 +87,10 @@ block content
                 margin: 10px;
                 padding: 0;
                 list-style-type: none;
+                max-height: 300px; /* Limit the height */
+                overflow-y: auto; /* Enable vertical scrolling */
             }
 
-            .scrollable {
-                max-height: 300px; /* Maximum height of the event list */
-                overflow-y: auto; /* Enable vertical scrolling */
-                width: 100%; /* Make sure it takes the full available width */
-                margin-top: 10px;
-                padding: 0;
-                list-style-type: none;
-            }
 
             .edit-profile-button {
                 font-size: 0.9em; /* Adjust button font size for smaller screens */
@@ -109,7 +109,7 @@ block content
                 h2 Username: #{user.username}
                 h3 Email: #{user.email}
                 h3 Events: #{numEvents}
-                ul.event-list(class=user.events.length > 5 ? 'scrollable': '')
+                ul.event-list
                     each event in user.events
                         li
                             a(href=event.url, class='event-link') #{event.title}
