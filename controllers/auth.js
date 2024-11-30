@@ -5,7 +5,6 @@ const asyncHandler = require("express-async-handler");
 const SECRET_KEY=process.env.SECRET_KEY
 const multer = require('multer');
 const Event = require("../models/event");
-const {log} = require("debug");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -21,7 +20,6 @@ exports.register_post = asyncHandler( async (req, res, next) => {
         }
         const user = new User({ username, email, password: password });
         await user.register();
-        console.log("user made");
     } catch (error) {
         next(error);
     }
@@ -45,7 +43,6 @@ exports.login_post = asyncHandler ( async (req, res, next) => {
         }
 
         const passwordMatch = await user.comparePassword(password);
-        console.log("Password Match:", passwordMatch);
         if (!passwordMatch) {
             return res.render('login', { title: 'Login', error: 'Incorrect password, try again' });
         }
@@ -81,10 +78,9 @@ exports.logout_post = asyncHandler ( async (req, res, next) => {
 
 exports.profile = asyncHandler ( async (req, res, next) => {
     try {
-        visitor = false;
+        let visitor = false;
 
         if (!res.locals.user._id.equals(req.params.id)) {
-            console.log("User is visitor");
             visitor = true;
         }
         const user = await User.findById(req.params.id)
@@ -114,13 +110,11 @@ exports.profile = asyncHandler ( async (req, res, next) => {
 
 
 exports.edit_profile_get = asyncHandler ( async (req, res, next) => {
-    console.log("edit get");
     try {
-        console.log("edit get");
         const token = req.cookies.token;
         if (!token) {
             console.log("No token provided");
-            return res.status(401).json({ message: 'No token provided' });
+            return res.redirect('/home');
         }
         const verify = jwt.verify(token, SECRET_KEY);
         const user = await User.findOne({ _id: verify.userId });
@@ -128,14 +122,11 @@ exports.edit_profile_get = asyncHandler ( async (req, res, next) => {
         const isGoogleAccount = await !!user.googleId;
 
 
-        console.log("edit");
         res.render("edit_profile", {
             title: "Edit Profile",
             user: user,
             isGoogleAccount: isGoogleAccount,
         });
-
-        console.log("edit done");
 
     } catch (error) {
         next(error);
@@ -152,7 +143,6 @@ exports.edit_profile_post = [
         try {
             const token = req.cookies.token;
             if (!token) {
-                log("No token provided");
                 return res.redirect('/home');
 
             }
@@ -174,7 +164,6 @@ exports.edit_profile_post = [
             }
 
             await user.save();
-            console.log("User profile updated");
             res.redirect('/user/profile/' + user._id);
         } catch (error) {
             next(error);

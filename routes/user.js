@@ -15,10 +15,7 @@ router.get('/login', userController.login_get);
 router.get('/logout', userController.logout_get);
 router.post('/logout', userController.logout_post);
 
-
-
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
 // Handle Google callback
 router.get(
     '/auth/google/callback',
@@ -29,14 +26,9 @@ router.get(
         const token = jwt.sign({username: req.user.username, userId: req.user.id, type: req.user.role }, SECRET_KEY, {
             expiresIn: '1 hour'
         });
-        //const token = jwt.sign({ id: req.user.id }, SECRET_KEY , { expiresIn: '1h' });
-
-        console.log(req.user.id);
-        // Set token as a third-party cookie
-        await res.cookie('token', token, { httpOnly: true, maxAge: 3600000 });
+        await res.cookie('token', token, { httpOnly: true });
 
         res.redirect('/home');
-
     }
 );
 

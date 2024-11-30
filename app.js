@@ -13,7 +13,6 @@ const { sendEventReminder } = require('./controllers/mailController');
 
 //schedule a cron job to at the start of every hour
 cron.schedule('0 * * * *', async () => {
-  console.log('Cron job started at:', new Date().toISOString());
   try {
     const events = await Event.find({
       //2 uur from now and only if reminderSent is false
@@ -27,14 +26,11 @@ cron.schedule('0 * * * *', async () => {
       await event.save();
     }
 
-    console.log('Cron job completed at:', new Date().toISOString());
   } catch (error) {
     console.error('Error in cron job:', error);
   }
 
-  //TODO dit misschien per uur duun ipv per minuut of zelfs per dag
   try {
-    console.log('Cron job started at to delete event:', new Date().toISOString());
     const events = await Event.find({
       date: { $lt: new Date(Date.now() - (2 * 3600000)) },
     }).populate("participants").exec();
@@ -49,7 +45,6 @@ cron.schedule('0 * * * *', async () => {
             { $pull: { events: event._id } }
         );
       }
-      console.log('Event removed :', event.title);
       await Event.findByIdAndDelete(event._id);
     }
 

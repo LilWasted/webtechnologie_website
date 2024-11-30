@@ -17,8 +17,5 @@ router.get("/privacy-policy", function (req, res) {
 router.get("/cookie-policy", function (req, res) {
     res.render("cookie_policy");
 });
-//- [ ] privacy policy
-//- [ ] terms of service
-//- [ ] cookie policy
-//- [ ] contact
+
 module.exports = router;

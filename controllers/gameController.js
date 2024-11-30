@@ -1,5 +1,3 @@
-// noinspection JSUnusedLocalSymbols
-
 const Game = require("../models/game");
 const asyncHandler = require("express-async-handler");
 const Event = require("../models/event");
@@ -11,7 +9,6 @@ exports.game_list = asyncHandler(async (req, res, next) => {
     const gamesWithEvents = await Promise.all(
         allGames.map(async (game) => {
             const openEventCount = await Event.countDocuments({ game: game._id, status: "Available" }).exec();
-            console.log(openEventCount);
             return { ...game.toObject(), openEventCount, url: game.url };
         })
     );
@@ -33,10 +30,8 @@ exports.game_detail = asyncHandler(async (req, res, next) => {
     ]);
 
     if (game === null) {
-        // No results.
-        const err = new Error("Game not found");
-        err.status = 404;
-        return next(err);
+        console.log("Game not found");
+        return res.redirect("/home");
     }
 
     res.render("game_detail", {
@@ -49,9 +44,7 @@ exports.game_detail = asyncHandler(async (req, res, next) => {
 
 exports.game_create_get = asyncHandler(async (req, res, next) => {
     const game = Game.findById(req.params.id).populate("name").exec();
-
     res.render("game_form", { title: "Create Game"});
-
 });
 
 exports.game_create_post = [
@@ -62,9 +55,7 @@ exports.game_create_post = [
         .escape(),
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
-
         const existingGame = await Game.findOne({ name: req.body.name }).exec();
-
         //const existingGame = await Game.findOne({ name: new RegExp('^' + req.body.name + '$', 'i') }).exec();
         if (existingGame) {
             errors.errors.push({ msg: "Game name already exists." });
@@ -76,7 +67,6 @@ exports.game_create_post = [
                 game: req.body,
                 errors: errors.array(),
             });
-            console.log(errors.array());
         } else {
             const game = new Game({ name: req.body.name });
             await game.save();

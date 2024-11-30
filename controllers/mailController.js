@@ -19,7 +19,6 @@ const sendMail = async (to, subject, text) => {
 
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log('Email sent: ' + info.response);
     } catch (error) {
         console.error('Error sending email: ' + error);
     }
@@ -33,11 +32,9 @@ const sendEventReminder = async (eventId) => {
             return;
         }
 
-        console.log('Sending reminder for event:', event.title);
         const subject = `Reminder: ${event.title}`;
         const text = `Hello, this is a reminder for the event, 1 hour until ${event.title} on ${event.date}.`;
         for (const participant of event.participants) {
-            console.log('Sending email to:', participant.email);
             await sendMail(participant.email, subject, text);
         }
     } catch (error) {

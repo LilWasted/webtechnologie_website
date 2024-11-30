@@ -1,11 +1,8 @@
-// noinspection JSUnusedLocalSymbols
-
 const Event = require("../models/event");
 const Game = require("../models/game");
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
-
 
 const jwt = require('jsonwebtoken');
 const SECRET_KEY=process.env.SECRET_KEY
@@ -34,8 +31,6 @@ exports.index = asyncHandler(async (req, res, next) => {  //hookINDEX
     // Get details of events, event instances, authors and genre counts (in parallel)
     const numEvents = await Event.countDocuments({}).exec();
 
-
-    //thsi renders home page
     res.render("index", {
         title: "Event Home",
         numEvents: numEvents,
@@ -143,8 +138,6 @@ exports.event_create_post = [  //hookevent_create_post
 
     // Convert the genre to an array.
 
-    //TODO filteren en alle inputs verschonen (kinda done)
-
     // Validate and sanitize fields.
     body("title", "Title must not be empty.")
         .trim()
@@ -201,12 +194,9 @@ exports.event_create_post = [  //hookevent_create_post
             // There are errors. Render form again with sanitized values/error messages.
             const allGames = await Game.find().sort({ name: 1 }).exec();
 
-            //TODO werkt dit?????
             const selectedGame =  allGames.find(
             (cat) => cat && cat._id === event.game
             );
-
-
 
             if (!selectedGame) {
                 errors.errors.push({
@@ -263,7 +253,6 @@ exports.event_delete_post = asyncHandler(async (req, res, next) => {
 
     if (event === null) {
         // No results.
-        console.log("event not found");
         res.redirect("/home/events");
     }
 
@@ -304,7 +293,6 @@ exports.join_post = asyncHandler(async (req, res, next) => {
     // Create an Event object with escaped and trimmed data.
     for (const participant of event.participants) {
         if (participant._id.equals(user._id)) {
-            console.log("user already in");
             return res.redirect(event.url);
         }
     }
@@ -355,8 +343,6 @@ exports.leave_get = asyncHandler(async (req, res, next) => { //hookleave_get
 
 exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
     const event = await Event.findById(req.params.id).populate('participants');
-
-
     const user = await res.locals.user;
 
     await User.updateOne(
@@ -382,9 +368,7 @@ exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
     res.redirect("/home/events");
 });
 
-//TODO afmaken
 exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
-
     const [event, game] = await Promise.all([
         Event.findById(req.params.id).populate("game").populate("organizer").exec(),
         Game.find().sort({ name: 1 }).exec(),
@@ -409,11 +393,8 @@ exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
         event: event,
 
     });
-
 });
-//TODO afmaken
 exports.update_post = [ //hookupdate_post
-
     body("title", "Title must not be empty.")
         .trim()
         .isLength({ min: 1 }).withMessage("Title must not be empty.")
@@ -445,7 +426,6 @@ exports.update_post = [ //hookupdate_post
         .isInt({ min: 1, max: 40 }).withMessage("Max size must be a positive integer between 1 and 40."),
     // Process request after validation and sanitization.
 
-    //TODO error aanpasses, kijken dat de game niet leeg is en geen array is, kan maar 1tje zijn(kinda gefixt)
     asyncHandler(async (req, res, next) => {
         // Extract the validation errors from a request.
         if (!req.body.max_size) {
@@ -472,8 +452,6 @@ exports.update_post = [ //hookupdate_post
 
             // Get all authors and genres for form.
             const allGame = await Game.find().sort({ name: 1 }).exec();
-
-
             const selectedGame =  allGame.find(
             (cat) => cat._id.toString() === event.game
             );
@@ -496,7 +474,6 @@ exports.update_post = [ //hookupdate_post
         } else {
             const updatedEvent = await Event.findByIdAndUpdate(req.params.id, event, {});
             res.redirect(updatedEvent.url);
-
             // Data from form is valid. Save event.
         }
     }),
@@ -505,56 +482,32 @@ exports.update_post = [ //hookupdate_post
 
 
 exports.kick_post = asyncHandler(async (req, res, next) => {
-    console.log("kick post 1");
     const event = await Event.findById(req.params.id).populate('participants').exec();
     const userToKick = await User.findById(req.params.kickId).exec();
     const user = await res.locals.user;
-
-    console.log("kick post 2");
 
     if (!event.organizer.equals(user._id)) {
         return res.redirect("/home/events");
     }
 
-    console.log("kick post 4");
-
-
     if (!userToKick) {
         return res.redirect("/home/events");
     }
 
-    console.log("kick post 4");
-
-
     // Remove the user from the event participants
     event.participants.pull(userToKick._id);
 
-    console.log("kick post 5");
-
     // Add the user to the event blacklist
     event.blacklist.push(userToKick._id);
-
-    console.log("kick post 6");
-
 
     // Check if the event is no longer full
     if (event.participants.length < event.max_size) {
         event.status = 'Available';
     }
-    console.log(event.groeprating);
-
-    console.log("kick post 7");
-
     await event.save();
-
-    console.log("kick post 8");
 
     // Remove the event from the user's events list
     userToKick.events.pull(event._id);
     await userToKick.save();
-
-    console.log("kick post 8");
-
-
     res.redirect(event.url);
 });

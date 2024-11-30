@@ -4,8 +4,6 @@ const router = express.Router();
 const game_controller = require("../controllers/gameController");
 const event_controller = require("../controllers/eventController");
 
-
-
 /// Event ROUTES ///
 
 // GET catalog home page.
@@ -55,10 +53,10 @@ router.post("/events/:id/kick/:kickId", event_controller.kick_post);
 
 router.get("/games", game_controller.game_list);
 
-
 router.get("/games/create/", game_controller.game_create_get);
 router.post("/games/create/", game_controller.game_create_post);
 
 router.get("/games/:id", game_controller.game_detail);
+
 module.exports = router;
 

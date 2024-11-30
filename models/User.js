@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema({
     { timestamps: true }
 );
 
-
 userSchema.methods.register = async function () {
      this.save();
 };
