@@ -146,8 +146,21 @@ block content
 
     document.getElementById('game-search-bar').addEventListener('input', function () {
       const gameList = document.getElementById('game-list');
+      const searchTerm = this.value.toLowerCase();
+
       if (this.value.trim() !== '') {
         gameList.style.display = 'block'; // Show dropdown if there is text in the input
+        // Filter the game items in the dropdown
+        const gameItems = gameList.querySelectorAll('.game-item');
+        gameItems.forEach(gameItem => {
+          const gameName = gameItem.querySelector('span').textContent.toLowerCase();
+          // Show only the game items that match the search term
+          if (gameName.includes(searchTerm)) {
+            gameItem.style.display = ''; // Show matching items
+          } else {
+            gameItem.style.display = 'none'; // Hide non-matching items
+          }
+        });
       } else {
         gameList.style.display = 'none'; // Hide dropdown if input is empty
       }
@@ -160,6 +173,7 @@ block content
       const dateTerm = document.getElementById('date-search-bar').value;
       const events = document.querySelectorAll('ul > li');
 
+
       events.forEach(event => {
         const title = event.querySelector('a').textContent.toLowerCase();
         const game = event.querySelector('p:nth-of-type(1)').textContent.toLowerCase();
@@ -167,8 +181,8 @@ block content
 
         const matchesTitle = title.includes(searchTerm);
         const matchesGame = game.includes(gameTerm);
-        const matchesDate = dateTerm ? date.includes(new Date(dateTerm).toDateString()) : true;
 
+        const matchesDate = dateTerm ? date.includes(new Date(dateTerm).toDateString()) : true;
         if (matchesTitle && matchesGame && matchesDate) {
           event.style.display = '';
         } else {
