@@ -132,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameList.style.display = 'grid';
             }
         });
-
     }
 
     if (searchInput) {
