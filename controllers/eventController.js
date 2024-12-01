@@ -193,7 +193,6 @@ exports.event_create_post = [  //hookevent_create_post
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
             const allGames = await Game.find().sort({ name: 1 }).exec();
-
             const selectedGame =  allGames.find(
             (cat) => cat && cat._id === event.game
             );
@@ -250,7 +249,6 @@ exports.event_delete_get = asyncHandler(async (req, res, next) => {
 exports.event_delete_post = asyncHandler(async (req, res, next) => {
 // Get details of author and all their books (in parallel)
     const event = await Event.findById(req.params.id).exec();
-
     if (event === null) {
         // No results.
         res.redirect("/home/events");
@@ -326,10 +324,7 @@ exports.join_post = asyncHandler(async (req, res, next) => {
 });
 
 exports.leave_get = asyncHandler(async (req, res, next) => { //hookleave_get
-
     const event = await Event.findById(req.params.id).exec();
-
-
     if (event === null) {
         // No results.
         res.redirect("/home/events");
@@ -432,12 +427,11 @@ exports.update_post = [ //hookupdate_post
             req.body.max_size = 6;
         }
         const errors = validationResult(req);
-
         const maker = await res.locals.user;
-
         const currentEvent = await Event.findById(req.params.id).exec();
         const currentParticipants=currentEvent.participants;
         let event;
+
         if(currentParticipants.length>req.body.max_size){
             errors.errors.push({msg: "You can't reduce the max size of the event below the current number of participants."});
         }else{
@@ -461,9 +455,6 @@ exports.update_post = [ //hookupdate_post
                 _id: req.params.id,
             });
         }
-
-
-
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
