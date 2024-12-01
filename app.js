@@ -10,6 +10,7 @@ const User = require('./models/User'); // Your Mongoose User schema
 const Event = require('./models/event');
 const cron = require('node-cron');
 const { sendEventReminder } = require('./controllers/mailController');
+const compression = require("compression");
 
 //schedule a cron job to at the start of every hour
 cron.schedule('0 * * * *', async () => {
@@ -91,6 +92,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression()); // Compress all routes
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
