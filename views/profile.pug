@@ -13,7 +13,8 @@ block content
             border-radius: 10px;
             max-width: 600px; /* Set a maximum width */
             margin: 20px auto; /* Center the container */
-            white-space: nowrap;
+            white-space: normal;
+            word-wrap: break-word;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -33,6 +34,7 @@ block content
             padding: 0;
             margin: 10px 0;
             list-style-type: none;
+            overflow-wrap: break-word;
         }
 
         li {
@@ -46,6 +48,7 @@ block content
             font-weight: bold;
             padding-left: 10px;
             padding-right: 10px;
+            word-wrap: break-word;
         }
 
         .error-message {
