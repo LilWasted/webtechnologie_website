@@ -61,7 +61,15 @@ const indexRouter = require('./routes/index');
 const homeRouter = require("./routes/home"); //Import routes for "catalog" area of sit
 const userRouter = require("./routes/user"); //Import routes for "catalog" area of sit
 
-const app = express();
+const app = express()
+// Set up rate limiter: maximum of sixty requests per minute
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 60 // 60 requests,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
 
 // Set up mongoose connection
 const mongoose = require("mongoose");
