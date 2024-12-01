@@ -26,7 +26,7 @@ block content
       // Game search input field
       div.form-group(style='margin-bottom: 20px; position: relative;')
         label(for='game' style=' display: block; margin-bottom: 5px;') Game:
-        input.w3-input.w3-border.w3-round-large#game.form-control(type='text', placeholder='Search games...', value=(event && event.gameName ? event.gameName : ''),oninput="filtergames()", required style='width: 100%;')
+        input.w3-input.w3-border.w3-round-large#game.form-control(type='text', placeholder='Search games...', value=(event && event.gameName ? event.gameName : ''), oninput="filtergames()", required style='width: 100%;')
         input(type='hidden', name='game', id='selected-game-id')
         // Custom dropdown menu
         div#game-list(style=' max-width: 600px; width: 100%;   background-color: #fff; display: none; color: black; border-radius: 10px;')
