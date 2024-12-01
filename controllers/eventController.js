@@ -436,27 +436,27 @@ exports.update_post = [ //hookupdate_post
         const maker = await res.locals.user;
 
         const currentEvent = await Event.findById(req.params.id).exec();
-       // Create an Event object with escaped and trimmed data.
-        const event = new Event({
-            title: req.body.title,
-            description: req.body.description,
-            game: req.body.game,
-            organizer: maker._id,
-            date: req.body.date,
-            platform: req.body.platform,
-            participants: [maker._id],
-            max_size: req.body.max_size,
-            _id: req.params.id,
-        });
-
-        if (event.max_size !== currentEvent.max_size) {
-            // If the number of participants exceeds max_size, you may want to handle it, e.g., by truncating
-            if (event.participants.length > event.max_size) {
-                // Optional: Remove excess participants, or implement custom logic (e.g., remove least active participants)
-            }else{
-                event.participants = currentEvent.participants;
-            }
+        const currentParticipants=currentEvent.participants;
+        let event;
+        if(currentParticipants.length>req.body.max_size){
+            errors.errors.push({msg: "You can't reduce the max size of the event below the current number of participants."});
+        }else{
+            // Create an Event object with escaped and trimmed data.
+            event = new Event({
+                title: req.body.title,
+                description: req.body.description,
+                game: req.body.game,
+                organizer: maker._id,
+                date: req.body.date,
+                platform: req.body.platform,
+                participants: currentParticipants,
+                max_size: req.body.max_size,
+                _id: req.params.id,
+            });
         }
+
+
+
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
