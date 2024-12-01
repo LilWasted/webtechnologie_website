@@ -58,7 +58,6 @@ exports.login_post = asyncHandler ( async (req, res, next) => {
 });
 
 exports.login_get = asyncHandler ( async (req, res) => {
-    const error = req.flash('error');
     res.render("login", { title: "Login", error: error });
     //res.render("login", { title: "Login" });
 });

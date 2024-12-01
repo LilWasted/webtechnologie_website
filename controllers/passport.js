@@ -10,7 +10,7 @@ passport.use(
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: 'https://gamerden.onrender.com/user/auth/google/callback'
         },
-        async (accessToken, refreshToken, profile, done) => {
+        async (req, accessToken, refreshToken, profile, done) => {
             try {
                 // Check if user exists in your database
                 let user = await User.findOne({ googleId: profile.id });
@@ -18,7 +18,7 @@ passport.use(
                 if (!user) {
                     usermail = await User.findOne({ email: profile.emails[0].value });
                     if (usermail) {
-                        return done(null, false, { message: 'Email already exists' });
+                        return req.res.redirect('/login?error=Email already exists');
                         // If user is found by email, add Google ID to their profile
                     }
 
