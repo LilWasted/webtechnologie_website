@@ -3,7 +3,7 @@ extends layout
 block content
   // Event Title Section
   div.w3-container.w3-padding-32.w3-center
-    h1.w3-xxlarge.w3-text-white(style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis;') #{event.title}
+    h1.w3-xxlarge.w3-text-white(style='white-space: normal; overflow: hidden; text-overflow: ellipsis;') #{event.title}
 
   // Game and Description Section
   div.w3-container.w3-padding-16
@@ -80,7 +80,14 @@ block content
             | Join Event
   style.
     @media only screen and (max-width: 600px) {
-      .w3-container .w3-button {
+      .w3-container{
+        display: block;
+        margin: 60px auto;
+        width: 50vw;
+        text-align: center;
+      }
+
+      .w3-button {
         display: block;
         margin: 0 auto;
         width: 50vw;
