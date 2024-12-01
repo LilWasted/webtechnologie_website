@@ -8,7 +8,9 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: 'https://gamerden.onrender.com/user/auth/google/callback'
+            callbackURL: 'https://gamerden.onrender.com/user/auth/google/callback',
+            passReqToCallback: true // Pass req to callback
+
         },
         async (req, accessToken, refreshToken, profile, done) => {
             try {
