@@ -434,6 +434,8 @@ exports.update_post = [ //hookupdate_post
         const errors = validationResult(req);
 
         const maker = await res.locals.user;
+
+        const currentEvent = await Event.findById(req.params.id).exec();
        // Create an Event object with escaped and trimmed data.
         const event = new Event({
             title: req.body.title,
@@ -446,6 +448,15 @@ exports.update_post = [ //hookupdate_post
             max_size: req.body.max_size,
             _id: req.params.id,
         });
+
+        if (event.max_size !== currentEvent.max_size) {
+            // If the number of participants exceeds max_size, you may want to handle it, e.g., by truncating
+            if (event.participants.length > event.max_size) {
+                // Optional: Remove excess participants, or implement custom logic (e.g., remove least active participants)
+            }else{
+                event.participants = currentEvent.participants;
+            }
+        }
 
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/error messages.
