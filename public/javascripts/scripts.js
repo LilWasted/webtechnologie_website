@@ -47,9 +47,13 @@ function closeNav() {
 function handleCookieConsent() {
     const cookieConsentPopup = document.getElementById('cookie-consent-popup');
     const acceptCookiesButton = document.getElementById('accept-cookies');
+    const currentUrl = window.location.pathname;
+
 
     if (!localStorage.getItem('cookiesAccepted')) {
-        cookieConsentPopup.style.display = 'block';
+        if (currentUrl !== '/cookie-policy') {
+            cookieConsentPopup.style.display = 'block';
+        }
     }
 
     acceptCookiesButton.addEventListener('click', () => {
