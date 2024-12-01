@@ -149,12 +149,25 @@ exports.edit_profile_post = [
             const verify = jwt.verify(token, SECRET_KEY);
             const user = await User.findOne({ _id: verify.userId });
             if (!user) {
-                log("User not found");
                 return res.redirect('/home');
             }
 
-            if (username) user.username = username;
-            if (email) user.email = email;
+            if (username) {
+                console.log("username: " + username);
+                const existingUser = await User.findOne({ username : username });
+                if (existingUser && !existingUser._id.equals(user._id)) {
+                    return res.render('edit_profile', { title: 'Edit Profile', error: 'Username already exists' });
+                }
+                user.username = username;
+            }
+            if (email) {
+                const existingUser = await User.findOne({email: email });
+                if (existingUser && !existingUser._id.equals(user._id)) {
+                    return res.render('edit_profile', { title: 'Edit Profile', error: 'Username already exists' });
+                }
+                user.email = email;
+
+            }
             if (password) {
                 const salt = await bcrypt.genSalt();
                 user.password = await bcrypt.hash(password, salt);
