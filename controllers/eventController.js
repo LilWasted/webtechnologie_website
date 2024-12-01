@@ -441,6 +441,12 @@ exports.update_post = [ //hookupdate_post
         if(currentParticipants.length>req.body.max_size){
             errors.errors.push({msg: "You can't reduce the max size of the event below the current number of participants."});
         }else{
+            let eventStatus;
+            if(currentParticipants===req.body.max_size){
+                eventStatus="Full";
+            }else{
+                eventStatus="Available";
+            }
             // Create an Event object with escaped and trimmed data.
             event = new Event({
                 title: req.body.title,
@@ -451,6 +457,7 @@ exports.update_post = [ //hookupdate_post
                 platform: req.body.platform,
                 participants: currentParticipants,
                 max_size: req.body.max_size,
+                status: eventStatus,
                 _id: req.params.id,
             });
         }
@@ -477,7 +484,7 @@ exports.update_post = [ //hookupdate_post
             }
 
             res.render("event_form", {
-                title: "Create Event",
+                title: "Update Event",
                 games: allGames,
                 event: event,
                 errors: errors.array(),
