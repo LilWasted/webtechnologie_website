@@ -369,7 +369,7 @@ exports.leave_post = asyncHandler(async (req, res, next) => { //hookleave_post
 });
 
 exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
-    const [event, game] = await Promise.all([
+    const [event, games] = await Promise.all([
         Event.findById(req.params.id).populate("game").populate("organizer").exec(),
         Game.find().sort({ name: 1 }).exec(),
     ]);
@@ -389,7 +389,7 @@ exports.update_get = asyncHandler(async (req, res, next) => { //hookupdate_get
 
     res.render("event_form", {
         title: "Update Event",
-        games: game,
+        games: games,
         event: event,
 
     });
@@ -451,8 +451,8 @@ exports.update_post = [ //hookupdate_post
             // There are errors. Render form again with sanitized values/error messages.
 
             // Get all authors and genres for form.
-            const allGame = await Game.find().sort({ name: 1 }).exec();
-            const selectedGame =  allGame.find(
+            const allGames = await Game.find().sort({ name: 1 }).exec();
+            const selectedGame =  allGames.find(
             (cat) => cat._id.toString() === event.game
             );
 
@@ -467,7 +467,7 @@ exports.update_post = [ //hookupdate_post
 
             res.render("event_form", {
                 title: "Create Event",
-                games: games,
+                games: allGames,
                 event: event,
                 errors: errors.array(),
             });
