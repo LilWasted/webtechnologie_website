@@ -18,15 +18,15 @@ block content
       div.form-group(style='margin-bottom: 20px;')
         label(for='platform' style=' display: block; margin-bottom: 5px;') Platform:
         select.w3-input.w3-border.w3-round-large#platform.form-control(name='platform', required style='max-height: 40px; width: 100%;')
-          option(value='PC') PC
-          option(value='PS') PS
-          option(value='xbox') Xbox
-          option(value='switch') Switch
+          option(value='PC', selected=(event && event.platform === 'PC' ? true : undefined)) PC
+          option(value='PS', selected=(event && event.platform === 'PS' ? true : undefined)) PS
+          option(value='xbox', selected=(event && event.platform === 'xbox' ? true : undefined)) Xbox
+          option(value='switch', selected=(event && event.platform === 'switch' ? true : undefined)) Switch
 
       // Game search input field
       div.form-group(style='margin-bottom: 20px; position: relative;')
         label(for='game' style=' display: block; margin-bottom: 5px;') Game:
-        input.w3-input.w3-border.w3-round-large#game.form-control(type='text', placeholder='Search games...', oninput="filtergames()", required style='width: 100%;')
+        input.w3-input.w3-border.w3-round-large#game.form-control(type='text', placeholder='Search games...', value=(event && event.gameName ? event.gameName : ''),oninput="filtergames()", required style='width: 100%;')
         input(type='hidden', name='game', id='selected-game-id')
         // Custom dropdown menu
         div#game-list(style=' max-width: 600px; width: 100%;   background-color: #fff; display: none; color: black; border-radius: 10px;')
