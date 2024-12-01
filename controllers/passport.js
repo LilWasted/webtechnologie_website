@@ -16,12 +16,30 @@ passport.use(
                 let user = await User.findOne({ googleId: profile.id });
 
                 if (!user) {
+                    usermail = await User.findOne({ email: profile.emails[0].value });
+                    if (usermail) {
+                        return res.render('login', { title: 'Login', error: 'Email already exists' });
+                        // If user is found by email, add Google ID to their profile
+                    }
+
+                    user_findName = await User.findOne({ username: profile.displayName });
+                    let counter = 1;
+                    if (user_findName) {
+                        user = new User({
+                            googleId: profile.id,
+                            email: profile.emails[0].value,
+                            username: `${profile.displayName}${counter}`,
+                        });
+                        counter++;
+                        // If user is found by email, add Google ID to their profile
+                    } else {
+                        user = new User({
+                            googleId: profile.id,
+                            email: profile.emails[0].value,
+                            username: profile.displayName,
+                        });
+                    }
                     // Save new user if they don't already exist
-                    user = new User({
-                        googleId: profile.id,
-                        email: profile.emails[0].value,
-                        username: profile.displayName,
-                    });
                     await user.save();
                 }
 
