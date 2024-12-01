@@ -132,14 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gameList.style.display = 'grid';
             }
         });
-        const hiddenGameIdInput = document.getElementById('selected-game-id');
 
-        if (event && event.game && event.game._id) {
-            // Set the visible game input field with the game's name
-            gameInput.value = event.game.name;
-            // Set the hidden input with the game's ID
-            hiddenGameIdInput.value = event.game._id;
-        }
     }
 
     if (searchInput) {
