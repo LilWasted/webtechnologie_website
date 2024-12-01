@@ -18,7 +18,7 @@ passport.use(
                 if (!user) {
                     usermail = await User.findOne({ email: profile.emails[0].value });
                     if (usermail) {
-                        return res.render('login', { title: 'Login', error: 'Email already exists' });
+                        return done(null, false, { message: 'Email already exists' });
                         // If user is found by email, add Google ID to their profile
                     }
 

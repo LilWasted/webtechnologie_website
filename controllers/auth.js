@@ -58,7 +58,9 @@ exports.login_post = asyncHandler ( async (req, res, next) => {
 });
 
 exports.login_get = asyncHandler ( async (req, res) => {
-    res.render("login", { title: "Login" });
+    const error = req.flash('error');
+    res.render("login", { title: "Login", error: error });
+    //res.render("login", { title: "Login" });
 });
 
 exports.logout_get = asyncHandler ( async (req, res) => {
