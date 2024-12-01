@@ -28,7 +28,6 @@ exports.register_post = asyncHandler( async (req, res, next) => {
 });
 
 exports.register_get = async (req, res) => {
-
     res.render("register", { title: "Register" });
 };
 
@@ -58,8 +57,7 @@ exports.login_post = asyncHandler ( async (req, res, next) => {
 });
 
 exports.login_get = asyncHandler ( async (req, res) => {
-    res.render("login", { title: "Login", error: error });
-    //res.render("login", { title: "Login" });
+    res.render("login", { title: "Login" });
 });
 
 exports.logout_get = asyncHandler ( async (req, res) => {
