@@ -442,7 +442,7 @@ exports.update_post = [ //hookupdate_post
             errors.errors.push({msg: "You can't reduce the max size of the event below the current number of participants."});
         }else{
             let eventStatus;
-            if(currentParticipants.length===req.body.max_size){
+            if(currentParticipants.length >= req.body.max_size){
                 eventStatus="Full";
             }else{
                 eventStatus="Available";
