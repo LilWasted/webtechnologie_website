@@ -147,6 +147,13 @@ exports.edit_profile_post = [
             }
             const verify = jwt.verify(token, SECRET_KEY);
             const user = await User.findOne({ _id: verify.userId });
+            const isGoogleAccount = await !!user.googleId;
+
+            res.render("edit_profile", {
+                title: "Edit Profile",
+                user: user,
+                isGoogleAccount: isGoogleAccount,
+            });
             if (!user) {
                 return res.redirect('/home');
             }
@@ -155,14 +162,19 @@ exports.edit_profile_post = [
                 console.log("username: " + username);
                 const existingUser = await User.findOne({ username : username });
                 if (existingUser && !existingUser._id.equals(user._id)) {
-                    return res.render('edit_profile', { title: 'Edit Profile', error: 'Username already exists' });
+                    return res.render('edit_profile', {
+                        title: 'Edit Profile',
+                        error: 'Username already exists',
+                        isGoogleAccount: isGoogleAccount,
+                        user: user
+                    });
                 }
                 user.username = username;
             }
             if (email) {
                 const existingUser = await User.findOne({email: email });
                 if (existingUser && !existingUser._id.equals(user._id)) {
-                    return res.render('edit_profile', { title: 'Edit Profile', error: 'Username already exists' });
+                    return res.render('edit_profile', { title: 'Edit Profile', error: 'email already exists' });
                 }
                 user.email = email;
 
